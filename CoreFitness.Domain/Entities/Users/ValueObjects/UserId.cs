@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreFitness.Domain.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,7 +12,7 @@ namespace CoreFitness.Domain.Entities.Users.ValueObjects
         public UserId(Guid value)
         {
             if (value == Guid.Empty)
-                throw new ArgumentException("UserId cannot be empty", nameof(value));
+                throw new IdIsRequiredException("UserId cannot be empty");
 
             Value = value;
         }

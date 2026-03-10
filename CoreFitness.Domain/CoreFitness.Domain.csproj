@@ -1,35 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Include="obj\Debug\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs" />
-    <Compile Include="obj\Debug\net10.0\CoreFitness.Domain.AssemblyInfo.cs" />
-    <Compile Include="obj\Debug\net10.0\CoreFitness.Domain.GlobalUsings.g.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="obj\CoreFitness.Domain.csproj.nuget.dgspec.json" />
-    <Content Include="obj\project.assets.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="bin\Debug\net10.0\" />
-    <Folder Include="obj\Debug\net10.0\refint\" />
-    <Folder Include="obj\Debug\net10.0\ref\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="obj\CoreFitness.Domain.csproj.nuget.g.props" />
-    <None Include="obj\CoreFitness.Domain.csproj.nuget.g.targets" />
-    <None Include="obj\Debug\net10.0\CoreFitness.Domain.AssemblyInfoInputs.cache" />
-    <None Include="obj\Debug\net10.0\CoreFitness.Domain.assets.cache" />
-    <None Include="obj\Debug\net10.0\CoreFitness.Domain.GeneratedMSBuildEditorConfig.editorconfig" />
-    <None Include="obj\project.nuget.cache" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
 </Project>

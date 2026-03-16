@@ -1,12 +1,15 @@
 ﻿using CoreFitness.Domain.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace CoreFitness.Domain.Entities.Users.ValueObjects
+namespace CoreFitness.Domain.Entities.Bookings.ValueObjects
 {
-    public readonly record struct UserId
+    public readonly record struct BookingId
     {
         public Guid Value { get; }
 
-        public UserId(Guid value)
+        public BookingId(Guid value)
         {
             if (value == Guid.Empty)
                 throw new IdIsRequiredException("UserId cannot be empty");
@@ -14,7 +17,7 @@ namespace CoreFitness.Domain.Entities.Users.ValueObjects
             Value = value;
         }
 
-        public static UserId New() => new(Guid.NewGuid());
+        public static BookingId New() => new(Guid.NewGuid());
         public override string ToString() => Value.ToString();
     }
 }

@@ -52,9 +52,10 @@ namespace CoreFitness.Domain.Entities.Users.ValueObjects
 
             try
             {
-                domain = new IdnMapping().GetAscii(domain);
+                var idn = new IdnMapping();
+                domain = idn.GetAscii(domain);
             }
-            catch (ArgumentException) { return userEmail};
+            catch (ArgumentException) { return userEmail; }
 
             return $"{local}@{domain}";
         }

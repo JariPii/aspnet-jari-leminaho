@@ -18,4 +18,3 @@ namespace CoreFitness.Domain.Entities.Memberships.ValueObjects
         public override string ToString() => Value.ToString();
     }
 }
-}

@@ -1,7 +1,4 @@
 ﻿using CoreFitness.Domain.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CoreFitness.Domain.Entities.Users.ValueObjects

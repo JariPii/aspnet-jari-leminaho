@@ -7,17 +7,8 @@ namespace CoreFitness.Domain.Entities.Users
 {
     internal class User : BaseEntity<UserId>, IAggregateRoot
     {
-        private UserEmail _email; 
-        public UserEmail Email
-        {
-            get => _email;
-            private set
-            {
-                _email = value;
-                EmailUnique = value.UniqueValue;
-            }
-        }
-        public string EmailUnique { get; private set; } = default!;
+        public UserEmail Email { get; private set; }
+        public string EmailUnique => Email.UniqueValue;
         public UserName UserName { get; private set; }
         public UserPhoneNumber? UserPhoneNumber { get; private set; }
 
@@ -32,5 +23,13 @@ namespace CoreFitness.Domain.Entities.Users
             UserPhoneNumber = phoneNumber;
         }
         protected User() { }
+
+        public void UpdateEmail(UserEmail newUserEmail)
+        {
+            if (Email == newUserEmail) return;
+
+            Email = newUserEmail;
+            UpdateTimeStamp();
+        }
     }
 }

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CoreFitness.Domain.Exceptions
+﻿namespace CoreFitness.Domain.Exceptions
 {
     public abstract class DomainException(string message, Exception? innerException = null) : Exception(message, innerException);
-    {
-    }
+    
 }

@@ -1,6 +1,5 @@
 ﻿using CoreFitness.Domain.Entities.Common;
 using CoreFitness.Domain.Entities.Memberships.ValueObjects;
-using CoreFitness.Domain.Exceptions;
 
 namespace CoreFitness.Domain.Entities.Memberships
 {
@@ -10,22 +9,20 @@ namespace CoreFitness.Domain.Entities.Memberships
         public MembershipTypeDescription Description { get; private set; }
         public MembershipTypePrice Price { get; private set; }
         public MembershipTypeDuration Duration { get; private set; }
-        public string? PhotoUrl { get; private set; }
         public bool IsActive { get; private set; }
 
-        public static MembershipType Create(MembershipTypeName name, MembershipTypeDescription description, MembershipTypePrice price, MembershipTypeDuration duration, string photoUrl)
+        public static MembershipType Create(MembershipTypeName name, MembershipTypeDescription description, MembershipTypePrice price, MembershipTypeDuration duration)
         {
-            return new(MembershipTypeId.New(), name, description, price, duration, photoUrl);
+            return new(MembershipTypeId.New(), name, description, price, duration);
         }
 
-        private MembershipType(MembershipTypeId id, MembershipTypeName name, MembershipTypeDescription description, MembershipTypePrice price, MembershipTypeDuration duration, string photoUrl)
+        private MembershipType(MembershipTypeId id, MembershipTypeName name, MembershipTypeDescription description, MembershipTypePrice price, MembershipTypeDuration duration)
         {
             Id = id;
             Name = name;
             Description = description;
             Price = price;
             Duration = duration;
-            PhotoUrl = photoUrl;
             IsActive = true;
         }
         protected MembershipType() { }

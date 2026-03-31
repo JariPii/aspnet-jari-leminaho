@@ -2,6 +2,7 @@
 using CoreFitness.Domain.Entities.Common;
 using CoreFitness.Domain.Entities.TrainingSessions;
 using CoreFitness.Domain.Entities.TrainingSessions.ValueObjects;
+using CoreFitness.Domain.Entities.Users;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
 
 namespace CoreFitness.Domain.Entities.Bookings
@@ -9,6 +10,7 @@ namespace CoreFitness.Domain.Entities.Bookings
     public class Booking : BaseEntity<BookingId>
     {
         public UserId UserId { get; private set; }
+        public User User { get; private set; } = null!;
         public TrainingSessionId TrainingSessionId { get; private set; }
         public TrainingSession TrainingSession { get; private set; } = null!;
         private Booking() { }

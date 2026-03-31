@@ -26,6 +26,7 @@ namespace CoreFitness.Domain.Entities.Memberships
             StartDate = startDate;
             EndDate = endDate;
         }
+
         private Membership() { }
 
         public bool IsActive => DateOnly.FromDateTime(DateTime.UtcNow) <= EndDate;
@@ -36,6 +37,6 @@ namespace CoreFitness.Domain.Entities.Memberships
                 throw new InvalidExtendMembershipException("New date has to later than end date");
 
             EndDate = newEndDate;
-        }
+        }        
     }
 }

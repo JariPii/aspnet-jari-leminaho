@@ -60,7 +60,7 @@ namespace CoreFitness.Domain.Entities.Users
             UpdateTimeStamp();
         }
 
-        public void UpdateAll(UserName name, UserEmail email, UserPhoneNumber phoneNumber)
+        public void UpdateAll(UserName name, UserEmail email, UserPhoneNumber? phoneNumber)
         {
             UpdateEmail(email);
             UpdateName(name);

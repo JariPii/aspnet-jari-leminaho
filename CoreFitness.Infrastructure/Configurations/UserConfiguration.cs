@@ -1,5 +1,6 @@
 ﻿using CoreFitness.Domain.Entities.Users;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
+using CoreFitness.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -28,13 +29,13 @@ namespace CoreFitness.Infrastructure.Configurations
             {
                 name.Property(n => n.FirstName)
                 .HasColumnName("FirstName")
-                .IsRequired()
-                .HasMaxLength(UserName.MaxLength);
+                .HasMaxLength(UserName.MaxLength)
+                .IsRequired();
 
                 name.Property(n => n.LastName)
                 .HasColumnName("LastName")
-                .IsRequired()
-                .HasMaxLength(UserName.MaxLength);
+                .HasMaxLength(UserName.MaxLength)
+                .IsRequired();
             });
 
             builder.Property(u => u.UserPhoneNumber)
@@ -42,7 +43,7 @@ namespace CoreFitness.Infrastructure.Configurations
 
             builder.Property(u => u.Role)
                 .HasConversion<string>()
-                .HasMaxLength(20)
+                .HasMaxLength(UserRoleConstants.MaxLength)
                 .IsRequired();
         }
     }

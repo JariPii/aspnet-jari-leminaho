@@ -3,15 +3,15 @@
     public abstract class BaseEntity<TId>
     {
         public TId Id { get; protected set; } = default!;
-        public DateTime CreatedAt { get; protected set; }
-        public DateTime? UpdatedAt { get; protected set; }
+        public DateTimeOffset CreatedAt { get; protected set; }
+        public DateTimeOffset? UpdatedAt { get; protected set; }
         public byte[] RowVersion { get; private set; } = default!;
 
         protected BaseEntity()
         {
-            CreatedAt = DateTime.UtcNow;
+            CreatedAt = DateTimeOffset.UtcNow;
         }
 
-        public void UpdateTimeStamp() => UpdatedAt = DateTime.UtcNow;
+        public void UpdateTimeStamp() => UpdatedAt = DateTimeOffset.UtcNow;
     }
 }

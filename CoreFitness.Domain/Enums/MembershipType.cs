@@ -2,6 +2,7 @@
 {
     public enum MembershipType
     {
+        Trial,
         Basic,
         Premium,
         Student

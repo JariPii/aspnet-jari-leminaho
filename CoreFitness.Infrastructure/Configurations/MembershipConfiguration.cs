@@ -23,6 +23,16 @@ namespace CoreFitness.Infrastructure.Configurations
                 .HasColumnType("date")
                 .IsRequired();
 
+            builder.Property(m => m.CurrentWeight)
+                .HasColumnType("decimal(5,2)");
+
+            builder.Property(m => m.TargetWeight)
+                .HasColumnType("decimal(5,2)");
+
+            builder.Property(m => m.Height)
+                .HasColumnType("decimal(5,2)");
+
+            builder.Ignore(m => m.BMI);
             builder.Ignore(m => m.IsActive);
         }
     }

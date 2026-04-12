@@ -8,12 +8,22 @@ namespace CoreFitness.Domain.Entities.Memberships
 {
     public class Membership : BaseEntity<MembershipId>, IAggregateRoot
     {
+        private readonly List<CheckIn> _checkIns = new();
+        public IReadOnlyCollection<CheckIn> CheckIns => _checkIns.AsReadOnly();
         public UserId UserId { get; private set; }
         public DateOnly StartDate { get; private set; }
         public DateOnly EndDate { get; private set; }
         public MembershipTypeId TypeId { get; private set; }
+        public bool IsActive => DateOnly.FromDateTime(DateTime.UtcNow) <= EndDate;
+        public bool IsManuallyDeactivated { get; private set; }
+        public int SessionsUsed { get; private set; }
+        public int SessionLimit { get; private set; }
+        public bool HasSessionsLeft => SessionsUsed < SessionLimit;
+        public decimal? CurrentWeight { get; private set; }
+        public decimal? TargetWeight { get; private set; }
+        public decimal? Height { get; private set; }
 
-        public Membership(
+        private Membership(
             MembershipId id,
             UserId userId,
             MembershipTypeId type,
@@ -27,9 +37,10 @@ namespace CoreFitness.Domain.Entities.Memberships
             EndDate = endDate;
         }
 
-        private Membership() { }
+        public static Membership Create(UserId userId, MembershipTypeId typeId, DateOnly startDate, DateOnly endDate) =>
+            new(MembershipId.New(), userId, typeId, startDate, endDate);
 
-        public bool IsActive => DateOnly.FromDateTime(DateTime.UtcNow) <= EndDate;
+        private Membership() { }
 
         public void Extend(DateOnly newEndDate)
         {
@@ -37,6 +48,76 @@ namespace CoreFitness.Domain.Entities.Memberships
                 throw new InvalidExtendMembershipException("New date has to later than end date");
 
             EndDate = newEndDate;
-        }        
+        }
+
+        public int CheckInsLast30Days => _checkIns
+            .Count(c => c.CheckedInAt >= DateTimeOffset.UtcNow.AddDays(-30));
+
+        public CheckIn RegisterCheckIn()
+        {
+            if (!IsActive)
+                throw new MembershipExpiredException("Membership is not active");
+
+            var checkIn = CheckIn.Create(UserId, Id);
+            _checkIns.Add(checkIn);
+            UpdateTimeStamp();
+            return checkIn;
+        }
+
+        public void UseSession()
+        {
+            if (!IsActive)
+                throw new MembershipExpiredException("Membership is not active");
+
+            if (!HasSessionsLeft)
+                throw new NoSessionsLeftException("No sessions left on membership");
+
+            SessionsUsed++;
+            UpdateTimeStamp();
+        }
+
+        public void DeactivateMembership()
+        {
+            if (!IsActive)
+                throw new MembershipExpiredException("Membership is already inactive");
+
+            IsManuallyDeactivated = true;
+            UpdateTimeStamp();
+        }
+
+        public void ActivateMembership()
+        {
+            if (DateOnly.FromDateTime(DateTime.UtcNow) > EndDate)
+                throw new MembershipExpiredException("Cannot activate en expired membership");
+
+            IsManuallyDeactivated = false;
+            UpdateTimeStamp();
+        }
+
+        public decimal? BMI => CurrentWeight.HasValue && Height.HasValue ?
+            Math.Round(CurrentWeight.Value / (decimal)Math.Pow((double)(Height.Value / 100), 2), 1) :
+            null;
+
+        public void UpdateWeight(decimal currentWeight, decimal height)
+        {
+            if (currentWeight <= 0)
+                throw new InvalidWeightException("Weight must be greater than 0");
+
+            if (height <= 0)
+                throw new InvalidHeightException("Height must be greater than 0");
+
+            CurrentWeight = currentWeight;
+            Height = height;
+            UpdateTimeStamp();
+        }
+
+        public void SetWeightGoal(decimal targetWeight)
+        {
+            if (targetWeight <= 0)
+                throw new InvalidWeightException("Target weight must be greater than 0");
+
+            TargetWeight = targetWeight;
+            UpdateTimeStamp();
+        }
     }
 }

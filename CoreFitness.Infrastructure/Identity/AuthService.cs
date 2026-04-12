@@ -1,6 +1,6 @@
 ﻿namespace CoreFitness.Infrastructure.Identity
 {
-    internal class AuthService
+    public class AuthService
     {
     }
 }

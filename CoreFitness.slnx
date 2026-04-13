@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
   <Project Path="CoreFitness.Application/CoreFitness.Application.csproj" />
   <Project Path="CoreFitness.Domain/CoreFitness.Domain.csproj" />
   <Project Path="CoreFitness.Infrastructure/CoreFitness.Infrastructure.csproj" />

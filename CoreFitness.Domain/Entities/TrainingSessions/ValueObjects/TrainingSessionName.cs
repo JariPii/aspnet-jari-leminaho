@@ -5,6 +5,7 @@ namespace CoreFitness.Domain.Entities.TrainingSessions.ValueObjects
 {
     public readonly partial record struct TrainingSessionName
     {
+        public const int MaxLength = 100;
         public string Value { get; }
 
         private TrainingSessionName(string value)
@@ -14,12 +15,15 @@ namespace CoreFitness.Domain.Entities.TrainingSessions.ValueObjects
 
         public static TrainingSessionName Create(string value)
         {
-            var cleanTrainingSessionName = value.NormalizeName();
+            if (string.IsNullOrWhiteSpace(value))
+                throw new InvalidTrainingSessionNameException("Name is required");
 
-            if (cleanTrainingSessionName.Length == 0)
-                throw new InvalidNameException("TrainingSessionName is required");
+            var trimmed = value.Trim();
 
-            return new TrainingSessionName(cleanTrainingSessionName);
+            if (trimmed.Length > MaxLength)
+                throw new InvalidTrainingSessionNameException($"Name cannot contain more than {MaxLength} characters");
+
+            return new TrainingSessionName(trimmed);
         }
 
         public override string ToString() => Value;

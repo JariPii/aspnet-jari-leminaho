@@ -21,5 +21,8 @@ namespace CoreFitness.Domain.Entities.Bookings
             UserId = userId;
             TrainingSessionId = trainingSessionId;
         }
+
+        public static Booking Create(UserId userId, TrainingSessionId trainingSessionId) =>
+            new(BookingId.New(), userId, trainingSessionId);
     }
 }

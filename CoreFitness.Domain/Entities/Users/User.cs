@@ -1,6 +1,7 @@
 ﻿using CoreFitness.Domain.Entities.Common;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Enums;
+using CoreFitness.Domain.Exceptions;
 using CoreFitness.Domain.Interfaces;
 
 
@@ -62,11 +63,23 @@ namespace CoreFitness.Domain.Entities.Users
             UpdateTimeStamp();
         }
 
-        public void UpdateAll(UserName name, UserEmail email, UserPhoneNumber? phoneNumber)
+        public void UpdatePhotoUrl(string newPhotoUrl)
+        {
+            if (string.IsNullOrWhiteSpace(newPhotoUrl))
+                throw new InvalidPhotoUrlException("PhotoUrl is required");
+                
+            if (PhotoUrl == newPhotoUrl) return;
+
+            PhotoUrl = newPhotoUrl;
+            UpdateTimeStamp();
+        }
+
+        public void UpdateAll(UserName name, UserEmail email, UserPhoneNumber? phoneNumber, string photoUrl)
         {
             UpdateEmail(email);
             UpdateName(name);
             UpdatePhoneNumber(phoneNumber);
+            UpdatePhotoUrl(photoUrl);
         }
     }
 }

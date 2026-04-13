@@ -53,7 +53,8 @@ namespace CoreFitness.Infrastructure.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Navigation(ts => ts.Bookings)
-                .HasField("_bookings");
+                .HasField("_bookings")
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

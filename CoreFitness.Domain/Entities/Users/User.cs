@@ -9,7 +9,7 @@ namespace CoreFitness.Domain.Entities.Users
     public class User : BaseEntity<UserId>, IAggregateRoot
     {
         public UserEmail Email { get; private set; }
-        public string EmailUnique => Email.UniqueValue;
+        public string EmailUnique { get; private set; } = string.Empty;
         public UserName UserName { get; private set; }
         public UserPhoneNumber? UserPhoneNumber { get; private set; }
         public string? PhotoUrl { get; private set; }
@@ -19,6 +19,7 @@ namespace CoreFitness.Domain.Entities.Users
         {
             Id = id;
             Email = email;
+            EmailUnique = email.UniqueValue;
             UserName = userName;
             UserPhoneNumber = phoneNumber;
             PhotoUrl = photoUrl;
@@ -35,6 +36,7 @@ namespace CoreFitness.Domain.Entities.Users
             if (Email == newUserEmail) return;
 
             Email = newUserEmail;
+            EmailUnique = newUserEmail.UniqueValue;
             UpdateTimeStamp();
         }
 

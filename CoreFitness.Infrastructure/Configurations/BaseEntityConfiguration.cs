@@ -12,8 +12,8 @@ namespace CoreFitness.Infrastructure.Configurations
             builder.HasKey(e => e.Id);
             builder.Property(e => e.Id).ValueGeneratedNever();
 
-            builder.Property(e => e.CreatedAt).HasColumnType("datetime2").IsRequired();
-            builder.Property(e => e.UpdatedAt).HasColumnType("datetime2").IsRequired(false);
+            builder.Property(e => e.CreatedAt).HasColumnType("datetimeoffset").IsRequired();
+            builder.Property(e => e.UpdatedAt).HasColumnType("datetimeoffset").IsRequired(false);
 
             builder.Property(e => e.RowVersion).IsRowVersion();
         }

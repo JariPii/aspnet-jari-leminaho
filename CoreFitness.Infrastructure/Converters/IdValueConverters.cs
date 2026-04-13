@@ -11,4 +11,5 @@ namespace CoreFitness.Infrastructure.Converters
     public class MembershipTypeIdConverter() : ValueConverter<MembershipTypeId, Guid>(id => id.Value, v => new MembershipTypeId(v));
     public class BookingIdConverter() : ValueConverter<BookingId, Guid>(id => id.Value, v => new BookingId(v));
     public class TrainingSessionIdConverter() : ValueConverter<TrainingSessionId, Guid>(id => id.Value, v => new TrainingSessionId(v));
+    public class CheckInIdConverter() : ValueConverter<CheckInId, Guid>(id => id.Value, v => new CheckInId(v));
 }

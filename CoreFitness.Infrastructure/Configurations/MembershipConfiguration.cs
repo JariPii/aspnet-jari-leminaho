@@ -11,6 +11,10 @@ namespace CoreFitness.Infrastructure.Configurations
         {
             base.Configure(builder);
 
+            builder.HasOne<MembershipType>()
+                .WithMany()
+                .HasForeignKey(m => m.TypeId);
+
             builder.Property(m => m.StartDate)
                 .HasConversion(d => d.ToDateTime(TimeOnly.MinValue),
                 d => DateOnly.FromDateTime(d))
@@ -32,8 +36,14 @@ namespace CoreFitness.Infrastructure.Configurations
             builder.Property(m => m.Height)
                 .HasColumnType("decimal(5,2)");
 
+            builder.Navigation(m => m.CheckIns)
+                .HasField("_checkIns")
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+
             builder.Ignore(m => m.BMI);
             builder.Ignore(m => m.IsActive);
+            builder.Ignore(m => m.HasSessionsLeft);
+            builder.Ignore(m => m.CheckInsLast30Days);
         }
     }
 }

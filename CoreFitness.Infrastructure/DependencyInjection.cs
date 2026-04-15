@@ -1,4 +1,5 @@
-﻿using CoreFitness.Infrastructure.Identity;
+﻿using CoreFitness.Application.Identity;
+using CoreFitness.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,8 @@ public static class DependencyInjection
         services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
             .AddEntityFrameworkStores<AuthDbContext>()
             .AddDefaultTokenProviders();
+
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }

@@ -16,7 +16,7 @@ namespace CoreFitness.Domain.Entities.Users
         public string? PhotoUrl { get; private set; }
         public UserRole Role { get; protected set; }
 
-        protected User(UserId id, UserEmail email, UserName userName, UserPhoneNumber? phoneNumber, string photoUrl, UserRole role)
+        protected User(UserId id, UserEmail email, UserName userName, UserPhoneNumber? phoneNumber, string? photoUrl, UserRole role)
         {
             Id = id;
             Email = email;
@@ -27,7 +27,7 @@ namespace CoreFitness.Domain.Entities.Users
             Role = role;
         }
 
-        public static User Create(UserEmail email, UserName name, UserPhoneNumber? phonenumber, string photoUrl, UserRole role)
+        public static User Create(UserEmail email, UserName name, UserPhoneNumber? phonenumber, string? photoUrl, UserRole role)
             => new(UserId.New(), email, name, phonenumber, photoUrl, role);
 
         private User() { }
@@ -63,11 +63,8 @@ namespace CoreFitness.Domain.Entities.Users
             UpdateTimeStamp();
         }
 
-        public void UpdatePhotoUrl(string newPhotoUrl)
-        {
-            if (string.IsNullOrWhiteSpace(newPhotoUrl))
-                throw new InvalidPhotoUrlException("PhotoUrl is required");
-                
+        public void UpdatePhotoUrl(string? newPhotoUrl)
+        {                
             if (PhotoUrl == newPhotoUrl) return;
 
             PhotoUrl = newPhotoUrl;

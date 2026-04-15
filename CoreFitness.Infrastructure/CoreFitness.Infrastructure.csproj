@@ -28,6 +28,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CoreFitness.Application\CoreFitness.Application.csproj" />
     <ProjectReference Include="..\CoreFitness.Domain\CoreFitness.Domain.csproj" />
   </ItemGroup>
 

@@ -1,5 +1,5 @@
 using CoreFitness.Infrastructure;
-using Microsoft.AspNetCore.Identity;
+using CoreFitness.Infrastructure.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,21 +10,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    using var scope = app.Services.CreateScope();
-    var services = scope.ServiceProvider;
-
-    var coreContext = services.GetRequiredService<CoreFitnessDbContext>();
-    var authContext = services.GetRequiredService<AuthDbContext>();
-
-    coreContext.Database.EnsureCreated();
-    authContext.Database.EnsureCreated();
-
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
-    foreach (var role in new[] { "Member", "Admin", "Trainer" })
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-            await roleManager.CreateAsync(new IdentityRole<Guid>(role));
-    }
+    await DbSeeder.SeedRolesAsync(app.Services.CreateScope().ServiceProvider);
 }
 
 if (!app.Environment.IsDevelopment())

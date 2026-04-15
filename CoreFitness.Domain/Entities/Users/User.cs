@@ -1,6 +1,7 @@
 ﻿using CoreFitness.Domain.Entities.Common;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Enums;
+using CoreFitness.Domain.Exceptions;
 using CoreFitness.Domain.Interfaces;
 
 
@@ -9,7 +10,7 @@ namespace CoreFitness.Domain.Entities.Users
     public class User : BaseEntity<UserId>, IAggregateRoot
     {
         public UserEmail Email { get; private set; }
-        public string EmailUnique => Email.UniqueValue;
+        public string EmailUnique { get; private set; } = string.Empty;
         public UserName UserName { get; private set; }
         public UserPhoneNumber? UserPhoneNumber { get; private set; }
         public string? PhotoUrl { get; private set; }
@@ -19,6 +20,7 @@ namespace CoreFitness.Domain.Entities.Users
         {
             Id = id;
             Email = email;
+            EmailUnique = email.UniqueValue;
             UserName = userName;
             UserPhoneNumber = phoneNumber;
             PhotoUrl = photoUrl;
@@ -35,6 +37,7 @@ namespace CoreFitness.Domain.Entities.Users
             if (Email == newUserEmail) return;
 
             Email = newUserEmail;
+            EmailUnique = newUserEmail.UniqueValue;
             UpdateTimeStamp();
         }
 
@@ -60,11 +63,23 @@ namespace CoreFitness.Domain.Entities.Users
             UpdateTimeStamp();
         }
 
-        public void UpdateAll(UserName name, UserEmail email, UserPhoneNumber? phoneNumber)
+        public void UpdatePhotoUrl(string newPhotoUrl)
+        {
+            if (string.IsNullOrWhiteSpace(newPhotoUrl))
+                throw new InvalidPhotoUrlException("PhotoUrl is required");
+                
+            if (PhotoUrl == newPhotoUrl) return;
+
+            PhotoUrl = newPhotoUrl;
+            UpdateTimeStamp();
+        }
+
+        public void UpdateAll(UserName name, UserEmail email, UserPhoneNumber? phoneNumber, string photoUrl)
         {
             UpdateEmail(email);
             UpdateName(name);
             UpdatePhoneNumber(phoneNumber);
+            UpdatePhotoUrl(photoUrl);
         }
     }
 }

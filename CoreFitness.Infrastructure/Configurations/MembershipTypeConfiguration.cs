@@ -1,5 +1,6 @@
 ﻿using CoreFitness.Domain.Entities.Memberships;
 using CoreFitness.Domain.Entities.Memberships.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CoreFitness.Infrastructure.Configurations
@@ -15,6 +16,13 @@ namespace CoreFitness.Infrastructure.Configurations
 
             builder.Property(t => t.Description)
                 .HasConversion(v => v.Value, v => MembershipTypeDescription.Create(v));
+
+            builder.Property(t => t.Price)
+                .HasConversion(v => v.Value, v => MembershipTypePrice.Create(v))
+                .HasColumnType("decimal(10,2)");
+
+            builder.Property(t => t.Duration)
+                .HasConversion(v => v.Value, v => MembershipTypeDuration.Create(v));
         }
     }
 }

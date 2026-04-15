@@ -24,9 +24,10 @@ namespace CoreFitness.Infrastructure
         {
             configurationBuilder.Properties<UserId>().HaveConversion<UserIdConverter>();
             configurationBuilder.Properties<MembershipId>().HaveConversion<MembershipIdConverter>();
-            configurationBuilder.Properties<MembershipTypeId>().HaveConversion<MembershipTypeId>();
+            configurationBuilder.Properties<MembershipTypeId>().HaveConversion<MembershipTypeIdConverter>();
             configurationBuilder.Properties<BookingId>().HaveConversion<BookingIdConverter>();
             configurationBuilder.Properties<TrainingSessionId>().HaveConversion<TrainingSessionIdConverter>();
+            configurationBuilder.Properties<CheckInId>().HaveConversion<CheckInIdConverter>();
 
             base.ConfigureConventions(configurationBuilder);
         }

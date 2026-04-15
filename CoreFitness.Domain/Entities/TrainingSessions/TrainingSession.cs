@@ -31,12 +31,12 @@ namespace CoreFitness.Domain.Entities.TrainingSessions
             Duration = duration;
         }
 
-        public static TrainingSession Create(TrainingSessionId id, TrainingSessionName name, TrainingSessionDescription description, DateTimeOffset startDate, TrainingSessionCapacity capacity, TrainingSessionDuration duration)
+        public static TrainingSession Create(TrainingSessionName name, TrainingSessionDescription description, DateTimeOffset startDate, TrainingSessionCapacity capacity, TrainingSessionDuration duration)
         {
             if (startDate <= DateTimeOffset.UtcNow) throw new StartDateException("StartDate cannot be earlier than todays date");
 
             return new TrainingSession(
-                id,
+                TrainingSessionId.New(),
                 name,
                 description,
                 startDate,

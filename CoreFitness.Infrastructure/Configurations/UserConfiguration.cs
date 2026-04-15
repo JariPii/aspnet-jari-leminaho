@@ -12,18 +12,16 @@ namespace CoreFitness.Infrastructure.Configurations
         {
             base.Configure(builder);
 
-            builder.ComplexProperty(u => u.Email, email =>
-            {
-                email.Property(e => e.Value)
-                .HasColumnName("Email")
+            builder.Property(u => u.Email)
+                .HasConversion(v => v.Value, v => UserEmail.Create(v))
+                .HasMaxLength(254)
                 .IsRequired();
 
-                email.Property(e => e.UniqueValue)
-                .HasColumnName("NormalizedEmail")
+            builder.Property(u => u.EmailUnique)
+                .HasMaxLength(254)
                 .IsRequired();
-            });
 
-            builder.HasIndex("NormalizedEmail").IsUnique();
+            builder.HasIndex(u => u.EmailUnique).IsUnique();
 
             builder.ComplexProperty(u => u.UserName, name =>
             {
@@ -45,6 +43,9 @@ namespace CoreFitness.Infrastructure.Configurations
                 .HasConversion<string>()
                 .HasMaxLength(UserRoleConstants.MaxLength)
                 .IsRequired();
+
+            builder.Property(u => u.PhotoUrl)
+                .HasMaxLength(500);
         }
     }
 }

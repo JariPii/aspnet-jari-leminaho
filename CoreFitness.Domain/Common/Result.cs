@@ -1,5 +1,6 @@
 ﻿namespace CoreFitness.Domain.Common
 {
+    //TODO: Finalize Result
     public class Result
     {
         public bool IsSuccess { get; }

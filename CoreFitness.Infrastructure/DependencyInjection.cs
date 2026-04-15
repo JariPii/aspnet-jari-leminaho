@@ -1,5 +1,7 @@
 ﻿using CoreFitness.Application.Identity;
+using CoreFitness.Domain.Interfaces.UnitOfWork;
 using CoreFitness.Infrastructure.Identity;
+using CoreFitness.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +53,7 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
 
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
         return services;
     }

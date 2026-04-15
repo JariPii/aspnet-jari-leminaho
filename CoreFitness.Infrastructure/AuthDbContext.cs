@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoreFitness.Infrastructure
 {
-    public class AuthDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+    public class AuthDbContext(DbContextOptions<AuthDbContext> options) : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
     {
-        public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options) { }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

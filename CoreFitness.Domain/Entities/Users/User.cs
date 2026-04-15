@@ -1,7 +1,6 @@
 ﻿using CoreFitness.Domain.Entities.Common;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Enums;
-using CoreFitness.Domain.Exceptions;
 using CoreFitness.Domain.Interfaces;
 
 

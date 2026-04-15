@@ -1,4 +1,5 @@
 using CoreFitness.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,13 @@ if (app.Environment.IsDevelopment())
 
     coreContext.Database.EnsureCreated();
     authContext.Database.EnsureCreated();
+
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+    foreach (var role in new[] { "Member", "Admin", "Trainer" })
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole<Guid>(role));
+    }
 }
 
 if (!app.Environment.IsDevelopment())

@@ -24,6 +24,9 @@
                         <li class="">
                             <a class="" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li>
+                            <a asp-controller="Auth" asp-action="SignIn">Sign In</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -33,6 +36,21 @@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+    </div>
+
+    <div>
+        <h1 class="text-5xl">TEST DEL</h1>
+        <div>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <span>Inloggad som: @User.Identity.Name</span>
+                <a asp-controller="Auth" asp-action="SignOut">Logga ut</a>
+            }
+            else
+            {
+                <a asp-controller="Auth" asp-action="SignIn">Logga in</a>
+            }
+        </div>
     </div>
 
     <footer class="">

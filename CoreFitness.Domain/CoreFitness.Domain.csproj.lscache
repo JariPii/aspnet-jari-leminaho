@@ -56,15 +56,18 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 /warnaserror+:NU1605,SYSLIB0011
 
 [sourceFiles]
+Common/Result.cs
 Entities/Bookings/
  Booking.cs
  ValueObjects/BookingId.cs
 Entities/
  Common/BaseEntity.cs
  Memberships/
+  CheckIn.cs
   Membership.cs
   MembershipType.cs
   ValueObjects/
+   CheckInId.cs
    MembershipId.cs
    MembershipTypeDescription.cs
    MembershipTypeDuration.cs
@@ -82,6 +85,7 @@ Entities/
  Users/
   User.cs
   ValueObjects/
+   AuthenticationId.cs
    UserEmail.cs
    UserId.cs
    UserName.cs
@@ -90,16 +94,25 @@ Enums/
  MembershipType.cs
  UserRole.cs
 Exceptions/
+ ConcurrencyException.cs
  DomainException.cs
  MembershipExceptions.cs
  MembershipTypeExceptions.cs
+ PersistenceException.cs
+ RowVersionException.cs
  SharedExceptions.cs
  TrainingSessionExceptions.cs
  UserException.cs
 Interfaces/
  IAggregateRoot.cs
  IBaseRepository.cs
- Memberships/IMembershipRepository.cs
+ Memberships/
+  IMembershipRepository.cs
+  IMembershipTypeRepository.cs
+ TrainingSessions/ITrainingSessionRepository.cs
+ UnitOfWork/
+  ITransaction.cs
+  IUnitOfWork.cs
  Users/IUserRepository.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs

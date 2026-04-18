@@ -1,6 +1,7 @@
 ﻿using CoreFitness.Domain.Entities.Users;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Enums;
+using CoreFitness.Infrastructure.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,6 +12,10 @@ namespace CoreFitness.Infrastructure.Configurations
         public override void Configure(EntityTypeBuilder<User> builder)
         {
             base.Configure(builder);
+
+            builder.Property(u => u.AuthenticationId)
+                .HasConversion(new AuthenticationIdConverter())
+                .IsRequired();
 
             builder.Property(u => u.Email)
                 .HasConversion(v => v.Value, v => UserEmail.Create(v))

@@ -1,0 +1,21 @@
+﻿using CoreFitness.Domain.Exceptions;
+
+namespace CoreFitness.Domain.Entities.Users.ValueObjects
+{
+    //TODO: Ändra till stringvärde eftersom olika proverds kan ha String eller Guid
+    public readonly record struct AuthenticationId
+    {
+        public string Value { get; }
+
+        public AuthenticationId(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new IdIsRequiredException("AuthenticationId cannot be empty");
+
+            Value = value;
+        }
+
+        public static AuthenticationId Create(string value) => new(value);
+        public override string ToString() => Value.ToString();
+    }
+}

@@ -23,6 +23,7 @@ namespace CoreFitness.Infrastructure
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
             configurationBuilder.Properties<UserId>().HaveConversion<UserIdConverter>();
+            configurationBuilder.Properties<AuthenticationId>().HaveConversion<AuthenticationIdConverter>();
             configurationBuilder.Properties<MembershipId>().HaveConversion<MembershipIdConverter>();
             configurationBuilder.Properties<MembershipTypeId>().HaveConversion<MembershipTypeIdConverter>();
             configurationBuilder.Properties<BookingId>().HaveConversion<BookingIdConverter>();
@@ -37,6 +38,16 @@ namespace CoreFitness.Infrastructure
             modelBuilder.Entity<IntResult>().HasNoKey();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(CoreFitnessDbContext).Assembly);
+
+            if (Database.IsSqlite())
+            {
+                foreach (var entity in modelBuilder.Model.GetEntityTypes())
+                {
+                    var rowVersion = entity.FindProperty("RowVersion");
+                    if (rowVersion != null)
+                        rowVersion.SetDefaultValueSql("randomblob(8)");
+                }
+            }
 
             base.OnModelCreating(modelBuilder);
         }

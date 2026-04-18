@@ -10,11 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CoreFitness.Infrastructure.Migrations.App
+namespace CoreFitness.Infrastructure.Migrations
 {
     [DbContext(typeof(CoreFitnessDbContext))]
-    [Migration("20260413075214_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260418171541_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -254,6 +254,10 @@ namespace CoreFitness.Infrastructure.Migrations.App
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthenticationId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");

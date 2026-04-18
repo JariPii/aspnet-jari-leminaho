@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./external-provider.css" layer(components);
 
 html {
   font-size: 14px;

@@ -48,6 +48,7 @@ namespace CoreFitness.Infrastructure.Identity
             await userManager.AddToRoleAsync(appUser, "Member");
 
             var domainUser = User.Create(
+                new AuthenticationId(appUser.Id.ToString()),
                 UserEmail.Create(email),
                 UserName.Create(firstName, lastName),
                 null,

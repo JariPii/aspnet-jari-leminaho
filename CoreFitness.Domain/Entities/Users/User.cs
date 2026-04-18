@@ -8,6 +8,7 @@ namespace CoreFitness.Domain.Entities.Users
 {
     public class User : BaseEntity<UserId>, IAggregateRoot
     {
+        public AuthenticationId AuthenticationId { get; private set; }
         public UserEmail Email { get; private set; }
         public string EmailUnique { get; private set; } = string.Empty;
         public UserName UserName { get; private set; }
@@ -15,9 +16,10 @@ namespace CoreFitness.Domain.Entities.Users
         public string? PhotoUrl { get; private set; }
         public UserRole Role { get; protected set; }
 
-        protected User(UserId id, UserEmail email, UserName userName, UserPhoneNumber? phoneNumber, string? photoUrl, UserRole role)
+        protected User(UserId id, AuthenticationId authenticationId, UserEmail email, UserName userName, UserPhoneNumber? phoneNumber, string? photoUrl, UserRole role)
         {
             Id = id;
+            AuthenticationId = authenticationId;
             Email = email;
             EmailUnique = email.UniqueValue;
             UserName = userName;
@@ -26,8 +28,8 @@ namespace CoreFitness.Domain.Entities.Users
             Role = role;
         }
 
-        public static User Create(UserEmail email, UserName name, UserPhoneNumber? phonenumber, string? photoUrl, UserRole role)
-            => new(UserId.New(), email, name, phonenumber, photoUrl, role);
+        public static User Create(AuthenticationId authenticationId, UserEmail email, UserName name, UserPhoneNumber? phonenumber, string? photoUrl, UserRole role)
+            => new(UserId.New(), authenticationId, email, name, phonenumber, photoUrl, role);
 
         private User() { }
 

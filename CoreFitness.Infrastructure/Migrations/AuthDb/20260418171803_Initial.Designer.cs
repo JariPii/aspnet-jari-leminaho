@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CoreFitness.Infrastructure.Migrations.Auth
+namespace CoreFitness.Infrastructure.Migrations.AuthDb
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20260413075438_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260418171803_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

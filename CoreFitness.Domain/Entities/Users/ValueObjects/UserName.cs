@@ -24,7 +24,11 @@ namespace CoreFitness.Domain.Entities.Users.ValueObjects
             if (cleanFirstName.Length > MaxLength || cleanLastName.Length > MaxLength)
                 throw new InvalidNameException($"Name can not exceed {MaxLength} characters");
 
-            if (!NameRegex().IsMatch(cleanFirstName) || !NameRegex().IsMatch(cleanLastName))
+            //if (!NameRegex().IsMatch(cleanFirstName) || !NameRegex().IsMatch(cleanLastName))
+            //    throw new InvalidNameException("Name contains invalid characters");
+
+            if (!string.IsNullOrEmpty(cleanFirstName) && !NameRegex().IsMatch(cleanFirstName) ||
+                !string.IsNullOrEmpty(cleanLastName) && !NameRegex().IsMatch(cleanLastName))
                 throw new InvalidNameException("Name contains invalid characters");
 
             return new UserName(cleanFirstName, cleanLastName);

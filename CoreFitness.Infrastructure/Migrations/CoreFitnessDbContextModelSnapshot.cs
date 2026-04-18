@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CoreFitness.Infrastructure.Migrations.App
+namespace CoreFitness.Infrastructure.Migrations
 {
     [DbContext(typeof(CoreFitnessDbContext))]
     partial class CoreFitnessDbContextModelSnapshot : ModelSnapshot
@@ -251,6 +251,10 @@ namespace CoreFitness.Infrastructure.Migrations.App
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthenticationId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");

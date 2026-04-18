@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CoreFitness.Infrastructure.Migrations.App
+namespace CoreFitness.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,6 +64,7 @@ namespace CoreFitness.Infrastructure.Migrations.App
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AuthenticationId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(254)", maxLength: 254, nullable: false),
                     EmailUnique = table.Column<string>(type: "nvarchar(254)", maxLength: 254, nullable: false),
                     UserPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),

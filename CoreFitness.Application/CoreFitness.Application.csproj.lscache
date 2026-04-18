@@ -56,12 +56,14 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 /warnaserror+:NU1605,SYSLIB0011
 
 [sourceFiles]
+Identity/IAuthService.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  CoreFitness.Application.AssemblyInfo.cs
  CoreFitness.Application.GlobalUsings.g.cs
 
 [metadataReferences]
+../CoreFitness.Domain/obj/Debug/net10.0/ref/CoreFitness.Domain.dll
 <DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.5/ref/net10.0/
  Microsoft.CSharp.dll
  Microsoft.VisualBasic.Core.dll

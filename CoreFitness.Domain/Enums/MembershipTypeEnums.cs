@@ -1,6 +1,6 @@
 ﻿namespace CoreFitness.Domain.Enums
 {
-    public enum MembershipType
+    public enum MembershipTypeEnums
     {
         Trial,
         Basic,

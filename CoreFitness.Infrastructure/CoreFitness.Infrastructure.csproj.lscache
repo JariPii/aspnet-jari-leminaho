@@ -73,13 +73,13 @@ DependencyInjection.cs
 Identity/
  ApplicationUser.cs
  AuthService.cs
-Migrations/
- 20260418171541_Initial.cs
- 20260418171541_Initial.Designer.cs
- AuthDb/
-  20260418171803_Initial.cs
-  20260418171803_Initial.Designer.cs
-  AuthDbContextModelSnapshot.cs
+Migrations/Auth/
+ 20260420102253_Initialcreate.cs
+ 20260420102253_Initialcreate.Designer.cs
+ AuthDbContextModelSnapshot.cs
+Migrations/CoreFitness/
+ 20260420102330_Initialcreate.cs
+ 20260420102330_Initialcreate.Designer.cs
  CoreFitnessDbContextModelSnapshot.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs

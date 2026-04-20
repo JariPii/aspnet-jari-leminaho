@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CoreFitness.Infrastructure.Migrations
+namespace CoreFitness.Infrastructure.Migrations.CoreFitness
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Initialcreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -131,12 +131,6 @@ namespace CoreFitness.Infrastructure.Migrations
                         principalTable: "TrainingSessions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -203,10 +197,10 @@ namespace CoreFitness.Infrastructure.Migrations
                 name: "IntResult");
 
             migrationBuilder.DropTable(
-                name: "TrainingSessions");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "TrainingSessions");
 
             migrationBuilder.DropTable(
                 name: "Memberships");

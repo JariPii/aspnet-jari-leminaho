@@ -5,19 +5,16 @@ using CoreFitness.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CoreFitness.Infrastructure.Migrations
+namespace CoreFitness.Infrastructure.Migrations.CoreFitness
 {
     [DbContext(typeof(CoreFitnessDbContext))]
-    [Migration("20260418171541_Initial")]
-    partial class Initial
+    partial class CoreFitnessDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -334,15 +331,7 @@ namespace CoreFitness.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoreFitness.Domain.Entities.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("TrainingSession");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CoreFitness.Domain.Entities.Memberships.CheckIn", b =>

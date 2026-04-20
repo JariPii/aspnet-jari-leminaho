@@ -10,13 +10,7 @@ namespace CoreFitness.Infrastructure.Configurations
         {
             base.Configure(builder);
 
-            builder.HasOne(u => u.User)
-                .WithMany()
-                .HasForeignKey(b => b.UserId);
-
-            builder.HasOne(b => b.TrainingSession)
-                .WithMany(u => u.Bookings)
-                .HasForeignKey(b => b.TrainingSessionId);
+            builder.Property(b => b.UserId).IsRequired();
 
             builder.HasIndex(b => new { b.UserId, b.TrainingSessionId }).IsUnique();
         }

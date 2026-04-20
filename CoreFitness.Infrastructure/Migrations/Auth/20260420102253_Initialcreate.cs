@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CoreFitness.Infrastructure.Migrations.AuthDb
+namespace CoreFitness.Infrastructure.Migrations.Auth
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Initialcreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

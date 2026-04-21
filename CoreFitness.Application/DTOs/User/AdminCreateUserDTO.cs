@@ -2,7 +2,7 @@
 
 namespace CoreFitness.Application.DTOs.User
 {
-    public record CreateUserDTO
+    public record AdminCreateUserDTO
     {
         public string Email { get; init; } = string.Empty;
         public string FirstName { get; init; } = string.Empty;

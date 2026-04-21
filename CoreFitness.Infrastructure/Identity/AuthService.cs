@@ -1,4 +1,5 @@
-﻿using CoreFitness.Application.Identity;
+﻿using CoreFitness.Application.DTOs.Auth;
+using CoreFitness.Application.Identity;
 using CoreFitness.Domain.Common;
 using CoreFitness.Domain.Entities.Users;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
@@ -14,13 +15,13 @@ namespace CoreFitness.Infrastructure.Identity
         IUserRepository userRepository,
         IUnitOfWork unitOfWork) : IAuthService
     {
-        public async Task<Result> LoginAsync(string email, string password, bool rememberMe = false, CancellationToken ct = default)
+        public async Task<Result> LoginAsync(LoginDTO dto, CancellationToken ct = default)
         {
-            var appUser = await userManager.FindByEmailAsync(email);
+            var appUser = await userManager.FindByEmailAsync(dto.Email);
             if (appUser is null)
                 return Result.Failure("Invalid email or password");
 
-            var result = await signInManager.PasswordSignInAsync(appUser, password, rememberMe, lockoutOnFailure: false);
+            var result = await signInManager.PasswordSignInAsync(appUser, dto.Password, dto.RememberMe, lockoutOnFailure: false);
             if (!result.Succeeded)
                 return Result.Failure("Invalid email or password");
 
@@ -30,18 +31,18 @@ namespace CoreFitness.Infrastructure.Identity
         public async Task LogOutAsync() =>
             await signInManager.SignOutAsync();
 
-        public async Task<Result> RegisterAsync(string email, string password, string firstName, string lastName, CancellationToken ct = default)
+        public async Task<Result> RegisterAsync(RegisterDTO dto, CancellationToken ct = default)
         {
-            if (await userManager.FindByEmailAsync(email) is not null)
+            if (await userManager.FindByEmailAsync(dto.Email) is not null)
                 return Result.Failure("Email already in use");
 
             var appUser = new ApplicationUser
             {
-                UserName = email,
-                Email = email
+                UserName = dto.Email,
+                Email = dto.Email
             };
 
-            var result = await userManager.CreateAsync(appUser, password);
+            var result = await userManager.CreateAsync(appUser, dto.Password);
             if (!result.Succeeded)
                 return Result.Failure(result.Errors.First().Description);
 
@@ -49,8 +50,8 @@ namespace CoreFitness.Infrastructure.Identity
 
             var domainUser = User.Create(
                 new AuthenticationId(appUser.Id.ToString()),
-                UserEmail.Create(email),
-                UserName.Create(firstName, lastName),
+                UserEmail.Create(dto.Email),
+                UserName.Create(dto.FirstName, dto.LastName),
                 null,
                 null,
                 UserRole.Member);

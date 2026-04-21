@@ -2,7 +2,7 @@
 
 namespace CoreFitness.Domain.Entities.Users.ValueObjects
 {
-    //TODO: Ändra till stringvärde eftersom olika proverds kan ha String eller Guid
+    //TODO: Ändra till stringvärde eftersom olika providers kan ha String eller Guid
     public readonly record struct AuthenticationId
     {
         public string Value { get; }

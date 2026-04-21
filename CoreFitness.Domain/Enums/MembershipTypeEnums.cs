@@ -7,4 +7,9 @@
         Premium,
         Student
     }
+
+    public static class TypeConstants
+    {
+        public const int MaxLength = 20;
+    }
 }

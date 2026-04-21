@@ -1,5 +1,6 @@
 ﻿using CoreFitness.Domain.Entities.Common;
 using CoreFitness.Domain.Entities.Memberships.ValueObjects;
+using CoreFitness.Domain.Enums;
 using CoreFitness.Domain.Exceptions;
 using CoreFitness.Domain.Interfaces;
 
@@ -12,13 +13,14 @@ namespace CoreFitness.Domain.Entities.Memberships
         public MembershipTypePrice Price { get; private set; }
         public MembershipTypeDuration Duration { get; private set; }
         public int SessionLimit { get; private set; }
+        public MembershipTypeEnums Type { get; private set; }
 
-        public static MembershipType Create(MembershipTypeName name, MembershipTypeDescription description, MembershipTypePrice price, MembershipTypeDuration duration, int sessionLimit)
+        public static MembershipType Create(MembershipTypeName name, MembershipTypeDescription description, MembershipTypePrice price, MembershipTypeDuration duration, int sessionLimit, MembershipTypeEnums type)
         {
-            return new(MembershipTypeId.New(), name, description, price, duration, sessionLimit);
+            return new(MembershipTypeId.New(), name, description, price, duration, sessionLimit, type);
         }
 
-        private MembershipType(MembershipTypeId id, MembershipTypeName name, MembershipTypeDescription description, MembershipTypePrice price, MembershipTypeDuration duration, int sessionLimit)
+        private MembershipType(MembershipTypeId id, MembershipTypeName name, MembershipTypeDescription description, MembershipTypePrice price, MembershipTypeDuration duration, int sessionLimit, MembershipTypeEnums type)
         {
             Id = id;
             Name = name;
@@ -26,6 +28,7 @@ namespace CoreFitness.Domain.Entities.Memberships
             Price = price;
             Duration = duration;
             SessionLimit = sessionLimit;
+            Type = type;
         }
         protected MembershipType() { }
 

@@ -1,5 +1,6 @@
 ﻿using CoreFitness.Domain.Entities.Memberships;
 using CoreFitness.Domain.Entities.Memberships.ValueObjects;
+using CoreFitness.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -23,6 +24,11 @@ namespace CoreFitness.Infrastructure.Configurations
 
             builder.Property(t => t.Duration)
                 .HasConversion(v => v.Value, v => MembershipTypeDuration.Create(v));
+
+            builder.Property(t => t.Type)
+                .HasConversion<string>()
+                .HasMaxLength(TypeConstants.MaxLength)
+                .IsRequired();
         }
     }
 }

@@ -10,6 +10,8 @@ namespace CoreFitness.Domain.Entities.TrainingSessions.ValueObjects
         {
             if (value == Guid.Empty)
                 throw new IdIsRequiredException("TrainingSessionId cannot be empty");
+
+            Value = value;
         }
 
         public static TrainingSessionId New() => new(Guid.NewGuid());

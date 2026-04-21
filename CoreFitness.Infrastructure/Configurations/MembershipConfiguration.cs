@@ -27,11 +27,18 @@ namespace CoreFitness.Infrastructure.Configurations
                 .HasColumnType("date")
                 .IsRequired();
 
+            builder.HasMany(m => m.CheckIns)
+                .WithOne()
+                .HasForeignKey(c => c.MembershipId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.Navigation(m => m.CheckIns)
                 .HasField("_checkIns")
                 .UsePropertyAccessMode(PropertyAccessMode.Field);
 
             builder.Ignore(m => m.IsActive);
+
+            builder.Ignore(m => m.IsExpired);
 
             builder.Ignore(m => m.HasSessionsLeft);
 

@@ -2,7 +2,7 @@
 
 namespace CoreFitness.Domain.Entities.Memberships.ValueObjects
 {
-    public class MembershipTypeBenefitId
+    public readonly record struct MembershipTypeBenefitId
     {
         public Guid Value { get; }
 

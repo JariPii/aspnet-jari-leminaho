@@ -8,13 +8,14 @@ namespace CoreFitness.Domain.Entities.Memberships
 {
     public class Membership : BaseEntity<MembershipId>, IAggregateRoot
     {
-        private readonly List<CheckIn> _checkIns = new();
+        private readonly List<CheckIn> _checkIns = [];
         public IReadOnlyCollection<CheckIn> CheckIns => _checkIns.AsReadOnly();
         public UserId UserId { get; private set; }
         public DateOnly StartDate { get; private set; }
         public DateOnly EndDate { get; private set; }
         public MembershipTypeId TypeId { get; private set; }
-        public bool IsActive => DateOnly.FromDateTime(DateTime.UtcNow) <= EndDate;
+        public bool IsExpired => DateOnly.FromDateTime(DateTime.UtcNow) > EndDate;
+        public bool IsActive => !IsExpired && !IsManuallyDeactivated;
         public bool IsManuallyDeactivated { get; private set; }
         public int SessionsUsed { get; private set; }
         public int SessionLimit { get; private set; }
@@ -77,8 +78,11 @@ namespace CoreFitness.Domain.Entities.Memberships
 
         public void DeactivateMembership()
         {
-            if (!IsActive)
-                throw new MembershipExpiredException("Membership is already inactive");
+            if (IsExpired)
+                throw new MembershipExpiredException("Cannot deactivate an expired membership");
+
+            if (IsManuallyDeactivated)
+                throw new MembershipAlreadyDeactivatedException("Membership is already deactivated");
 
             IsManuallyDeactivated = true;
             UpdateTimeStamp();
@@ -86,8 +90,10 @@ namespace CoreFitness.Domain.Entities.Memberships
 
         public void ActivateMembership()
         {
-            if (DateOnly.FromDateTime(DateTime.UtcNow) > EndDate)
-                throw new MembershipExpiredException("Cannot activate en expired membership");
+            if (IsExpired)
+                throw new MembershipExpiredException("Cannot activate an expired membership");
+
+            if (!IsManuallyDeactivated) return;
 
             IsManuallyDeactivated = false;
             UpdateTimeStamp();

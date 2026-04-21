@@ -34,9 +34,9 @@ namespace CoreFitness.Infrastructure.Seeders
                 MembershipTypeEnums.Trial
                 );
 
-            trial.AddBenefit("Access to our premium locker");
-            trial.AddBenefit("High-energyt fitness class");
-            trial.AddBenefit("Motivating & supportive environment");
+            trial.AddBenefit(MembershipTypeBenefitDescription.Create("Access to our premium locker"));
+            trial.AddBenefit(MembershipTypeBenefitDescription.Create("High-energyt fitness class"));
+            trial.AddBenefit(MembershipTypeBenefitDescription.Create("Motivating & supportive environment"));
 
             var standard = MembershipType.Create(
                 MembershipTypeName.Create("Standard"),
@@ -47,9 +47,9 @@ namespace CoreFitness.Infrastructure.Seeders
                 MembershipTypeEnums.Standard
                 );
 
-            standard.AddBenefit("Standard locker");
-            standard.AddBenefit("High-energy group fitness classes");
-            standard.AddBenefit("Motivating & supportive environment");
+            standard.AddBenefit(MembershipTypeBenefitDescription.Create("Standard locker"));
+            standard.AddBenefit(MembershipTypeBenefitDescription.Create("High-energy group fitness classes"));
+            standard.AddBenefit(MembershipTypeBenefitDescription.Create("Motivating & supportive environment"));
 
             var premium = MembershipType.Create(
                 MembershipTypeName.Create("Premium"),
@@ -57,12 +57,12 @@ namespace CoreFitness.Infrastructure.Seeders
                 MembershipTypePrice.Create(595),
                 MembershipTypeDuration.Create(30),
                 20,
-                MembershipTypeEnums.Trial
+                MembershipTypeEnums.Premium
                 );
 
-            standard.AddBenefit("Priority Support & Premium locker");
-            standard.AddBenefit("High-energy group fitness classes");
-            standard.AddBenefit("Motivating & supportive environment");
+            premium.AddBenefit(MembershipTypeBenefitDescription.Create("Priority Support & Premium locker"));
+            premium.AddBenefit(MembershipTypeBenefitDescription.Create("High-energy group fitness classes"));
+            premium.AddBenefit(MembershipTypeBenefitDescription.Create("Motivating & supportive environment"));
 
             await context.MembershipTypes.AddRangeAsync(trial, standard, premium);
             await context.SaveChangesAsync();

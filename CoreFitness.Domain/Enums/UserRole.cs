@@ -3,7 +3,8 @@
     public enum UserRole
     {
         Admin,
-        Member
+        Member,
+        Trainer
     }
 
     public static class UserRoleConstants

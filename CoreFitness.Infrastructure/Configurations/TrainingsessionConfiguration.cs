@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CoreFitness.Infrastructure.Configurations
 {
-    public class TrainingsessionConfiguration : BaseEntityConfiguration<TrainingSession, TrainingSessionId>
+    public class TrainingSessionConfiguration : BaseEntityConfiguration<TrainingSession, TrainingSessionId>
     {
         public override void Configure(EntityTypeBuilder<TrainingSession> builder)
         {

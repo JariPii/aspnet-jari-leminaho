@@ -15,7 +15,6 @@ namespace CoreFitness.Infrastructure.Configurations
             base.Configure(builder);
 
             builder.Property(u => u.AuthenticationId)
-                .HasConversion(new AuthenticationIdConverter())
                 .IsRequired();
 
             builder.Property(u => u.Email)

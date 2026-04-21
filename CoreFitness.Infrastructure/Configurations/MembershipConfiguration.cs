@@ -27,23 +27,28 @@ namespace CoreFitness.Infrastructure.Configurations
                 .HasColumnType("date")
                 .IsRequired();
 
-            builder.Property(m => m.CurrentWeight)
-                .HasColumnType("decimal(5,2)");
-
-            builder.Property(m => m.TargetWeight)
-                .HasColumnType("decimal(5,2)");
-
-            builder.Property(m => m.Height)
-                .HasColumnType("decimal(5,2)");
+            builder.HasMany(m => m.CheckIns)
+                .WithOne()
+                .HasForeignKey(c => c.MembershipId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Navigation(m => m.CheckIns)
                 .HasField("_checkIns")
                 .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-            builder.Ignore(m => m.BMI);
             builder.Ignore(m => m.IsActive);
+
+            builder.Ignore(m => m.IsExpired);
+
             builder.Ignore(m => m.HasSessionsLeft);
+
             builder.Ignore(m => m.CheckInsLast30Days);
+
+            builder.Property(m => m.IsManuallyDeactivated).IsRequired();
+
+            builder.Property(m => m.SessionsUsed).IsRequired();
+
+            builder.Property(m => m.SessionLimit).IsRequired();
         }
     }
 }

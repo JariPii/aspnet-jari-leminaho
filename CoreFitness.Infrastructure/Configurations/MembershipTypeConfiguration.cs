@@ -1,7 +1,9 @@
 ﻿using CoreFitness.Domain.Entities.Memberships;
 using CoreFitness.Domain.Entities.Memberships.ValueObjects;
+using CoreFitness.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using static CoreFitness.Infrastructure.Converters.ValueObjectConverters;
 
 namespace CoreFitness.Infrastructure.Configurations
 {
@@ -12,17 +14,33 @@ namespace CoreFitness.Infrastructure.Configurations
             base.Configure(builder);
 
             builder.Property(t => t.Name)
-                .HasConversion(v => v.Value, v => MembershipTypeName.Create(v));
+                .HasMaxLength(MembershipTypeName.MaxLength)
+                .IsRequired();
 
             builder.Property(t => t.Description)
-                .HasConversion(v => v.Value, v => MembershipTypeDescription.Create(v));
+                .HasMaxLength(MembershipTypeDescription.MaxLength)
+                .IsRequired();
 
             builder.Property(t => t.Price)
-                .HasConversion(v => v.Value, v => MembershipTypePrice.Create(v))
                 .HasColumnType("decimal(10,2)");
 
-            builder.Property(t => t.Duration)
-                .HasConversion(v => v.Value, v => MembershipTypeDuration.Create(v));
+            builder.Property(t => t.Duration);
+
+            builder.Property(t => t.Type)
+                .HasConversion<string>()
+                .HasMaxLength(TypeConstants.MaxLength)
+                .IsRequired();
+
+            builder.Property(t => t.SessionLimit).IsRequired();
+
+            builder.HasMany(t => t.Benefits)
+                .WithOne()
+                .HasForeignKey(b => b.MembershipTypeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Navigation(t => t.Benefits)
+                .HasField("_benefits")
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

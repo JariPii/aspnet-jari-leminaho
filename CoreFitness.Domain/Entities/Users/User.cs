@@ -1,6 +1,7 @@
 ﻿using CoreFitness.Domain.Entities.Common;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Enums;
+using CoreFitness.Domain.Exceptions;
 using CoreFitness.Domain.Interfaces;
 
 
@@ -15,6 +16,9 @@ namespace CoreFitness.Domain.Entities.Users
         public UserPhoneNumber? UserPhoneNumber { get; private set; }
         public string? PhotoUrl { get; private set; }
         public UserRole Role { get; protected set; }
+        public decimal? CurrentWeight { get; private set; }
+        public decimal? TargetWeight { get; private set; }
+        public decimal? Height { get; private set; }
 
         protected User(UserId id, AuthenticationId authenticationId, UserEmail email, UserName userName, UserPhoneNumber? phoneNumber, string? photoUrl, UserRole role)
         {
@@ -78,6 +82,32 @@ namespace CoreFitness.Domain.Entities.Users
             UpdateName(name);
             UpdatePhoneNumber(phoneNumber);
             UpdatePhotoUrl(photoUrl);
+        }
+
+        public decimal? BMI => CurrentWeight.HasValue && Height.HasValue ?
+            Math.Round(CurrentWeight.Value / (decimal)Math.Pow((double)(Height.Value / 100), 2), 1) :
+            null;
+
+        public void UpdateWeight(decimal currentWeight, decimal height)
+        {
+            if (currentWeight <= 0)
+                throw new InvalidWeightException("Weight must be greater than 0");
+
+            if (height <= 0)
+                throw new InvalidHeightException("Height must be greater than 0");
+
+            CurrentWeight = currentWeight;
+            Height = height;
+            UpdateTimeStamp();
+        }
+
+        public void SetWeightGoal(decimal targetWeight)
+        {
+            if (targetWeight <= 0)
+                throw new InvalidWeightException("Target weight must be greater than 0");
+
+            TargetWeight = targetWeight;
+            UpdateTimeStamp();
         }
     }
 }

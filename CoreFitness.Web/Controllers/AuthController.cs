@@ -164,7 +164,7 @@ namespace CoreFitness.Web.Controllers
             var coreUser = CoreFitness.Domain.Entities.Users.User.Create(
                 AuthenticationId.Create(user.Id.ToString()),
                 UserEmail.Create(email),
-                UserName.Create("", ""),
+                UserName.Create(firstName, lastName),
                 null,
                 photoUrl,
                 UserRole.Member);

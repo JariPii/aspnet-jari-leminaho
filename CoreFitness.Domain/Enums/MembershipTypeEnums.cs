@@ -3,8 +3,12 @@
     public enum MembershipTypeEnums
     {
         Trial,
-        Basic,
-        Premium,
-        Student
+        Standard,
+        Premium
+    }
+
+    public static class TypeConstants
+    {
+        public const int MaxLength = 20;
     }
 }

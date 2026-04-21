@@ -2,6 +2,7 @@
 
 namespace CoreFitness.Domain.Entities.Memberships.ValueObjects
 {
+    // TODO: Fixa duration till dagar
     public readonly record struct MembershipTypeDuration
     {
         public int Value { get; }

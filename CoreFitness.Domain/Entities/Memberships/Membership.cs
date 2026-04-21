@@ -8,37 +8,37 @@ namespace CoreFitness.Domain.Entities.Memberships
 {
     public class Membership : BaseEntity<MembershipId>, IAggregateRoot
     {
-        private readonly List<CheckIn> _checkIns = new();
+        private readonly List<CheckIn> _checkIns = [];
         public IReadOnlyCollection<CheckIn> CheckIns => _checkIns.AsReadOnly();
         public UserId UserId { get; private set; }
         public DateOnly StartDate { get; private set; }
         public DateOnly EndDate { get; private set; }
         public MembershipTypeId TypeId { get; private set; }
-        public bool IsActive => DateOnly.FromDateTime(DateTime.UtcNow) <= EndDate;
+        public bool IsExpired => DateOnly.FromDateTime(DateTime.UtcNow) > EndDate;
+        public bool IsActive => !IsExpired && !IsManuallyDeactivated;
         public bool IsManuallyDeactivated { get; private set; }
         public int SessionsUsed { get; private set; }
         public int SessionLimit { get; private set; }
         public bool HasSessionsLeft => SessionsUsed < SessionLimit;
-        public decimal? CurrentWeight { get; private set; }
-        public decimal? TargetWeight { get; private set; }
-        public decimal? Height { get; private set; }
 
         private Membership(
             MembershipId id,
             UserId userId,
             MembershipTypeId type,
             DateOnly startDate,
-            DateOnly endDate)
+            DateOnly endDate,
+            int sessionLimit)
         {
             Id = id;
             UserId = userId;
             TypeId = type;
             StartDate = startDate;
             EndDate = endDate;
+            SessionLimit = sessionLimit;
         }
 
-        public static Membership Create(UserId userId, MembershipTypeId typeId, DateOnly startDate, DateOnly endDate) =>
-            new(MembershipId.New(), userId, typeId, startDate, endDate);
+        public static Membership Create(UserId userId, MembershipTypeId typeId, DateOnly startDate, DateOnly endDate, int sessionLimit) =>
+            new(MembershipId.New(), userId, typeId, startDate, endDate, sessionLimit);
 
         private Membership() { }
 
@@ -78,8 +78,11 @@ namespace CoreFitness.Domain.Entities.Memberships
 
         public void DeactivateMembership()
         {
-            if (!IsActive)
-                throw new MembershipExpiredException("Membership is already inactive");
+            if (IsExpired)
+                throw new MembershipExpiredException("Cannot deactivate an expired membership");
+
+            if (IsManuallyDeactivated)
+                throw new MembershipAlreadyDeactivatedException("Membership is already deactivated");
 
             IsManuallyDeactivated = true;
             UpdateTimeStamp();
@@ -87,36 +90,12 @@ namespace CoreFitness.Domain.Entities.Memberships
 
         public void ActivateMembership()
         {
-            if (DateOnly.FromDateTime(DateTime.UtcNow) > EndDate)
-                throw new MembershipExpiredException("Cannot activate en expired membership");
+            if (IsExpired)
+                throw new MembershipExpiredException("Cannot activate an expired membership");
+
+            if (!IsManuallyDeactivated) return;
 
             IsManuallyDeactivated = false;
-            UpdateTimeStamp();
-        }
-
-        public decimal? BMI => CurrentWeight.HasValue && Height.HasValue ?
-            Math.Round(CurrentWeight.Value / (decimal)Math.Pow((double)(Height.Value / 100), 2), 1) :
-            null;
-
-        public void UpdateWeight(decimal currentWeight, decimal height)
-        {
-            if (currentWeight <= 0)
-                throw new InvalidWeightException("Weight must be greater than 0");
-
-            if (height <= 0)
-                throw new InvalidHeightException("Height must be greater than 0");
-
-            CurrentWeight = currentWeight;
-            Height = height;
-            UpdateTimeStamp();
-        }
-
-        public void SetWeightGoal(decimal targetWeight)
-        {
-            if (targetWeight <= 0)
-                throw new InvalidWeightException("Target weight must be greater than 0");
-
-            TargetWeight = targetWeight;
             UpdateTimeStamp();
         }
     }

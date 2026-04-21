@@ -13,9 +13,9 @@ namespace CoreFitness.Domain.Entities.Memberships.ValueObjects
             Value = value;
         }
 
-        public static MembershipTypeDescription Create(string valaue)
+        public static MembershipTypeDescription Create(string value)
         {
-            var cleanDescription = valaue.NormalizeText();
+            var cleanDescription = value.NormalizeText();
 
             if (cleanDescription.Length > MaxLength)
                 throw new InvalidMembershipTypeDescriptionException($"Description cannot excedd {MaxLength} characters");

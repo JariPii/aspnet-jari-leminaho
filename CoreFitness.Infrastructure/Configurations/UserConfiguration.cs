@@ -4,6 +4,7 @@ using CoreFitness.Domain.Enums;
 using CoreFitness.Infrastructure.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using static CoreFitness.Infrastructure.Converters.ValueObjectConverters;
 
 namespace CoreFitness.Infrastructure.Configurations
 {
@@ -14,11 +15,9 @@ namespace CoreFitness.Infrastructure.Configurations
             base.Configure(builder);
 
             builder.Property(u => u.AuthenticationId)
-                .HasConversion(new AuthenticationIdConverter())
                 .IsRequired();
 
             builder.Property(u => u.Email)
-                .HasConversion(v => v.Value, v => UserEmail.Create(v))
                 .HasMaxLength(254)
                 .IsRequired();
 
@@ -42,7 +41,7 @@ namespace CoreFitness.Infrastructure.Configurations
             });
 
             builder.Property(u => u.UserPhoneNumber)
-                .HasConversion(p => p.HasValue ? p.Value.Value : null, v => v != null ? UserPhoneNumber.Create(v) : null);
+                .HasConversion<UserPhoneNumberConverter>();
 
             builder.Property(u => u.Role)
                 .HasConversion<string>()
@@ -51,6 +50,17 @@ namespace CoreFitness.Infrastructure.Configurations
 
             builder.Property(u => u.PhotoUrl)
                 .HasMaxLength(500);
+
+            builder.Property(m => m.CurrentWeight)
+                .HasColumnType("decimal(5,2)");
+
+            builder.Property(m => m.TargetWeight)
+                .HasColumnType("decimal(5,2)");
+
+            builder.Property(m => m.Height)
+                .HasColumnType("decimal(5,2)");
+
+            builder.Ignore(m => m.BMI);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using CoreFitness.Domain.Entities.Memberships;
 using CoreFitness.Domain.Entities.Memberships.ValueObjects;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CoreFitness.Infrastructure.Configurations
@@ -11,12 +10,11 @@ namespace CoreFitness.Infrastructure.Configurations
         {
             base.Configure(builder);
 
-            builder.Property(c => c.CheckedInAt).IsRequired();
+            builder.Property(c => c.UserId).IsRequired();
 
-            builder.HasOne<Membership>()
-                .WithMany(m => m.CheckIns)
-                .HasForeignKey(c => c.MembershipId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(c => c.MembershipId).IsRequired();
+
+            builder.Property(c => c.CheckedInAt).IsRequired();
         }
     }
 }

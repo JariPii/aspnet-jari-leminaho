@@ -56,12 +56,38 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 /warnaserror+:NU1605,SYSLIB0011
 
 [sourceFiles]
-Common/Result.cs
+DependencyInjection.cs
+DTOs/Auth/
+ LoginDTO.cs
+ RegisterDTO.cs
+DTOs/
+ Booking/BookingDTO.cs
+ Membership/
+  CheckInDTO.cs
+  CreateMembershipDTO.cs
+  MembershipDTO.cs
+  MembershipTypeDTO.cs
+ TrainingSession/
+  CreateTrainingSessionDTO.cs
+  TrainingSessionDTO.cs
+  UpdateTrainingSessionDTO.cs
+ User/
+  AdminCreateUserDTO.cs
+  UpdateUserDTO.cs
+  UserDTO.cs
 Identity/IAuthService.cs
+Interfaces/
+ IMembershipService.cs
+ ITrainingSessionService.cs
+ IUserService.cs
+Mappings/UserMapping.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  CoreFitness.Application.AssemblyInfo.cs
  CoreFitness.Application.GlobalUsings.g.cs
+Services/
+ MembershipService.cs
+ UserService.cs
 
 [metadataReferences]
 ../CoreFitness.Domain/obj/Debug/net10.0/ref/CoreFitness.Domain.dll
@@ -233,6 +259,7 @@ obj/Debug/net10.0/
  System.Xml.XPath.dll
  System.Xml.XPath.XDocument.dll
  WindowsBase.dll
+<NUGET>/microsoft.extensions.dependencyinjection.abstractions/10.0.6/lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
 
 [analyzerReferences]
 <DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.5/analyzers/dotnet/cs/

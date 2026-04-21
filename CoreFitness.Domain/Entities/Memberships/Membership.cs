@@ -56,7 +56,7 @@ namespace CoreFitness.Domain.Entities.Memberships
         public CheckIn RegisterCheckIn()
         {
             if (!IsActive)
-                throw new MembershipExpiredException("Membership is not active");
+                throw new MembershipExpiredException();
 
             var checkIn = CheckIn.Create(UserId, Id);
             _checkIns.Add(checkIn);
@@ -67,10 +67,10 @@ namespace CoreFitness.Domain.Entities.Memberships
         public void UseSession()
         {
             if (!IsActive)
-                throw new MembershipExpiredException("Membership is not active");
+                throw new MembershipExpiredException();
 
             if (!HasSessionsLeft)
-                throw new NoSessionsLeftException("No sessions left on membership");
+                throw new NoSessionsLeftException();
 
             SessionsUsed++;
             UpdateTimeStamp();
@@ -79,10 +79,10 @@ namespace CoreFitness.Domain.Entities.Memberships
         public void DeactivateMembership()
         {
             if (IsExpired)
-                throw new MembershipExpiredException("Cannot deactivate an expired membership");
+                throw new MembershipExpiredException();
 
             if (IsManuallyDeactivated)
-                throw new MembershipAlreadyDeactivatedException("Membership is already deactivated");
+                throw new MembershipAlreadyDeactivatedException();
 
             IsManuallyDeactivated = true;
             UpdateTimeStamp();
@@ -91,7 +91,7 @@ namespace CoreFitness.Domain.Entities.Memberships
         public void ActivateMembership()
         {
             if (IsExpired)
-                throw new MembershipExpiredException("Cannot activate an expired membership");
+                throw new MembershipExpiredException();
 
             if (!IsManuallyDeactivated) return;
 

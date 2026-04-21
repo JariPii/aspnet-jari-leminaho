@@ -10,7 +10,7 @@ namespace CoreFitness.Domain.Entities.Users.ValueObjects
         public AuthenticationId(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new IdIsRequiredException("AuthenticationId cannot be empty");
+                throw new IdIsRequiredException();
 
             Value = value;
         }

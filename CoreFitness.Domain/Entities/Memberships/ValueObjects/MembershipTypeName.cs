@@ -17,7 +17,7 @@ namespace CoreFitness.Domain.Entities.Memberships.ValueObjects
             var cleanMTName = value.NormalizeName();
 
             if (cleanMTName.Length == 0)
-                throw new InvalidMembershipTypeNameException("Name is required");
+                throw new InvalidMembershipTypeNameException(cleanMTName);
 
             if (cleanMTName.Length > MaxLength)
                 throw new InvalidMembershipTypeNameException($"Name cannot excedd {MaxLength} characters");

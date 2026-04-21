@@ -9,7 +9,7 @@ namespace CoreFitness.Domain.Entities.Bookings.ValueObjects
         public BookingId(Guid value)
         {
             if (value == Guid.Empty)
-                throw new IdIsRequiredException("UserId cannot be empty");
+                throw new IdIsRequiredException();
 
             Value = value;
         }

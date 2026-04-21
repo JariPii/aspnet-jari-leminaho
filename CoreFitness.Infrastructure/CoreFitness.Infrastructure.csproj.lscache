@@ -63,10 +63,13 @@ Configurations/
  BookingConfiguration.cs
  CheckInConfiguration.cs
  MembershipConfiguration.cs
+ MembershipTypeBenefitConfiguration.cs
  MembershipTypeConfiguration.cs
  TrainingsessionConfiguration.cs
  UserConfiguration.cs
-Converters/IdValueConverters.cs
+Converters/
+ IdValueConverters.cs
+ ValueObjectConverters.cs
 CoreFitnessDbContext.cs
 CoreFitnessDbContextFactory.cs
 DependencyInjection.cs
@@ -92,6 +95,7 @@ Primitives/IntResult.cs
 Repositories/
  BaseRepository.cs
  MembershipRepository.cs
+ MembershipTypeRepository.cs
  TrainingSessionRepository.cs
  UserRepository.cs
 Seeders/DbSeeder.cs

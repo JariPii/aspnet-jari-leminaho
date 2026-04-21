@@ -9,7 +9,7 @@ namespace CoreFitness.Domain.Entities.Users.ValueObjects
         public UserId(Guid value)
         {
             if (value == Guid.Empty)
-                throw new IdIsRequiredException("UserId cannot be empty");
+                throw new IdIsRequiredException();
 
             Value = value;
         }

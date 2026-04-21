@@ -18,7 +18,7 @@ namespace CoreFitness.Domain.Entities.Memberships.ValueObjects
             var cleanDescription = value.NormalizeText();
 
             if (cleanDescription.Length > MaxLength)
-                throw new InvalidMembershipTypeDescriptionException($"Description cannot excedd {MaxLength} characters");
+                throw new InvalidMembershipTypeDescriptionException();
 
             return new MembershipTypeDescription(cleanDescription);
         }

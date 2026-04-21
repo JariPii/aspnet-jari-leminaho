@@ -91,10 +91,10 @@ namespace CoreFitness.Domain.Entities.Users
         public void UpdateWeight(decimal currentWeight, decimal height)
         {
             if (currentWeight <= 0)
-                throw new InvalidWeightException("Weight must be greater than 0");
+                throw new InvalidWeightException(currentWeight);
 
             if (height <= 0)
-                throw new InvalidHeightException("Height must be greater than 0");
+                throw new InvalidHeightException(height);
 
             CurrentWeight = currentWeight;
             Height = height;
@@ -104,7 +104,7 @@ namespace CoreFitness.Domain.Entities.Users
         public void SetWeightGoal(decimal targetWeight)
         {
             if (targetWeight <= 0)
-                throw new InvalidWeightException("Target weight must be greater than 0");
+                throw new InvalidWeightException(targetWeight);
 
             TargetWeight = targetWeight;
             UpdateTimeStamp();

@@ -14,7 +14,7 @@ namespace CoreFitness.Domain.Entities.Memberships.ValueObjects
         public static MembershipTypePrice Create(decimal value)
         {
             if (value < 0)
-                throw new InvalidPriceException("Price cannot be a negative value");
+                throw new InvalidPriceException(value);
 
             return new MembershipTypePrice(value);
         }

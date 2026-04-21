@@ -19,26 +19,25 @@ namespace CoreFitness.Domain.Entities.Memberships
         public int SessionsUsed { get; private set; }
         public int SessionLimit { get; private set; }
         public bool HasSessionsLeft => SessionsUsed < SessionLimit;
-        public decimal? CurrentWeight { get; private set; }
-        public decimal? TargetWeight { get; private set; }
-        public decimal? Height { get; private set; }
 
         private Membership(
             MembershipId id,
             UserId userId,
             MembershipTypeId type,
             DateOnly startDate,
-            DateOnly endDate)
+            DateOnly endDate,
+            int sessionLimit)
         {
             Id = id;
             UserId = userId;
             TypeId = type;
             StartDate = startDate;
             EndDate = endDate;
+            SessionLimit = sessionLimit;
         }
 
-        public static Membership Create(UserId userId, MembershipTypeId typeId, DateOnly startDate, DateOnly endDate) =>
-            new(MembershipId.New(), userId, typeId, startDate, endDate);
+        public static Membership Create(UserId userId, MembershipTypeId typeId, DateOnly startDate, DateOnly endDate, int sessionLimit) =>
+            new(MembershipId.New(), userId, typeId, startDate, endDate, sessionLimit);
 
         private Membership() { }
 
@@ -91,32 +90,6 @@ namespace CoreFitness.Domain.Entities.Memberships
                 throw new MembershipExpiredException("Cannot activate en expired membership");
 
             IsManuallyDeactivated = false;
-            UpdateTimeStamp();
-        }
-
-        public decimal? BMI => CurrentWeight.HasValue && Height.HasValue ?
-            Math.Round(CurrentWeight.Value / (decimal)Math.Pow((double)(Height.Value / 100), 2), 1) :
-            null;
-
-        public void UpdateWeight(decimal currentWeight, decimal height)
-        {
-            if (currentWeight <= 0)
-                throw new InvalidWeightException("Weight must be greater than 0");
-
-            if (height <= 0)
-                throw new InvalidHeightException("Height must be greater than 0");
-
-            CurrentWeight = currentWeight;
-            Height = height;
-            UpdateTimeStamp();
-        }
-
-        public void SetWeightGoal(decimal targetWeight)
-        {
-            if (targetWeight <= 0)
-                throw new InvalidWeightException("Target weight must be greater than 0");
-
-            TargetWeight = targetWeight;
             UpdateTimeStamp();
         }
     }

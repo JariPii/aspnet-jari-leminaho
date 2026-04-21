@@ -1,0 +1,20 @@
+﻿using CoreFitness.Domain.Exceptions;
+
+namespace CoreFitness.Domain.Entities.Memberships.ValueObjects
+{
+    public class MembershipTypeBenefitId
+    {
+        public Guid Value { get; }
+
+        public MembershipTypeBenefitId(Guid value)
+        {
+            if (value == Guid.Empty)
+                throw new IdIsRequiredException("MembershipTypeBenefitId cannot be empty");
+
+            Value = value;
+        }
+
+        public static MembershipTypeBenefitId New() => new(Guid.NewGuid());
+        public override string ToString() => Value.ToString();
+    }
+}

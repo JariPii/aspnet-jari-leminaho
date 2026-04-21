@@ -11,35 +11,23 @@ namespace CoreFitness.Infrastructure.Configurations
         {
             base.Configure(builder);
 
-            builder.ComplexProperty(ts => ts.TrainingSessionName, name =>
-            {
-                name.Property(n => n.Value)
+            builder.Property(ts => ts.TrainingSessionName)
                 .HasColumnName("Name")
                 .HasMaxLength(TrainingSessionName.MaxLength)
                 .IsRequired();
-            });
 
-            builder.ComplexProperty(ts => ts.TrainingSessionDescription, description =>
-            {
-                description.Property(d => d.Value)
+            builder.Property(ts => ts.TrainingSessionDescription)
                 .HasColumnName("Description")
                 .HasMaxLength(TrainingSessionDescription.MaxLength)
                 .IsRequired();
-            });
 
-            builder.ComplexProperty(ts => ts.Capacity, capacity =>
-            {
-                capacity.Property(c => c.Value)
+            builder.Property(ts => ts.Capacity)
                 .HasColumnName("Capacity")
                 .IsRequired();
-            });
 
-            builder.ComplexProperty(ts => ts.Duration, duration =>
-            {
-                duration.Property(d => d.Value)
+            builder.Property(ts => ts.Duration)
                 .HasColumnName("Duration")
                 .IsRequired();
-            });
 
             builder.Property(ts => ts.StartDate)
                 .IsRequired();

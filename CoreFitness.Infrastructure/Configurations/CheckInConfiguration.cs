@@ -11,6 +11,8 @@ namespace CoreFitness.Infrastructure.Configurations
         {
             base.Configure(builder);
 
+            builder.Property(c => c.UserId).IsRequired();
+
             builder.Property(c => c.CheckedInAt).IsRequired();
 
             builder.HasOne<Membership>()

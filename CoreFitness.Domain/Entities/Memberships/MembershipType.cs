@@ -15,6 +15,10 @@ namespace CoreFitness.Domain.Entities.Memberships
         public int SessionLimit { get; private set; }
         public MembershipTypeEnums Type { get; private set; }
 
+        private readonly List<MembershipTypeBenefit> _benefits = [];
+        public IReadOnlyCollection<MembershipTypeBenefit> Benefits => _benefits.AsReadOnly();
+        
+
         public static MembershipType Create(MembershipTypeName name, MembershipTypeDescription description, MembershipTypePrice price, MembershipTypeDuration duration, int sessionLimit, MembershipTypeEnums type)
         {
             return new(MembershipTypeId.New(), name, description, price, duration, sessionLimit, type);
@@ -50,6 +54,38 @@ namespace CoreFitness.Domain.Entities.Memberships
                 throw new InvalidSessionLimitException("Session limit must be greater than 0");
 
             SessionLimit = newLimit;
+            UpdateTimeStamp();
+        }
+
+        public void UpdateName(MembershipTypeName newName)
+        {
+            if (Name == newName) return;
+
+            Name = newName;
+            UpdateTimeStamp();
+        }
+
+        public void UpdateDescription(MembershipTypeDescription newDescription)
+        {
+            if (Description == newDescription) return;
+
+            Description = newDescription;
+            UpdateTimeStamp();
+        }
+
+        public void AddBenefit(MembershipTypeBenefitDescription description)
+        {
+            var benefit = MembershipTypeBenefit.Create(Id, description);
+            _benefits.Add(benefit);
+            UpdateTimeStamp();
+        }
+
+        public void RemoveBenefit(MembershipTypeBenefitId benfitId)
+        {
+            var benefit = _benefits.FirstOrDefault(b => b.Id == benfitId) ??
+                throw new BenefitNotFoundException("Benefit not found");
+
+            _benefits.Remove(benefit);
             UpdateTimeStamp();
         }
     }

@@ -1,4 +1,6 @@
 ﻿using CoreFitness.Application.Identity;
+using CoreFitness.Domain.Interfaces.Memberships;
+using CoreFitness.Domain.Interfaces.TrainingSessions;
 using CoreFitness.Domain.Interfaces.UnitOfWork;
 using CoreFitness.Domain.Interfaces.Users;
 using CoreFitness.Infrastructure.Identity;
@@ -88,6 +90,9 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IMembershipRepository, MembershipRepository>();
+        services.AddScoped<IMembershipTypeRepository, MembershipTypeRepository>();
+        services.AddScoped<ITrainingSessionRepository, TrainingSessionRepository>();
 
         return services;
     }

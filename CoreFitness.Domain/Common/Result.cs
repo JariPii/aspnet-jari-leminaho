@@ -1,59 +1,34 @@
-﻿using CoreFitness.Domain.Exceptions;
-
-namespace CoreFitness.Domain.Common
+﻿namespace CoreFitness.Domain.Common
 {
-    //TODO: Finalize Result
     public class Result
     {
         public bool IsSuccess { get; }
-        public string? Error { get; }
+        public bool IsFailure => !IsSuccess;
+        public Error? Error { get; }
 
-        protected Result(bool isSuccess, string? error)
+        protected Result(bool isSuccess, Error? error)
         {
+            if (isSuccess && error is not null)
+                throw new InvalidOperationException("Success result cannot have error");
+
+            if (!isSuccess && error is null)
+                throw new InvalidOperationException("Failure result must have error");
+
             IsSuccess = isSuccess;
             Error = error;
         }
 
         public static Result Success() => new(true, null);
-        public static Result Failure(string error) => new(false, error);
 
-        public static async Task<Result> TryAsync(Func<Task> action)
-        {
-            try
-            {
-                await action();
-                return Success();
-            }
-            catch (DomainException ex)
-            {
-                return Failure(ex.Message);
-            }
-        }
-    }
+        public static Result Failure(Error error) => new(false, error);
 
-    public class Result<T> : Result
-    {
-        public T? Value { get; }
+        public static Result NotFound(string entity, object id) =>
+            Failure(Error.NotFound(entity, id));
 
-        private Result(bool isSuccess, T? value, string? error) : base(isSuccess, error)
-        {
-            Value = value;
-        }
+        public static Result Validation(string message) =>
+            Failure(Error.Validation(message));
 
-        public static Result<T> Success(T value) => new(true, value, null);
-        public static new Result<T> Failure(string error) => new(false, default, error);
-
-        public static async Task<Result<T>> TryAsync(Func<Task<T>> action)
-        {
-            try
-            {
-                var value = await action();
-                return Success(value);
-            }
-            catch (DomainException ex)
-            {
-                return Failure(ex.Message);
-            }
-        }
+        public static Result Conflict(string message) =>
+            Failure(Error.Conflict(message));
     }
 }

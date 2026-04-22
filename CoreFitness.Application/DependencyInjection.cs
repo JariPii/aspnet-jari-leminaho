@@ -1,5 +1,6 @@
 ﻿
 using CoreFitness.Application.Interfaces;
+using CoreFitness.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreFitness.Application

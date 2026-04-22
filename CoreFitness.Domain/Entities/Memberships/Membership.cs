@@ -76,6 +76,14 @@ namespace CoreFitness.Domain.Entities.Memberships
             UpdateTimeStamp();
         }
 
+        public void RefundSession()
+        {
+            if (SessionsUsed <= 0) return;
+
+            SessionsUsed--;
+            UpdateTimeStamp();
+        }
+
         public void DeactivateMembership()
         {
             if (IsExpired)

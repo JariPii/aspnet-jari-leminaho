@@ -3,7 +3,7 @@ using CoreFitness.Domain.Entities.Users;
 
 namespace CoreFitness.Application.Mappings
 {
-    public static class UserMapping
+    public static class UserMappings
     {
         public static UserDTO ToDTO(this User user) => new()
         {

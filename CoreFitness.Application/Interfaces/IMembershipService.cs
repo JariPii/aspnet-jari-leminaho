@@ -10,5 +10,6 @@ namespace CoreFitness.Application.Interfaces
         Task<Result> CreateAsync(Guid userId, CreateMembershipDTO dto, CancellationToken ct = default);
         Task<Result> DeactivateAsync(Guid userId, CancellationToken ct = default);
         Task<Result> ActivateAsync(Guid userId, CancellationToken ct = default);
+        Task<Result> CheckInAsync(Guid userId, CancellationToken ct = default);
     }
 }

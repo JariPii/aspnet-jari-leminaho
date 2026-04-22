@@ -8,5 +8,6 @@ namespace CoreFitness.Application.Interfaces
         Task<Result<UserDTO>> GetByIdAsync(Guid userId, CancellationToken ct = default);
         Task<Result> UpdateAsync(UpdateUserDTO dto, CancellationToken ct = default);
         Task<Result> DeleteAsync(Guid userId, CancellationToken ct = default);
+        Task<Result> CompleteRegistrationAsync(Guid authenticationId, CompleteProfileDTO dto, CancellationToken ct = default);
     }
 }

@@ -51,7 +51,7 @@ namespace CoreFitness.Domain.Entities.Memberships
         public void UpdateSessionLimit(int newLimit)
         {
             if (newLimit <= 0)
-                throw new InvalidSessionLimitException("Session limit must be greater than 0");
+                throw new InvalidSessionLimitException(newLimit);
 
             SessionLimit = newLimit;
             UpdateTimeStamp();
@@ -83,7 +83,7 @@ namespace CoreFitness.Domain.Entities.Memberships
         public void RemoveBenefit(MembershipTypeBenefitId benfitId)
         {
             var benefit = _benefits.FirstOrDefault(b => b.Id == benfitId) ??
-                throw new BenefitNotFoundException("Benefit not found");
+                throw new BenefitNotFoundException(benfitId);
 
             _benefits.Remove(benefit);
             UpdateTimeStamp();

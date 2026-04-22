@@ -15,7 +15,7 @@ namespace CoreFitness.Domain.Entities.Memberships.ValueObjects
         public static MembershipTypeDuration Create(int value)
         {
             if (value < 0)
-                throw new InvalidMembershipTypeDurationException("Duration cannot be a negative value");
+                throw new InvalidMembershipTypeDurationException(value);
 
             return new MembershipTypeDuration(value);
         }

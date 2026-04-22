@@ -7,6 +7,5 @@ namespace CoreFitness.Domain.Interfaces.Users
     {
         Task<User?> GetByEmailAsync(UserEmail email, CancellationToken ct = default);
         Task<bool> ExistsByEmailAsync(UserEmail email, CancellationToken ct = default);
-        Task<bool> ExistsByIdAsync(UserId id, CancellationToken ct = default);
     }
 }

@@ -9,7 +9,7 @@ namespace CoreFitness.Domain.Entities.Memberships.ValueObjects
         public CheckInId(Guid value)
         {
             if (value == Guid.Empty)
-                throw new IdIsRequiredException("CheckInId cannot be empty");
+                throw new IdIsRequiredException();
 
             Value = value;
         }

@@ -14,7 +14,7 @@ namespace CoreFitness.Domain.Entities.TrainingSessions.ValueObjects
         public static TrainingSessionCapacity Create(int value)
         {
             if (value <= 0)
-                throw new InvalidCapacityException("Capacity cannot be 0");
+                throw new InvalidCapacityException(value);
 
             return new TrainingSessionCapacity(value);
         }

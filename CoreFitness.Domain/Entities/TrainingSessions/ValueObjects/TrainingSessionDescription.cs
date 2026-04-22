@@ -16,12 +16,12 @@ namespace CoreFitness.Domain.Entities.TrainingSessions.ValueObjects
         public static TrainingSessionDescription Create(string description)
         {
             if (string.IsNullOrWhiteSpace(description))
-                throw new InvalidDescriptionException("Description is required");
+                throw new InvalidTrainingSessionDescriptionException(description);
 
             var trimmed = description.Trim();
 
             if (trimmed.Length > MaxLength)
-                throw new InvalidDescriptionLengthException($"Description cannot be more than {MaxLength} characcters");
+                throw new InvalidDescriptionLengthException();
 
             return new TrainingSessionDescription(trimmed);
         }

@@ -14,7 +14,7 @@ namespace CoreFitness.Domain.Entities.TrainingSessions.ValueObjects
         public static TrainingSessionDuration Create(TimeSpan value)
         {
             if (value <= TimeSpan.Zero)
-                throw new InvalidDurationException("Duration must be set");
+                throw new InvalidDurationException(value);
 
             return new TrainingSessionDuration(value);
         }

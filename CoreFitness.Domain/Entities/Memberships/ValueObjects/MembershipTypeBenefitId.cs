@@ -9,7 +9,7 @@ namespace CoreFitness.Domain.Entities.Memberships.ValueObjects
         public MembershipTypeBenefitId(Guid value)
         {
             if (value == Guid.Empty)
-                throw new IdIsRequiredException("MembershipTypeBenefitId cannot be empty");
+                throw new IdIsRequiredException();
 
             Value = value;
         }

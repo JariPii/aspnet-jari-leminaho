@@ -33,7 +33,7 @@ namespace CoreFitness.Domain.Entities.TrainingSessions
 
         public static TrainingSession Create(TrainingSessionName name, TrainingSessionDescription description, DateTimeOffset startDate, TrainingSessionCapacity capacity, TrainingSessionDuration duration)
         {
-            if (startDate <= DateTimeOffset.UtcNow) throw new StartDateException("StartDate cannot be earlier than todays date");
+            if (startDate <= DateTimeOffset.UtcNow) throw new InvalidStartDateException();
 
             return new TrainingSession(
                 TrainingSessionId.New(),
@@ -47,10 +47,10 @@ namespace CoreFitness.Domain.Entities.TrainingSessions
         public Booking Book(UserId userId)
         {
             if (IsFull)
-                throw new TrainingSessionIsFullException("Session is fully booked");
+                throw new TrainingSessionIsFullException();
 
             if (_bookings.Any(b => b.UserId == userId))
-                throw new DuplicateBookingException("User already booked this session");
+                throw new DuplicateBookingException();
 
             var booking = Booking.Create(userId, Id);
             _bookings.Add(booking);
@@ -61,7 +61,7 @@ namespace CoreFitness.Domain.Entities.TrainingSessions
         public void CancelBooking(UserId userId)
         {
             var booking = _bookings.FirstOrDefault(b => b.UserId == userId) ??
-                throw new BookingNotFoundException("Booking not found");
+                throw new BookingNotFoundException(userId, Id);
 
             _bookings.Remove(booking);
             UpdateTimeStamp();
@@ -86,7 +86,7 @@ namespace CoreFitness.Domain.Entities.TrainingSessions
         public void UpdateStartDate(DateTimeOffset startDate)
         {
             if (startDate <= DateTimeOffset.UtcNow)
-                throw new StartDateException("StartDate cannot be earlier than todays date");
+                throw new InvalidStartDateException();
 
             StartDate = startDate;
             UpdateTimeStamp();

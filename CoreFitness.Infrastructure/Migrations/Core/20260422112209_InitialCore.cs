@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CoreFitness.Infrastructure.Migrations.CoreFitness
+namespace CoreFitness.Infrastructure.Migrations.Core
 {
     /// <inheritdoc />
-    public partial class Initialcreate : Migration
+    public partial class InitialCore : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,11 +26,12 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     SessionLimit = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
@@ -45,11 +46,11 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StartDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    Capacity = table.Column<int>(type: "int", nullable: false),
-                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Capacity = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
@@ -70,6 +71,9 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                     UserPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhotoUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Role = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    CurrentWeight = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    TargetWeight = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
+                    Height = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
@@ -93,9 +97,6 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                     IsManuallyDeactivated = table.Column<bool>(type: "bit", nullable: false),
                     SessionsUsed = table.Column<int>(type: "int", nullable: false),
                     SessionLimit = table.Column<int>(type: "int", nullable: false),
-                    CurrentWeight = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
-                    TargetWeight = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
-                    Height = table.Column<decimal>(type: "decimal(5,2)", nullable: true),
                     CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
@@ -106,6 +107,28 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                     table.ForeignKey(
                         name: "FK_Memberships_MembershipTypes_TypeId",
                         column: x => x.TypeId,
+                        principalTable: "MembershipTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MembershipTypeBenefits",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MembershipTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MembershipTypeBenefits", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MembershipTypeBenefits_MembershipTypes_MembershipTypeId",
+                        column: x => x.MembershipTypeId,
                         principalTable: "MembershipTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -178,6 +201,11 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MembershipTypeBenefits_MembershipTypeId",
+                table: "MembershipTypeBenefits",
+                column: "MembershipTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_EmailUnique",
                 table: "Users",
                 column: "EmailUnique",
@@ -195,6 +223,9 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
 
             migrationBuilder.DropTable(
                 name: "IntResult");
+
+            migrationBuilder.DropTable(
+                name: "MembershipTypeBenefits");
 
             migrationBuilder.DropTable(
                 name: "Users");

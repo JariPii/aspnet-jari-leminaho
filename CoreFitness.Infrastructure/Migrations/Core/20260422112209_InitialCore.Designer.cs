@@ -5,16 +5,19 @@ using CoreFitness.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CoreFitness.Infrastructure.Migrations.CoreFitness
+namespace CoreFitness.Infrastructure.Migrations.Core
 {
     [DbContext(typeof(CoreFitnessDbContext))]
-    partial class CoreFitnessDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260422112209_InitialCore")]
+    partial class InitialCore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,14 +100,8 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<decimal?>("CurrentWeight")
-                        .HasColumnType("decimal(5,2)");
-
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("date");
-
-                    b.Property<decimal?>("Height")
-                        .HasColumnType("decimal(5,2)");
 
                     b.Property<bool>("IsManuallyDeactivated")
                         .HasColumnType("bit");
@@ -123,9 +120,6 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("date");
-
-                    b.Property<decimal?>("TargetWeight")
-                        .HasColumnType("decimal(5,2)");
 
                     b.Property<Guid>("TypeId")
                         .HasColumnType("uniqueidentifier");
@@ -153,14 +147,16 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(10,2)");
@@ -174,6 +170,11 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                     b.Property<int>("SessionLimit")
                         .HasColumnType("int");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("datetimeoffset");
 
@@ -182,13 +183,53 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                     b.ToTable("MembershipTypes");
                 });
 
-            modelBuilder.Entity("CoreFitness.Domain.Entities.TrainingSessions.TrainingSession", b =>
+            modelBuilder.Entity("CoreFitness.Domain.Entities.Memberships.MembershipTypeBenefit", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("MembershipTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<DateTimeOffset?>("UpdatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MembershipTypeId");
+
+                    b.ToTable("MembershipTypeBenefits");
+                });
+
+            modelBuilder.Entity("CoreFitness.Domain.Entities.TrainingSessions.TrainingSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int")
+                        .HasColumnName("Capacity");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("time")
+                        .HasColumnName("Duration");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -199,48 +240,20 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                     b.Property<DateTimeOffset>("StartDate")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("TrainingSessionDescription")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("TrainingSessionName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("Name");
+
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("datetimeoffset");
-
-                    b.ComplexProperty(typeof(Dictionary<string, object>), "Capacity", "CoreFitness.Domain.Entities.TrainingSessions.TrainingSession.Capacity#TrainingSessionCapacity", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<int>("Value")
-                                .HasColumnType("int")
-                                .HasColumnName("Capacity");
-                        });
-
-                    b.ComplexProperty(typeof(Dictionary<string, object>), "Duration", "CoreFitness.Domain.Entities.TrainingSessions.TrainingSession.Duration#TrainingSessionDuration", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<TimeSpan>("Value")
-                                .HasColumnType("time")
-                                .HasColumnName("Duration");
-                        });
-
-                    b.ComplexProperty(typeof(Dictionary<string, object>), "TrainingSessionDescription", "CoreFitness.Domain.Entities.TrainingSessions.TrainingSession.TrainingSessionDescription#TrainingSessionDescription", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(500)
-                                .HasColumnType("nvarchar(500)")
-                                .HasColumnName("Description");
-                        });
-
-                    b.ComplexProperty(typeof(Dictionary<string, object>), "TrainingSessionName", "CoreFitness.Domain.Entities.TrainingSessions.TrainingSession.TrainingSessionName#TrainingSessionName", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("Name");
-                        });
 
                     b.HasKey("Id");
 
@@ -259,6 +272,9 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<decimal?>("CurrentWeight")
+                        .HasColumnType("decimal(5,2)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(254)
@@ -268,6 +284,9 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                         .IsRequired()
                         .HasMaxLength(254)
                         .HasColumnType("nvarchar(254)");
+
+                    b.Property<decimal?>("Height")
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("PhotoUrl")
                         .HasMaxLength(500)
@@ -283,6 +302,9 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<decimal?>("TargetWeight")
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("datetimeoffset");
@@ -352,9 +374,23 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CoreFitness.Domain.Entities.Memberships.MembershipTypeBenefit", b =>
+                {
+                    b.HasOne("CoreFitness.Domain.Entities.Memberships.MembershipType", null)
+                        .WithMany("Benefits")
+                        .HasForeignKey("MembershipTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CoreFitness.Domain.Entities.Memberships.Membership", b =>
                 {
                     b.Navigation("CheckIns");
+                });
+
+            modelBuilder.Entity("CoreFitness.Domain.Entities.Memberships.MembershipType", b =>
+                {
+                    b.Navigation("Benefits");
                 });
 
             modelBuilder.Entity("CoreFitness.Domain.Entities.TrainingSessions.TrainingSession", b =>

@@ -41,6 +41,7 @@ namespace CoreFitness.Application.Services
             var membership = Membership.Create(
                 new UserId(userId),
                 membershipType.Id,
+                membershipType.Price.Value,
                 startDate,
                 endDate,
                 membershipType.SessionLimit

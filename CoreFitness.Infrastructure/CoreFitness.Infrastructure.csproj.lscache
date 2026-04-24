@@ -2,12 +2,10 @@ version=1
 
 # This file caches language service data to improve the performance of C# Dev Kit.
 # It is not intended for manual editing. It can safely be deleted and will be
-# regenerated automatically.
+# regenerated automatically. For more information, see https://aka.ms/lscache
 #
-# To exclude from version control, add *.lscache to your .gitignore file.
-#
-# To disable caching, add the following to your VS Code settings:
-#   "dotnet.projectsystem.enableLanguageServiceCache": false
+# To control where cache files are stored, use the following VS Code setting:
+#   "dotnet.projectsystem.cacheInProjectFolder": true
 
 [project]
 language=C#
@@ -77,12 +75,12 @@ Identity/
  ApplicationUser.cs
  AuthService.cs
 Migrations/Auth/
- 20260420102253_Initialcreate.cs
- 20260420102253_Initialcreate.Designer.cs
+ 20260422112224_InitialAuth.cs
+ 20260422112224_InitialAuth.Designer.cs
  AuthDbContextModelSnapshot.cs
-Migrations/CoreFitness/
- 20260420102330_Initialcreate.cs
- 20260420102330_Initialcreate.Designer.cs
+Migrations/Core/
+ 20260422112209_InitialCore.cs
+ 20260422112209_InitialCore.Designer.cs
  CoreFitnessDbContextModelSnapshot.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
@@ -104,7 +102,7 @@ Seeders/DbSeeder.cs
 ../
  CoreFitness.Application/obj/Debug/net10.0/ref/CoreFitness.Application.dll
  CoreFitness.Domain/obj/Debug/net10.0/ref/CoreFitness.Domain.dll
-<DOTNET>/packs/Microsoft.AspNetCore.App.Ref/10.0.5/ref/net10.0/
+<DOTNET>/packs/Microsoft.AspNetCore.App.Ref/10.0.6/ref/net10.0/
  Microsoft.AspNetCore.Antiforgery.dll
  Microsoft.AspNetCore.Authentication.Abstractions.dll
  Microsoft.AspNetCore.Authentication.BearerToken.dll
@@ -245,7 +243,7 @@ Seeders/DbSeeder.cs
  System.Formats.Cbor.dll
  System.Security.Cryptography.Xml.dll
  System.Threading.RateLimiting.dll
-<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.5/ref/net10.0/
+<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.6/ref/net10.0/
  Microsoft.CSharp.dll
  Microsoft.VisualBasic.Core.dll
  Microsoft.VisualBasic.dll
@@ -448,7 +446,7 @@ Seeders/DbSeeder.cs
  system.security.cryptography.protecteddata/9.0.4/lib/net9.0/System.Security.Cryptography.ProtectedData.dll
 
 [analyzerReferences]
-<DOTNET>/packs/Microsoft.AspNetCore.App.Ref/10.0.5/analyzers/dotnet/cs/
+<DOTNET>/packs/Microsoft.AspNetCore.App.Ref/10.0.6/analyzers/dotnet/cs/
  Microsoft.AspNetCore.App.Analyzers.dll
  Microsoft.AspNetCore.App.CodeFixes.dll
  Microsoft.AspNetCore.App.SourceGenerators.dll
@@ -456,14 +454,14 @@ Seeders/DbSeeder.cs
  Microsoft.Extensions.Logging.Generators.dll
  Microsoft.Extensions.Options.SourceGeneration.dll
  Microsoft.Extensions.Validation.ValidationsGenerator.dll
-<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.5/analyzers/dotnet/cs/
+<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.6/analyzers/dotnet/cs/
  Microsoft.Interop.ComInterfaceGenerator.dll
  Microsoft.Interop.JavaScript.JSImportGenerator.dll
  Microsoft.Interop.LibraryImportGenerator.dll
  Microsoft.Interop.SourceGeneration.dll
  System.Text.Json.SourceGeneration.dll
  System.Text.RegularExpressions.Generator.dll
-<DOTNET>/sdk/10.0.201/Sdks/Microsoft.NET.Sdk/analyzers/
+<DOTNET>/sdk/10.0.202/Sdks/Microsoft.NET.Sdk/analyzers/
  Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll
  Microsoft.CodeAnalysis.NetAnalyzers.dll
 <NUGET>/microsoft.codeanalysis.analyzers/3.11.0/analyzers/dotnet/cs/
@@ -474,5 +472,5 @@ Seeders/DbSeeder.cs
  system.clientmodel/1.5.1/analyzers/dotnet/cs/System.ClientModel.SourceGeneration.dll
 
 [analyzerConfigFiles]
-<DOTNET>/sdk/10.0.201/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_10_default.globalconfig
+<DOTNET>/sdk/10.0.202/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_10_default.globalconfig
 obj/Debug/net10.0/CoreFitness.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig

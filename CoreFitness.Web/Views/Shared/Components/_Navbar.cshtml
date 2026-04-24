@@ -1,0 +1,62 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+
+@* TODO: Fix navbar design width and rounded top *@
+    <nav class="bg-transparent text-white rounded-2xl px-6 py-4 flex items-center justify-between">
+        @* <div class='mx-auto '> *@
+            <a asp-controller="Home" asp-action="Index" class='flex items-center'>
+                <img src="~/images/logotype.svg" alt='CoreFitness logo' class='h-8'/>
+            </a>
+
+            <ul class='hidden md:flex items-center gap-8 text-sm font-medium'>
+                <li>
+                    <a asp-controller="Home" asp-action="Index" class='hover:text-lime-400 transition-colors'>
+                        Fitness Centers
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Membership" asp-action="Index" class='hover:text-lime-400 transition-colors'>
+                        Memberships
+                    </a>
+                </li>
+                @* TODO: Proper dropdown *@
+                <li class='relative group'>
+                    <button class="flex items-center gap-1 hover:text-lime-400 transition-colors">
+                        Training
+                    </button>
+                    <div class='absolute top-full left-0 mt-2 w-48 bg-white text-gray900 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50'>
+                        <a href="#" class='blcok px-4 py-3 hover:bg-gray-50 rounded-t-lg text-sm text-gray-500'>Personal Training</a>
+                        <a href="#" class='blcok px-4 py-3 hover:bg-gray-50 rounded-t-lg text-sm text-gray-500'>Group Training</a>
+                        <a href="#" class='blcok px-4 py-3 hover:bg-gray-50 rounded-t-lg text-sm text-gray-500'>Padel</a>
+                    </div>
+                </li>
+                
+                <li>
+                    <a asp-controller="CustomerService" asp-action="Index" class='hover:text-lime-400 transition-colors'>
+                        Customer Service
+                    </a>
+                </li>
+            </ul>
+            <div class='hidden md:flex items-center gap-4'>
+                @if(SignInManager.IsSignedIn(User))
+                {
+                    <a asp-controller="Membership" asp-action="Index" class='text-sm font-medium hover:text-lime-400 transition-colors'>
+                        Our Classes
+                    </a>
+                    <a asp-controller="Profile" asp-action="AboutMe" class='flex items-center gap-2 bg-tertiary text-gray-900 font-semibold px-5 py-2 rounded-full hover:bg-lime-300 transition-colors'>
+                        My Account
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Membership" asp-action="Index" class='text-sm font-medium hover:text-lime-400 transition-colors'>
+                        Become Member
+                    </a>
+                    <a asp-controller="Account" asp-action="Login" class='flex items-center gap-2 bg-tertiary text-gray-900 font-semibold px-5 py-2 rounded-full hover:bg-lime-300 transition-colors'>
+                        SignIn
+                    </a>
+                }
+            </div>
+        @* </div> *@
+    </nav>

@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using CoreFitness.Domain.Entities.Common;
+﻿using CoreFitness.Domain.Entities.Common;
 using CoreFitness.Domain.Interfaces;
-using CoreFitness.Domain.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreFitness.Infrastructure.Repositories
 {

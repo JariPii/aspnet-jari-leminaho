@@ -8,12 +8,11 @@ namespace CoreFitness.Domain.Entities.Memberships
 {
     public class Membership : BaseEntity<MembershipId>, IAggregateRoot
     {
-        private readonly List<CheckIn> _checkIns = [];
-        public IReadOnlyCollection<CheckIn> CheckIns => _checkIns.AsReadOnly();
         public UserId UserId { get; private set; }
         public DateOnly StartDate { get; private set; }
         public DateOnly EndDate { get; private set; }
         public MembershipTypeId TypeId { get; private set; }
+        public decimal PurchasedPrice { get; private set; }
         public bool IsExpired => DateOnly.FromDateTime(DateTime.UtcNow) > EndDate;
         public bool IsActive => !IsExpired && !IsManuallyDeactivated;
         public bool IsManuallyDeactivated { get; private set; }
@@ -21,10 +20,14 @@ namespace CoreFitness.Domain.Entities.Memberships
         public int SessionLimit { get; private set; }
         public bool HasSessionsLeft => SessionsUsed < SessionLimit;
 
+        private readonly List<CheckIn> _checkIns = [];
+        public IReadOnlyCollection<CheckIn> CheckIns => _checkIns.AsReadOnly();
+
         private Membership(
             MembershipId id,
             UserId userId,
             MembershipTypeId type,
+            decimal purchasedPrice,
             DateOnly startDate,
             DateOnly endDate,
             int sessionLimit)
@@ -37,8 +40,8 @@ namespace CoreFitness.Domain.Entities.Memberships
             SessionLimit = sessionLimit;
         }
 
-        public static Membership Create(UserId userId, MembershipTypeId typeId, DateOnly startDate, DateOnly endDate, int sessionLimit) =>
-            new(MembershipId.New(), userId, typeId, startDate, endDate, sessionLimit);
+        public static Membership Create(UserId userId, MembershipTypeId typeId, decimal purchasedPrice, DateOnly startDate, DateOnly endDate, int sessionLimit) =>
+            new(MembershipId.New(), userId, typeId, purchasedPrice, startDate, endDate, sessionLimit);
 
         private Membership() { }
 

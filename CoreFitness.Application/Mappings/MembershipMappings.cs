@@ -1,5 +1,6 @@
 ﻿using CoreFitness.Application.DTOs.Membership;
 using CoreFitness.Domain.Entities.Memberships;
+using CoreFitness.Domain.Entities.Memberships.ValueObjects;
 
 namespace CoreFitness.Application.Mappings
 {
@@ -9,7 +10,7 @@ namespace CoreFitness.Application.Mappings
         {
             Id = membership.Id.Value,
             MembershipTypeName = membershipTypeName,
-            Price = price,
+            PurchasedPrice = membership.PurchasedPrice,
             StartDate = membership.StartDate,
             EndDate = membership.EndDate,
             IsActive = membership.IsActive,

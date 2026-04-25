@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreFitness.Infrastructure.Migrations.Auth
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20260420102253_Initialcreate")]
-    partial class Initialcreate
+    [Migration("20260422112224_InitialAuth")]
+    partial class InitialAuth
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

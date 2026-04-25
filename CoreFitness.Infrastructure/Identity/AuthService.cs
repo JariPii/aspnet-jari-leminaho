@@ -19,11 +19,11 @@ namespace CoreFitness.Infrastructure.Identity
         {
             var appUser = await userManager.FindByEmailAsync(dto.Email);
             if (appUser is null)
-                return Result.Failure("Invalid email or password");
+                return Result.Failure(Error.Validation("Invalid email or password"));
 
             var result = await signInManager.PasswordSignInAsync(appUser, dto.Password, dto.RememberMe, lockoutOnFailure: false);
             if (!result.Succeeded)
-                return Result.Failure("Invalid email or password");
+                return Result.Failure(Error.Validation("Invalid email or password"));
 
             return Result.Success();
         }
@@ -34,7 +34,7 @@ namespace CoreFitness.Infrastructure.Identity
         public async Task<Result> RegisterAsync(RegisterDTO dto, CancellationToken ct = default)
         {
             if (await userManager.FindByEmailAsync(dto.Email) is not null)
-                return Result.Failure("Email already in use");
+                return Result.Failure(Error.Conflict("Email already in use"));
 
             var appUser = new ApplicationUser
             {
@@ -44,7 +44,7 @@ namespace CoreFitness.Infrastructure.Identity
 
             var result = await userManager.CreateAsync(appUser, dto.Password);
             if (!result.Succeeded)
-                return Result.Failure(result.Errors.First().Description);
+                return Result.Failure(Error.Validation(result.Errors.First().Description));
 
             await userManager.AddToRoleAsync(appUser, "Member");
 

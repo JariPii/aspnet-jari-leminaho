@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CoreFitness.Infrastructure.Migrations.Auth
 {
     /// <inheritdoc />
-    public partial class Initialcreate : Migration
+    public partial class InitialAuth : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

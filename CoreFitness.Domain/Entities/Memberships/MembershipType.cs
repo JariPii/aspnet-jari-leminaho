@@ -17,7 +17,6 @@ namespace CoreFitness.Domain.Entities.Memberships
 
         private readonly List<MembershipTypeBenefit> _benefits = [];
         public IReadOnlyCollection<MembershipTypeBenefit> Benefits => _benefits.AsReadOnly();
-        
 
         public static MembershipType Create(MembershipTypeName name, MembershipTypeDescription description, MembershipTypePrice price, MembershipTypeDuration duration, int sessionLimit, MembershipTypeEnums type)
         {

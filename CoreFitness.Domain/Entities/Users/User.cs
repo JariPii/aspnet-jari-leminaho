@@ -15,7 +15,7 @@ namespace CoreFitness.Domain.Entities.Users
         public UserName UserName { get; private set; }
         public UserPhoneNumber? UserPhoneNumber { get; private set; }
         public string? PhotoUrl { get; private set; }
-        public UserRole Role { get; protected set; }
+        public UserRole Role { get; private set; }
         public decimal? CurrentWeight { get; private set; }
         public decimal? TargetWeight { get; private set; }
         public decimal? Height { get; private set; }

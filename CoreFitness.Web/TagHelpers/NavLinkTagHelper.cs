@@ -31,7 +31,7 @@ public class NavLinkTagHelper : TagHelper
         var childContent = await output.GetChildContentAsync();
 
         var urlHelper = _urlHelperFactory.GetUrlHelper(ViewContext);
-        var url = urlHelper.Action(AspAction, AspController);
+        var url = urlHelper.Action(AspAction, AspController) ?? "#";
 
         output.TagName = "a";
         output.TagMode = TagMode.StartTagAndEndTag;
@@ -45,7 +45,7 @@ public class NavLinkTagHelper : TagHelper
 
         var variantClass = Variant switch
         {
-            "primary" => "inline-flex justify-center items-center gap-2 bg-tertiary text-gray-900 font-semibold px-5 py-2 rounded-full hover:bg-lime-300",
+            "primary" => "inline-flex justify-center items-center gap-2 bg-tertiary text-gray-900 font-semibold px-5 py-2 rounded-full hover:bg-lime-300 self-start",
             "nav" or null => "text-sm hover:text-lime-400",
             _ => ""
         };

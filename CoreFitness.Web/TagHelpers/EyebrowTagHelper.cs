@@ -21,11 +21,11 @@ public class EyebrowTagHelper : TagHelper
         output.TagName = "span";
         output.TagMode = TagMode.StartTagAndEndTag;
 
-        output.AddClasses("inline-flex items-center justify-center text-center bg-black text-white px-3 py-1 rounded-2xl text-sm font-semibold");
+        output.AddClasses("inline-flex items-center justify-center gap-2 text-center bg-black text-white px-3 py-1 rounded-2xl text-sm font-semibold font-paragraph h-fit");
 
         if(!string.IsNullOrWhiteSpace(CssClass))
             output.AddClass(CssClass, HtmlEncoder.Default);
 
-        output.Content.SetContent(content);
+        output.Content.SetHtmlContent($"<span class='w-1.5 h-1.5 bg-tertiary rounded-full inline-block'></span>{content}");
     }
 }

@@ -16,16 +16,15 @@
 <body class="bg-primary min-h-screen flex flex-col">
 
     @if(isHome){
-        <div class="relative bg-[url('/images/nav-hero.png')] bg-cover bg-top overflow-hidden m-4">
-            <div class="absolute inset-0 bg-white/5 backdrop-brightness-110 pointer-events-none"></div>
+        <div class="bg-[url('/images/nav-hero.png')] bg-cover bg-top mx-4 my-1 rounded-3xl">
             @await Html.PartialAsync("Components/Layout/_Navbar")
             @await Html.PartialAsync("Components/Home/_Hero")
         </div>
+        @await Html.PartialAsync("Components/Home/_Equipmentbar")
     }
     else
     {
-        <div class="relative bg-[url('/images/nav-hero.png')] bg-cover bg-top overflow-hidden m-4">
-            <div class="absolute inset-0 bg-white/5 backdrop-brightness-110 pointer-events-none"></div>
+        <div class="bg-[url('/images/nav-hero.png')] bg-cover bg-top m-4 rounded-2xl">
             @await Html.PartialAsync("Components/Layout/_Navbar")
         </div>
 

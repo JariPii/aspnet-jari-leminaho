@@ -375,3 +375,6 @@ CoreFitness.Web/appsettings.Development.json
 
 # EF migrations snapshots (optional, some prefer to keep these)
 # *.Designer.cs
+
+# Tailwind generated CSS
+**/css/output.css

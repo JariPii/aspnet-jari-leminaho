@@ -26,9 +26,9 @@
                         Training
                     </button>
                     <div class='absolute top-full left-0 mt-2 w-48 bg-white text-gray900 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50'>
-                        <a href="#" class='blcok px-4 py-3 hover:bg-gray-50 rounded-t-lg text-sm text-gray-500'>Personal Training</a>
-                        <a href="#" class='blcok px-4 py-3 hover:bg-gray-50 rounded-t-lg text-sm text-gray-500'>Group Training</a>
-                        <a href="#" class='blcok px-4 py-3 hover:bg-gray-50 rounded-t-lg text-sm text-gray-500'>Padel</a>
+                        <a href="#" class='block px-4 py-3 hover:bg-gray-50 rounded-t-lg text-sm text-gray-500'>Group Training</a>
+                        <a href="#" class='block px-4 py-3 hover:bg-gray-50 rounded-t-lg text-sm text-gray-500'>Personal Training</a>
+                        <a href="#" class='block px-4 py-3 hover:bg-gray-50 rounded-t-lg text-sm text-gray-500'>Padel</a>
                     </div>
                 </li>
                 
@@ -57,6 +57,43 @@
                         SignIn
                     </a>
                 }
+            </div>
+
+            <button id='mobile-menu-btn' class='md:hidden p-2 hover:cursor-pointer' aria-label='Toggle menu' >
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+
+            <div id="mobile-menu" class='hidden'>
+                <div>
+                    <a asp-controller="Home" asp-action="Index">
+                        Home
+                    </a>
+                    <a asp-controller="Membership" asp-action="Index">
+                        Memberships
+                    </a>
+                    <a asp-controller="Training" asp-action="Index">
+                        Training
+                    </a>
+                    <a asp-controller="CustomerService" asp-action="Index">
+                        Customer servcie
+                    </a>
+                    <a asp-controller="Store" asp-action="Index">
+                        Store
+                    </a>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <a asp-controller="Profile" asp-action="Index">
+                            My Account
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Membership" asp-action="Index">Become Member</a>
+                        <a asp-controller="Account" asp-action="Index">Sign In</a>
+                    }
+                </div>
             </div>
         @* </div> *@
     </nav>

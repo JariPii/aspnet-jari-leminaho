@@ -461,8 +461,26 @@ Views/Auth/
 Views/Home/
  Index.cshtml
  Privacy.cshtml
+Views/Shared/Components/Account/
+ _AboutMeForm.cshtml
+ _MyStatistics.cshtml
+ _ProfileSidebar.cshtml
+Views/Shared/Components/
+ Buttons/_MainButton.cshtml
+ CustomerService/_ContactUsForm.cshtml
+ Home/
+  _AboutUs.cshtml
+  _Hero.cshtml
+  _OurPrograms.cshtml
+  _OurStore.cshtml
+ Layout/
+  _Footer.cshtml
+  _Navbar.cshtml
+ Membership/_MembershipCard.cshtml
+ Shared/
+  _Faq.cshtml
+  _FaqItem.cshtml
 Views/Shared/
- Components/_Navbar.cshtml
  Error.cshtml
  ExternalProviders/_GoogleButton.cshtml
  _Layout.cshtml
@@ -477,8 +495,26 @@ Views/Auth/
 Views/Home/
  Index.cshtml
  Privacy.cshtml
+Views/Shared/Components/Account/
+ _AboutMeForm.cshtml
+ _MyStatistics.cshtml
+ _ProfileSidebar.cshtml
+Views/Shared/Components/
+ Buttons/_MainButton.cshtml
+ CustomerService/_ContactUsForm.cshtml
+ Home/
+  _AboutUs.cshtml
+  _Hero.cshtml
+  _OurPrograms.cshtml
+  _OurStore.cshtml
+ Layout/
+  _Footer.cshtml
+  _Navbar.cshtml
+ Membership/_MembershipCard.cshtml
+ Shared/
+  _Faq.cshtml
+  _FaqItem.cshtml
 Views/Shared/
- Components/_Navbar.cshtml
  Error.cshtml
  ExternalProviders/_GoogleButton.cshtml
  _Layout.cshtml

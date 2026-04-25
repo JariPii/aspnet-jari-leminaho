@@ -9,10 +9,21 @@
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
+    @* TODO: Fix overlay and overflow-hidden *@
     <div class="relative bg-[url('/images/nav-hero.png')] bg-cover bg-top overflow-hidden m-4">
-        <div class="absolute inset-0 bg-white/5 backdrop-brightness-110"></div>
+        <div class="absolute inset-0 bg-white/5 backdrop-brightness-110 pointer-events-none"></div>
         @await Html.PartialAsync("Components/_Navbar")
     </div>
+
+    @* <div id="mobile-menu" class="hidden md:hidden bg-gray-900 text-white">
+        <div class="px-6 py-4 flex flex-col gap-4 text-sm font-medium">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+            <a asp-controller="Membership" asp-action="Index">Memberships</a>
+            <a asp-controller="CustomerService" asp-action="Index">Customer Service</a>
+        </div>
+    </div> *@
+
+    @* </div> *@
     <div class="">
         <main role="main" class="pb-3">
             @RenderBody()

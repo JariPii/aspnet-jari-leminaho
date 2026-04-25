@@ -12,6 +12,7 @@ namespace CoreFitness.Application
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMembershipService, MembershipService>();
             services.AddScoped<ITrainingSessionService, TrainingSessionService>();
+            services.AddHttpClient<IQuoteService, QuoteService>();
 
             return services;
         }

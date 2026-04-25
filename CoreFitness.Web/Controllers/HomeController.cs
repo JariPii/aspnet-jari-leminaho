@@ -1,10 +1,11 @@
+using CoreFitness.Application.Interfaces;
 using CoreFitness.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace CoreFitness.Web.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(IQuoteService quoteService) : Controller
     {
         public IActionResult Index()
         {
@@ -14,6 +15,15 @@ namespace CoreFitness.Web.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public async Task<IActionResult> GetQuote()
+        {
+            var quote = await quoteService.GetRandomQuoteAsync();
+            if (quote is null)
+                return StatusCode(500);
+
+            return Json(quote);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,3 +1,4 @@
+using CoreFitness.Application;
 using CoreFitness.Infrastructure;
 using CoreFitness.Infrastructure.Seeders;
 
@@ -5,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
+builder.Services.AddApplication();
 
 var app = builder.Build();
 

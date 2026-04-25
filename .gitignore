@@ -363,4 +363,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+*.csproj.nuget.dgspec.json
+*.csproj.lscache
+
 CoreFitness.Web/appsettings.Development.json

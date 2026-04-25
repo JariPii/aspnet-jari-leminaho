@@ -5,4 +5,9 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    @await Html.PartialAsync("Components/Home/_EquipmentBar")
+    @await Html.PartialAsync("Components/Home/_AboutUs")
+    @await Html.PartialAsync("Components/Home/_OurPrograms")
+    @await Html.PartialAsync("Components/Home/_OurStore")
 </div>

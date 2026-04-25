@@ -4,21 +4,20 @@
 
 @* TODO: Fix navbar design width and rounded top *@
     <nav class="bg-transparent text-white rounded-2xl px-6 py-4 flex items-center justify-between">
-        @* <div class='mx-auto '> *@
             <a asp-controller="Home" asp-action="Index" class='flex items-center'>
                 <img src="~/images/logotype.svg" alt='CoreFitness logo' class='h-8'/>
             </a>
 
             <ul class='hidden md:flex items-center gap-8 text-sm font-medium'>
                 <li>
-                    <a asp-controller="Home" asp-action="Index" class='hover:text-lime-400 transition-colors'>
+                    <cf-navlink asp-controller="Home" asp-action="Index">
                         Fitness Centers
-                    </a>
+                    </cf-navlink>
                 </li>
                 <li>
-                    <a asp-controller="Membership" asp-action="Index" class='hover:text-lime-400 transition-colors'>
+                    <cf-navlink asp-controller="Membership" asp-action="Index">
                         Memberships
-                    </a>
+                    </cf-navlink>
                 </li>
                 @* TODO: Proper dropdown *@
                 <li class='relative group'>
@@ -33,29 +32,31 @@
                 </li>
                 
                 <li>
-                    <a asp-controller="CustomerService" asp-action="Index" class='hover:text-lime-400 transition-colors'>
+                    <cf-navlink asp-controller="CustomerService" asp-action="Index">
                         Customer Service
-                    </a>
+                    </cf-navlink>
                 </li>
             </ul>
             <div class='hidden md:flex items-center gap-4'>
                 @if(SignInManager.IsSignedIn(User))
                 {
-                    <a asp-controller="Membership" asp-action="Index" class='text-sm font-medium hover:text-lime-400 transition-colors'>
+                    <cf-navlink asp-controller="Membership" asp-action="Index">
                         Our Classes
-                    </a>
-                    <a asp-controller="Profile" asp-action="AboutMe" class='flex items-center gap-2 bg-tertiary text-gray-900 font-semibold px-5 py-2 rounded-full hover:bg-lime-300 transition-colors'>
+                    </cf-navlink>
+
+                    <cf-navlink asp-controller="Profile" asp-action="AboutMe" variant="primary">
                         My Account
-                    </a>
+                    </cf-navlink>
                 }
                 else
                 {
-                    <a asp-controller="Membership" asp-action="Index" class='text-sm font-medium hover:text-lime-400 transition-colors'>
-                        Become Member
-                    </a>
-                    <a asp-controller="Account" asp-action="Login" class='flex items-center gap-2 bg-tertiary text-gray-900 font-semibold px-5 py-2 rounded-full hover:bg-lime-300 transition-colors'>
-                        SignIn
-                    </a>
+                    <cf-navlink asp-controller="Profile" asp-action="AboutMe">
+                        Our Classes
+                    </cf-navlink>
+
+                    <cf-navlink asp-controller="Profile" asp-action="AboutMe" variant="primary">
+                        Sign In
+                    </cf-navlink>
                 }
             </div>
 

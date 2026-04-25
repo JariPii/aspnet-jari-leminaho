@@ -3,13 +3,11 @@
 
 // Write your JavaScript code.
 
-console.log('site.js loaded');
+// Mobile menu
 
 document.addEventListener('DOMContentLoaded', function () {
   const btn = document.getElementById('mobile-menu-btn');
   const menu = document.getElementById('mobile-menu');
-
-  console.log(btn, menu);
 
   if (btn && menu) {
     btn.addEventListener('click', function () {
@@ -18,3 +16,25 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
+// Qoutes
+
+const quoteBtn = document.getElementById('get-quote-btn');
+
+if (quoteBtn) {
+  quoteBtn.addEventListener('click', async function (e) {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('/Home/GetQuote');
+      const quote = await response.json();
+      // const quote = data[0];
+
+      document.getElementById('quote-text').textContent = `"${quote.content}"`;
+      document.getElementById('quote-author').textContent = `"${quote.author}"`;
+      document.getElementById('quote-container').classList.remove('hidden');
+    } catch (error) {
+      console.error('Failed to fetch quote: ', error);
+    }
+  });
+}

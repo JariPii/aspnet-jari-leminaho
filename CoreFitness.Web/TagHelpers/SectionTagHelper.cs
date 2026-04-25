@@ -7,6 +7,7 @@ namespace CoreFitness.Web.TagHelpers;
 [HtmlTargetElement("cf-section")]
 public class SectionTagHelper : TagHelper
 {
+    public string? Variant { get; set; }
     public string? CssClass { get; set; }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -16,7 +17,16 @@ public class SectionTagHelper : TagHelper
         output.TagName = "div";
         output.TagMode = TagMode.StartTagAndEndTag;
 
-        output.AddClasses("bg-white border");
+        var baseClass = "max-w-7xl flex";
+
+        var variantClass = Variant switch
+        {
+            "dark" => "bg-gray-900",
+            "light" => "bg-white",
+            _ => ""
+        };
+
+        output.AddClasses(baseClass, variantClass);
 
         if(!string.IsNullOrWhiteSpace(CssClass))
             output.AddClass(CssClass, HtmlEncoder.Default);

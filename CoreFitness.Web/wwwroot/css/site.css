@@ -42,5 +42,6 @@ body {
 }
 
 @theme {
+  --color-primary: #f7f7f7;
   --color-tertiary: #d6eb31;
 }

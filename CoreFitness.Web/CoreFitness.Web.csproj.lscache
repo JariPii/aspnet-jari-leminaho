@@ -58,6 +58,7 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 Controllers/
  AuthController.cs
  HomeController.cs
+ MembershipController.cs
 Models/ErrorViewModel.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
@@ -467,31 +468,32 @@ Views/Auth/
 Views/Home/
  Index.cshtml
  Privacy.cshtml
-Views/Shared/Components/Account/
- _AboutMeForm.cshtml
- _MyStatistics.cshtml
- _ProfileSidebar.cshtml
-Views/Shared/Components/
- Buttons/_MainButton.cshtml
- CustomerService/_ContactUsForm.cshtml
- Home/
-  _AboutUs.cshtml
-  _EquipmentBar.cshtml
-  _Hero.cshtml
-  _OurPrograms.cshtml
-  _OurStore.cshtml
- Layout/
-  _Footer.cshtml
-  _Navbar.cshtml
- Membership/_MembershipCard.cshtml
- Shared/
-  _Faq.cshtml
-  _FaqItem.cshtml
-Views/Shared/
- Error.cshtml
- ExternalProviders/_GoogleButton.cshtml
- _Layout.cshtml
 Views/
+ Membership/Index.cshtml
+ Shared/Components/Account/
+  _AboutMeForm.cshtml
+  _MyStatistics.cshtml
+  _ProfileSidebar.cshtml
+ Shared/Components/
+  Buttons/_MainButton.cshtml
+  CustomerService/_ContactUsForm.cshtml
+  Home/
+   _AboutUs.cshtml
+   _EquipmentBar.cshtml
+   _Hero.cshtml
+   _OurPrograms.cshtml
+   _OurStore.cshtml
+  Layout/
+   _Footer.cshtml
+   _Navbar.cshtml
+  Membership/_MembershipCard.cshtml
+  Shared/
+   _Faq.cshtml
+   _FaqItem.cshtml
+ Shared/
+  Error.cshtml
+  ExternalProviders/_GoogleButton.cshtml
+  _Layout.cshtml
  _ViewImports.cshtml
  _ViewStart.cshtml
 
@@ -502,30 +504,31 @@ Views/Auth/
 Views/Home/
  Index.cshtml
  Privacy.cshtml
-Views/Shared/Components/Account/
- _AboutMeForm.cshtml
- _MyStatistics.cshtml
- _ProfileSidebar.cshtml
-Views/Shared/Components/
- Buttons/_MainButton.cshtml
- CustomerService/_ContactUsForm.cshtml
- Home/
-  _AboutUs.cshtml
-  _EquipmentBar.cshtml
-  _Hero.cshtml
-  _OurPrograms.cshtml
-  _OurStore.cshtml
- Layout/
-  _Footer.cshtml
-  _Navbar.cshtml
- Membership/_MembershipCard.cshtml
- Shared/
-  _Faq.cshtml
-  _FaqItem.cshtml
-Views/Shared/
- Error.cshtml
- ExternalProviders/_GoogleButton.cshtml
- _Layout.cshtml
 Views/
+ Membership/Index.cshtml
+ Shared/Components/Account/
+  _AboutMeForm.cshtml
+  _MyStatistics.cshtml
+  _ProfileSidebar.cshtml
+ Shared/Components/
+  Buttons/_MainButton.cshtml
+  CustomerService/_ContactUsForm.cshtml
+  Home/
+   _AboutUs.cshtml
+   _EquipmentBar.cshtml
+   _Hero.cshtml
+   _OurPrograms.cshtml
+   _OurStore.cshtml
+  Layout/
+   _Footer.cshtml
+   _Navbar.cshtml
+  Membership/_MembershipCard.cshtml
+  Shared/
+   _Faq.cshtml
+   _FaqItem.cshtml
+ Shared/
+  Error.cshtml
+  ExternalProviders/_GoogleButton.cshtml
+  _Layout.cshtml
  _ViewImports.cshtml
  _ViewStart.cshtml

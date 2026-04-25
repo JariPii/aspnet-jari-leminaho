@@ -15,7 +15,7 @@
                     </cf-navlink>
                 </li>
                 <li>
-                    <cf-navlink asp-controller="Membership" asp-action="Index">
+                    <cf-navlink asp-controller="Memberships" asp-action="Index">
                         Memberships
                     </cf-navlink>
                 </li>
@@ -40,7 +40,7 @@
             <div class='hidden md:flex items-center gap-4'>
                 @if(SignInManager.IsSignedIn(User))
                 {
-                    <cf-navlink asp-controller="Membership" asp-action="Index">
+                    <cf-navlink asp-controller="Memberships" asp-action="Index">
                         Our Classes
                     </cf-navlink>
 

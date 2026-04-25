@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var isHome = ViewData["IsHome"] as bool? == true;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,18 +12,30 @@
     <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-    @* TODO: Fix overlay and overflow-hidden *@
-    <div class="relative bg-[url('/images/nav-hero.png')] bg-cover bg-top overflow-hidden m-4">
-        <div class="absolute inset-0 bg-white/5 backdrop-brightness-110 pointer-events-none"></div>
-        @await Html.PartialAsync("Components/Layout/_Navbar")
-    </div>
 
-    <div class="">
-        <main role="main" class="pb-3">
+<body class="bg-primary min-h-screen flex flex-col">
+
+    @if(isHome){
+        <div class="relative bg-[url('/images/nav-hero.png')] bg-cover bg-top overflow-hidden m-4">
+            <div class="absolute inset-0 bg-white/5 backdrop-brightness-110 pointer-events-none"></div>
+            @await Html.PartialAsync("Components/Layout/_Navbar")
+            @await Html.PartialAsync("Components/Home/_Hero")
+        </div>
+    }
+    else
+    {
+        <div class="relative bg-[url('/images/nav-hero.png')] bg-cover bg-top overflow-hidden m-4">
+            <div class="absolute inset-0 bg-white/5 backdrop-brightness-110 pointer-events-none"></div>
+            @await Html.PartialAsync("Components/Layout/_Navbar")
+        </div>
+
+    }
+
+    <main role="main" class="flex-1 pb-3">
+        <div class='max-w-7xl mx-auto px-6'>
             @RenderBody()
-        </main>
-    </div>
+        </div>
+    </main>
 
    @await Html.PartialAsync("Components/Layout/_Footer")
 

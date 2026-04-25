@@ -21,7 +21,7 @@ public class EyebrowTagHelper : TagHelper
         output.TagName = "span";
         output.TagMode = TagMode.StartTagAndEndTag;
 
-        output.AddClasses("inline-flex items-center justify-center gap-2 text-center bg-black text-white px-3 py-1 rounded-2xl text-sm font-semibold font-paragraph h-fit");
+        output.AddClasses("inline-flex items-center justify-center gap-2 text-center bg-black text-white px-3 py-1 rounded-2xl text-sm font-semibold font-paragraph h-fit w-fit");
 
         if(!string.IsNullOrWhiteSpace(CssClass))
             output.AddClass(CssClass, HtmlEncoder.Default);

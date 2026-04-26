@@ -22,6 +22,7 @@ if (app.Environment.IsDevelopment())
     await coreDb.Database.EnsureCreatedAsync();
 
     await DbSeeder.SeedRolesAsync(app.Services.CreateScope().ServiceProvider);
+    await DbSeeder.SeedMembershipTypesAsync(app.Services.CreateScope().ServiceProvider);
 }
 
 if (!app.Environment.IsDevelopment())

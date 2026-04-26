@@ -1,0 +1,22 @@
+@model ProfilePageViewModel
+
+<div>
+    <h2>About Me</h2>
+    <form asp-controller="Profile" asp-action="Update" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <label>First Name</label>
+        <input asp-for="FirstName" placeholder='Enter First Name'/>
+
+        <label>Last Name</label>
+        <input asp-for="LastName" placeholder='Enter Last Name'/>
+
+        <label>Email Address</label>
+        <input asp-for="Email" placeholder='Enter Email'/>
+
+        <label>Phoen Number</label>
+        <input asp-for="PhoneNumber" placeholder='Enter Phone Number'/>
+
+        <button type="submit">Save</button>
+    </form>
+</div>

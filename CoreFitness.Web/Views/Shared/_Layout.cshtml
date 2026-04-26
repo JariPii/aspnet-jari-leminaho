@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CoreFitness</title>
     <script type="importmap"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
     <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -18,7 +19,10 @@
     @if(isHome){
         <div class="bg-[url('/images/nav-hero.png')] bg-cover bg-top mx-4 my-1 rounded-3xl">
             @await Html.PartialAsync("Components/Layout/_Navbar")
+            <div class='flex justify-center'>
+
             @await Html.PartialAsync("Components/Home/_Hero")
+            </div>
         </div>
         @await Html.PartialAsync("Components/Home/_Equipmentbar")
     }
@@ -30,13 +34,15 @@
 
     }
 
-    <main role="main" class="flex-1 pb-3">
+    <main role="main" class="flex-1 pb-3 ">
         <div class='max-w-7xl mx-auto px-6'>
             @RenderBody()
         </div>
     </main>
 
-   @await Html.PartialAsync("Components/Layout/_Footer")
+    <div class='flex justify-center'>
+        @await Html.PartialAsync("Components/Layout/_Footer")
+    </div>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

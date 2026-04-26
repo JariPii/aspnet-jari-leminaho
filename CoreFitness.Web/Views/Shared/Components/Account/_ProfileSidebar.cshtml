@@ -1,0 +1,15 @@
+@model ProfilePageViewModel
+
+<div>
+    @if(Model.PhotoUrl is not null)
+    {
+        <img src="@Model.PhotoUrl" class='h-32 w-32 rounded-2xl object-cover' alt='Profile photo' />
+    }
+    else
+    {
+    <div class='h-32 w-32 bg-gray-400'>AVATARIMAGE</div>        
+    }
+    <div>
+        <p>@Model.FirstName @Model.LastName</p>
+    </div>
+</div>

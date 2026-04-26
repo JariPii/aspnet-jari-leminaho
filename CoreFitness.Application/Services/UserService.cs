@@ -81,5 +81,30 @@ namespace CoreFitness.Application.Services
             await unitOfWork.SaveChangesAsync(ct);
             return Result.Success();
         }
+
+        public async Task<Result<UserStatisticsDTO>> GetStatisticsAsync(Guid userId, CancellationToken ct = default)
+        {
+            var user = await repository.GetByIdAsync(new UserId(userId), ct);
+                if(user is null)
+                    return Result<UserStatisticsDTO>.Failure(Error.NotFound("User", userId));
+
+            return Result<UserStatisticsDTO>.Success(new UserStatisticsDTO
+            {
+                CurrentWeight = user.CurrentWeight,
+                TargetWeight = user.TargetWeight,
+                Height = user.Height,
+                BMI = user.BMI
+            });
+        }
+
+        public async Task<Result<UserDTO>> GetByAuthenticationId(Guid authId, CancellationToken ct = default)
+        {
+            var user = await repository.GetByAuthenticationIdAsync(AuthenticationId.Create(authId.ToString()), ct);
+
+            if(user is null)
+                return Result<UserDTO>.Failure(Error.NotFound("User", authId));
+
+            return Result<UserDTO>.Success(user.ToDTO());
+        }
     }
 }

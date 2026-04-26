@@ -1,9 +1,10 @@
+@model MembershipPageViewModel
+
 @{
     ViewData["Title"] = "Memberships page";
 }
 
 <div>
-    <h2>
-        Test
-    </h2>
+    @await Html.PartialAsync("Components/Membership/_MembershipOffers", Model.MembershipTypes)
+    @await Html.PartialAsync("Components/Shared/_Faq", Model.FaqItems)
 </div>

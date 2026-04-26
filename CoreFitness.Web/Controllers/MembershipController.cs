@@ -1,15 +1,27 @@
+using CoreFitness.Application.DTOs.Membership;
+using CoreFitness.Application.Interfaces;
+using CoreFitness.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreFitness.Web.Controllers
 {
     [Route("memberships")]
-    public class MembershipController : Controller
+    public class MembershipController(IMembershipService membershipService, IFaqService faqService) : Controller
     {
         [HttpGet]
         [Route("")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var membershipResult = await membershipService.GetMembershipTypesAsync();
+            var faqItems = await faqService.GetFaqItemsAsync();
+
+            var viewModel = new MembershipPageViewModel
+            {
+                MembershipTypes = membershipResult.IsSuccess ? membershipResult.Value! : [],
+                FaqItems = faqItems
+            };
+
+            return View(viewModel);
         }
     }
 }

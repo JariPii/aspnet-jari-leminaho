@@ -165,6 +165,8 @@ namespace CoreFitness.Web.Controllers
                     user.Email,
                     string.Join(",", linkResult.Errors.Select(e => e.Description)));
 
+                await userManager.DeleteAsync(user);
+
                 return ExternalLogInFailed(returnUrl);
             }
 
@@ -180,10 +182,24 @@ namespace CoreFitness.Web.Controllers
                 photoUrl,
                 UserRole.Member);
 
-            await userRepository.AddAsync(coreUser);
-            await unitOfWork.SaveChangesAsync();
+            try
+            {
+                await userRepository.AddAsync(coreUser);
+                await unitOfWork.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                
+                logger.LogError("Failed to create domain user, rolling back identity user: {Error}", ex.Message);
+
+                await userManager.RemoveLoginAsync(user, info.LoginProvider, info.ProviderKey);
+                await userManager.DeleteAsync(user);
+                
+                return ExternalLogInFailed(returnUrl);
+            }
 
             await signInManager.SignInAsync(user, isPersistent: false);
+
             return RedirectToLocal(returnUrl);
         }
 

@@ -93,10 +93,25 @@ public class AccountController(SignInManager<ApplicationUser> signInManager, Use
             UserRole.Member
         );
 
-        await userRepository.AddAsync(coreUser);
-        await unitOfWork.SaveChangesAsync();
+        try
+        {
+            await userRepository.AddAsync(coreUser);
+            await unitOfWork.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            
+            logger.LogError("Failed to create domain user, rolling back identity user: {Error}", ex.Message);
+
+            await userManager.DeleteAsync(user);
+
+            ModelState.AddModelError(string.Empty, "Failed to create account. Please try again.");
+
+            return View(vm);
+        }
 
         await signInManager.SignInAsync(user, isPersistent: false);
+
         return RedirectToAction(nameof(SignIn), new { returnUrl = "/"});
     }
 
@@ -126,7 +141,25 @@ public class AccountController(SignInManager<ApplicationUser> signInManager, Use
         );
 
         if(result.Succeeded)
+        {
+            var identityUser = await userManager.FindByEmailAsync(vm.Email);
+            if(identityUser is not null)
+            {
+                var domainUser = await userRepository.GetByAuthenticationIdAsync(
+                    AuthenticationId.Create(identityUser.Id.ToString()));
+
+                if(domainUser is null)
+                {
+                    await signInManager.SignOutAsync();
+
+                    ModelState.AddModelError(string.Empty, "Account data is incomplete. Please contact support");
+
+                    return View(vm);
+                }
+            }
+
             return RedirectToLocal(vm.ReturnUrl);
+        }
 
         if(result.IsLockedOut)
         {

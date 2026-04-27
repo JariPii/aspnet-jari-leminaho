@@ -33,6 +33,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseStatusCodePagesWithReExecute("/Home/Error404");
 
 app.UseAuthentication();
 app.UseAuthorization();

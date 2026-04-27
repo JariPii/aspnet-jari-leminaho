@@ -106,5 +106,31 @@ namespace CoreFitness.Application.Services
 
             return Result<UserDTO>.Success(user.ToDTO());
         }
+
+        public async Task<Result> UpdateWeightAsync(Guid userId, decimal weight, decimal height, CancellationToken ct = default)
+        {
+            var user = await repository.GetByIdAsync(new UserId(userId), ct);
+
+            if(user is null)
+                return Result.Failure(Error.NotFound("User", userId));
+
+            user.UpdateWeight(weight, height);
+
+            await unitOfWork.SaveChangesAsync(ct);
+            return Result.Success();
+        }
+
+        public async Task<Result> UpdateWeightGoalAsync(Guid userId, decimal targetWeight, CancellationToken ct = default)
+        {
+            var user = await repository.GetByIdAsync(new UserId(userId), ct);
+
+            if(user is null)
+                return Result.Failure(Error.NotFound("User", userId));
+
+            user.SetWeightGoal(targetWeight);
+
+            await unitOfWork.SaveChangesAsync(ct);
+            return Result.Success();
+        }
     }
 }

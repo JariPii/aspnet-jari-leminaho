@@ -11,5 +11,7 @@ namespace CoreFitness.Application.Interfaces
         Task<Result> CompleteRegistrationAsync(Guid authenticationId, CompleteProfileDTO dto, CancellationToken ct = default);
         Task<Result<UserStatisticsDTO>> GetStatisticsAsync(Guid userId, CancellationToken ct = default);
         Task<Result<UserDTO>> GetByAuthenticationId(Guid authId, CancellationToken ct = default);
+        Task<Result> UpdateWeightAsync(Guid userId, decimal weight, decimal height, CancellationToken ct = default);
+        Task<Result> UpdateWeightGoalAsync(Guid userId, decimal targetWeight, CancellationToken ct = default);
     }
 }

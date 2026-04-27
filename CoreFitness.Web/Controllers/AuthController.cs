@@ -232,7 +232,7 @@ namespace CoreFitness.Web.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignOut()
+        public new async Task<IActionResult> SignOut()
         {
             await signInManager.SignOutAsync();
 

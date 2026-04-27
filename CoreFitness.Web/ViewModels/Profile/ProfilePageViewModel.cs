@@ -10,5 +10,8 @@ public class ProfilePageViewModel
     public string Email { get; set; } = string.Empty;
     public string? PhoneNumber { get; set; }
     public string? PhotoUrl { get; set; }
+    public decimal? Weight { get; set; }
+    public decimal? Height { get; set; }
+    public decimal? TargetWeight { get; set; }
     public UserStatisticsDTO? Statistics { get; set; }
 }

@@ -1,14 +1,16 @@
 using System.Security.Claims;
 using CoreFitness.Application.DTOs.User;
 using CoreFitness.Application.Interfaces;
+using CoreFitness.Infrastructure.Identity;
 using CoreFitness.Web.ViewModels.Profile;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreFitness.Web.Controllers;
 
 [Authorize]
-public class ProfileController(IUserService userService, ILogger<ProfileController> logger) : Controller
+public class ProfileController(IUserService userService, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<ProfileController> logger) : Controller
 {
     public async Task<IActionResult> Index()
     {
@@ -16,7 +18,13 @@ public class ProfileController(IUserService userService, ILogger<ProfileControll
 
         var userResult = await userService.GetByAuthenticationId(authId);
         if(!userResult.IsSuccess)
-            return NotFound();
+        {
+            await signInManager.SignOutAsync();
+
+            TempData["Error"] = "Your account was not found. Please sign in again or create a new account";
+            
+            return RedirectToAction("SignIn", "Account");
+        }
 
         var statsResult = await userService.GetStatisticsAsync(userResult.Value!.Id);
 
@@ -87,5 +95,36 @@ public class ProfileController(IUserService userService, ILogger<ProfileControll
 
         TempData["Success"] = "Profile updated successfully";
         return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete()
+    {
+        var authId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        var userResult = await userService.GetByAuthenticationId(authId);
+        if(!userResult.IsSuccess)
+        {
+            await signInManager.SignOutAsync();
+
+            TempData["Error"] = "Your account was not found.";
+            
+            return RedirectToAction("SignIn", "Account");
+        }
+
+        var result = await userService.DeleteAsync(userResult.Value!.Id);
+        if(result is null || !result.IsSuccess)
+        {
+            TempData["Error"] = result?.Error?.Message ?? "Failed to delete account";
+            
+            return RedirectToAction(nameof(Index));
+        }
+
+        var identityUser = await userManager.FindByIdAsync(authId.ToString());
+        if(identityUser is not null)
+            await userManager.DeleteAsync(identityUser);
+
+        await signInManager.SignOutAsync();
+        return RedirectToAction("Index", "Home");
     }
 }

@@ -16,4 +16,8 @@
     <form asp-controller="Auth" asp-action="SignOut" method="post">
         <button type="submit">Sign Out</button>
     </form>
+
+    <form asp-controller="Profile" asp-action="Delete" method="post">
+        <button type="submit" onclick='return confirm("Are tou sure you want to delete your account?")'>Remove Account</button>
+    </form>
 </div>

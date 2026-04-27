@@ -4,6 +4,7 @@ using CoreFitness.Domain.Interfaces.UnitOfWork;
 using CoreFitness.Domain.Interfaces.Users;
 using CoreFitness.Infrastructure.Identity;
 using CoreFitness.Web.ViewModels.Auth;
+using CoreFitness.Web.ViewModels.Profile;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -72,6 +73,16 @@ namespace CoreFitness.Web.Controllers
         private async Task<IActionResult> ExternalVerification(string email, string? returnUrl = null)
         {
             //TODO: Generera engångskod, spara i databas/cache skicka via mail.
+            var existingUser = await userManager.FindByEmailAsync(email);
+
+            if(existingUser is null)
+            {
+                return View("NoAccountFound", new NoAccountFoundViewModel
+                {
+                    Email = email,
+                    ReturnUrl = returnUrl
+                });
+            }
 
             return View("VerifyExternalLogIn", new VerifyExternalLogInViewModel
             {
@@ -174,6 +185,16 @@ namespace CoreFitness.Web.Controllers
 
             await signInManager.SignInAsync(user, isPersistent: false);
             return RedirectToLocal(returnUrl);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateFromExternal(NoAccountFoundViewModel vm)
+        {
+            return View("VerifyExternalLogin", new VerifyExternalLogInViewModel
+            {
+                Email = vm.Email,
+                ReturnUrl = vm.ReturnUrl
+            });
         }
 
         private async Task<IActionResult> LinkExistingUser(ApplicationUser user, ExternalLoginInfo info, string? returnUrl = null)

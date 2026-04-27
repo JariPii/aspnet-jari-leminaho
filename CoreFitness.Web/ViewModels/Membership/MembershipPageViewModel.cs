@@ -1,7 +1,7 @@
 using CoreFitness.Application.DTOs.FaqItem;
 using CoreFitness.Application.DTOs.Membership;
 
-namespace CoreFitness.Web.ViewModels;
+namespace CoreFitness.Web.ViewModels.Membership;
 
 public class MembershipPageViewModel
 {

@@ -1,6 +1,6 @@
 using System.Security.Claims;
 using CoreFitness.Application.Interfaces;
-using CoreFitness.Web.ViewModels;
+using CoreFitness.Web.ViewModels.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

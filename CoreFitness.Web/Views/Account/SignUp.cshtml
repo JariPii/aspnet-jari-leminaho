@@ -1,0 +1,40 @@
+@model SignUpViewModel
+
+<section>
+    <div>
+        <h2>Become a member</h2>
+        <p>Join us and start your fitness journey today with expert guidance.</p>
+    </div>
+
+     @if (Model.ExternalProviders.Any())
+    {
+        <form asp-controller="Auth" asp-action="ExternalLogIn" method="post">
+            @foreach (var provider in Model.ExternalProviders)
+            {
+                <partial name="@($"ExternalProviders/_{provider}Button")" />
+            }
+        </form>
+    }
+    
+    <div>
+        <hr />
+        <span>Or coninue with</span>
+        <hr />
+    </div>
+
+    <form asp-controller="Account" asp-action="SignUp" method='post'>
+
+        <div>
+            <label asp-for="Email">Email Address</label>
+            <input asp-for="Email" type='email' placeholder='Enter Your Email'/>
+            <span asp-validation-for="Email"></span>
+        </div>
+        <button type='submit'>Continue</button>
+    </form>
+
+    <p>We will send you a verification code to your email address</p>
+
+    <p>Allready have an account?
+        <a asp-controller="Account" asp-action="SignIn"> Sign In</a>
+    </p>
+</section>

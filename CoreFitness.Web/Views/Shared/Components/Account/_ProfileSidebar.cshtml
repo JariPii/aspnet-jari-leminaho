@@ -12,4 +12,8 @@
     <div>
         <p>@Model.FirstName @Model.LastName</p>
     </div>
+
+    <form asp-controller="Auth" asp-action="SignOut" method="post">
+        <button type="submit">Sign Out</button>
+    </form>
 </div>

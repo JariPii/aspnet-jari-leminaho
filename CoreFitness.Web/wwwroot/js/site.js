@@ -40,7 +40,7 @@ if (quoteBtn) {
 }
 
 // FaqItems
-
+// TODO: Add IsActive
 document.querySelectorAll('.faq-btn').forEach(function (btn) {
   btn.addEventListener('click', function () {
     const answer = btn.nextElementSibling;

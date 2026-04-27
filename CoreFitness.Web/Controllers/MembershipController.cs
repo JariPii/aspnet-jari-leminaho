@@ -1,6 +1,6 @@
 using CoreFitness.Application.DTOs.Membership;
 using CoreFitness.Application.Interfaces;
-using CoreFitness.Web.ViewModels;
+using CoreFitness.Web.ViewModels.Membership;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreFitness.Web.Controllers

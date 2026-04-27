@@ -3,7 +3,7 @@ using CoreFitness.Domain.Enums;
 using CoreFitness.Domain.Interfaces.UnitOfWork;
 using CoreFitness.Domain.Interfaces.Users;
 using CoreFitness.Infrastructure.Identity;
-using CoreFitness.Web.ViewModels;
+using CoreFitness.Web.ViewModels.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -12,24 +12,24 @@ namespace CoreFitness.Web.Controllers
 {
     public class AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<AuthController> logger, IUserRepository userRepository, IUnitOfWork unitOfWork) : Controller
     {
-        [HttpGet]
-        public async Task<IActionResult> SignIn(string? returnUrl = null)
-        {
-            var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
+        // [HttpGet]
+        // public async Task<IActionResult> SignIn(string? returnUrl = null)
+        // {
+        //     var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
 
-            var vm = new SignInViewModel
-            {
-                ReturnUrl = returnUrl,
-                ExternalProviders = [..schemes.Select(x => x.Name)]
-            };
-            return View(vm);
-        }
+        //     var vm = new SignInViewModel
+        //     {
+        //         ReturnUrl = returnUrl,
+        //         ExternalProviders = [..schemes.Select(x => x.Name)]
+        //     };
+        //     return View(vm);
+        // }
 
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult ExternalLogin(string provider, string? returnUrl = null)
         {
             if (string.IsNullOrWhiteSpace(provider))
-                return RedirectToAction(nameof(SignIn), new { returnUrl });
+                return RedirectToAction("SignIn", "Account", new { returnUrl });
 
             var redirectUrl = Url.Action(nameof(ExternalLogInCallback), "Auth", new { returnUrl });
             var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -220,7 +220,7 @@ namespace CoreFitness.Web.Controllers
         {
             TempData["Error"] = "Failed to login. Please try again";
 
-            return RedirectToAction(nameof(SignIn), new { returnUrl });
+            return RedirectToAction("SignIn", "Account", new { returnUrl });
         }
 
         private IActionResult RedirectToLocal(string? returnUrl = null)
@@ -229,6 +229,14 @@ namespace CoreFitness.Web.Controllers
                 return Redirect(returnUrl);
 
             return RedirectToAction("index", "Home");
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> SignOut()
+        {
+            await signInManager.SignOutAsync();
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

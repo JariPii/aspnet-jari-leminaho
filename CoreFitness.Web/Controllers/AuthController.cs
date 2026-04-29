@@ -19,12 +19,17 @@ namespace CoreFitness.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ExternalLogInCallback(string? returnUrl = null, string? remoteError = null, CancellationToken ct = default)
         {
-            var result = await authService.HandleExternalCallbackAsync(returnUrl, remoteError, ct);
+            var result = await authService.HandleExternalCallbackAsync(returnUrl, remoteError, confirmed: false,  ct);
 
             return result.Type switch
             {
                 AuthenticationResultType.SignedIn => RedirectToAction("Index", "Profile"),
                 AuthenticationResultType.RequiresVerification when result.Email is not null => View("VerifyEmail", new VerifyEmailViewModel
+                {
+                    Email = result.Email,
+                    ReturnUrl = returnUrl
+                }),
+                AuthenticationResultType.RequiresAccountCreation when result.Email is not null => View("ConfirmExternalAccount", new ConfirmExternalAccountViewModel
                 {
                     Email = result.Email,
                     ReturnUrl = returnUrl
@@ -75,6 +80,18 @@ namespace CoreFitness.Web.Controllers
                 Email = vm.Email,
                 ReturnUrl = vm.ReturnUrl
             });
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmExternalAccount(ConfirmExternalAccountViewModel vm, CancellationToken ct = default)
+        {
+            var result = await authService.HandleExternalCallbackAsync(vm.ReturnUrl, null, confirmed: true, ct);
+
+            return result.Type switch
+            {
+                AuthenticationResultType.SignedIn => RedirectToAction("Index", "Profile"),
+                _ => ExternalLogInFailed(vm.ReturnUrl)
+            };
         }
 
         private RedirectToActionResult ExternalLogInFailed(string? returnUrl = null)

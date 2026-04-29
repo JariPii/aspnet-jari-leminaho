@@ -28,4 +28,10 @@ public class AuthenticationResult
         Type = AuthenticationResultType.InvalidCode,
         ReturnUrl = returnUrl
     };
+    public static AuthenticationResult RequiresAccountCreation(string email, string? returnUrl) => new()
+    {
+      Type = AuthenticationResultType.RequiresAccountCreation,
+      Email = email,
+      ReturnUrl = returnUrl  
+    };
 }

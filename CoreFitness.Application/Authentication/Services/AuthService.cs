@@ -31,7 +31,7 @@ public class AuthService(IUserRepository userRepository,IPasswordProvider passwo
         };
     }
 
-    public async Task<AuthenticationResult> HandleExternalCallbackAsync(string? returnUrl, string? remoteError, CancellationToken ct = default)
+    public async Task<AuthenticationResult> HandleExternalCallbackAsync(string? returnUrl, string? remoteError, bool confirmed = false, CancellationToken ct = default)
     {
         if(!string.IsNullOrEmpty(remoteError))
             return AuthenticationResult.Failed(remoteError);
@@ -78,6 +78,9 @@ public class AuthService(IUserRepository userRepository,IPasswordProvider passwo
 
             return AuthenticationResult.SignedIn(returnUrl);
         }
+
+        if(!confirmed)
+            return AuthenticationResult.RequiresAccountCreation(externalUser.Email, returnUrl);
 
         var createResult = await passwordProvider.CreateUserWithPasswordAsync(externalUser.Email, null, ct);
 
@@ -177,6 +180,5 @@ public class AuthService(IUserRepository userRepository,IPasswordProvider passwo
 
     public async Task SignOutAsync(CancellationToken ct = default) =>
         await passwordProvider.SignOutAsync(ct);
-
 
 }

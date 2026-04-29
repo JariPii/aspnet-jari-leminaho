@@ -8,13 +8,9 @@ namespace CoreFitness.Infrastructure.Authentication.Services;
 
 public class PasswordProvider(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<PasswordProvider> logger) : IPasswordProvider
 {
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
-    private readonly ILogger<PasswordProvider> _logger = logger;
-
     public async Task<PasswordSignInResult> PasswordSignInAsync(string email, string password, bool rememberMe, CancellationToken ct = default)
     {
-        var result = await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: true);
+        var result = await signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: true);
 
         return result switch
         {
@@ -26,11 +22,11 @@ public class PasswordProvider(UserManager<ApplicationUser> userManager, SignInMa
     }
     public async Task<CreateUserResult> CreateUserWithPasswordAsync(string email, string? password = null, CancellationToken ct = default)
     {
-        var existing = await _userManager.FindByEmailAsync(email);
+        var existing = await userManager.FindByEmailAsync(email);
 
         if(existing is not null)
         {
-            _logger.LogWarning("User already exists for {Email}", email);
+            logger.LogWarning("User already exists for {Email}", email);
             return CreateUserResult.Failed();
         }
 
@@ -42,12 +38,12 @@ public class PasswordProvider(UserManager<ApplicationUser> userManager, SignInMa
         };
 
         IdentityResult result = password is null
-            ? await _userManager.CreateAsync(user)
-            : await _userManager.CreateAsync(user, password);
+            ? await userManager.CreateAsync(user)
+            : await userManager.CreateAsync(user, password);
 
         if(!result.Succeeded)
         {
-            _logger.LogWarning("Failed to create user {Email}: {Errors}", email, string.Join(", ", result.Errors.Select(e => e.Description)));
+            logger.LogWarning("Failed to create user {Email}: {Errors}", email, string.Join(", ", result.Errors.Select(e => e.Description)));
             return CreateUserResult.Failed();
         }
 
@@ -57,15 +53,15 @@ public class PasswordProvider(UserManager<ApplicationUser> userManager, SignInMa
     
     public async Task<PasswordSignInResult> SignInWithEmailAsync(string email, CancellationToken ct = default)
     {
-        var user = await _userManager.FindByEmailAsync(email);
+        var user = await userManager.FindByEmailAsync(email);
 
         if(user is null)
         {
-            _logger.LogWarning("SignInByEmail failed. User not found: {Email}", email);
+            logger.LogWarning("SignInByEmail failed. User not found: {Email}", email);
             return PasswordSignInResult.Failed;
         }
 
-        await _signInManager.SignInAsync(user, isPersistent: false);
+        await signInManager.SignInAsync(user, isPersistent: false);
 
         return PasswordSignInResult.Succeeded;
     }
@@ -73,35 +69,34 @@ public class PasswordProvider(UserManager<ApplicationUser> userManager, SignInMa
     
     public async Task SignInAsync(string userId, CancellationToken ct = default)
     {
-        var user = await _userManager.FindByIdAsync(userId);
+        var user = await userManager.FindByIdAsync(userId);
 
         if(user is null)
         {
-            _logger.LogError("Signin failed. User not found: {UserId}", userId);
+            logger.LogError("Signin failed. User not found: {UserId}", userId);
             return;
         }
 
-        await _signInManager.SignInAsync(user, isPersistent: false);
+        await signInManager.SignInAsync(user, isPersistent: false);
     }
 
     public async Task SignOutAsync(CancellationToken ct = default) =>
-        await _signInManager.SignOutAsync();
+        await signInManager.SignOutAsync();
 
     public async Task DeleteUserAsync(string userId, CancellationToken ct = default)
     {
-        var user = await _userManager.FindByIdAsync(userId);
-
+        var user = await userManager.FindByIdAsync(userId);
         if(user is null)
         {
-            _logger.LogWarning("Failed to delete user. User not found: {UserId}", userId);
+            logger.LogWarning("Failed to delete user. User not found: {UserId}", userId);
             return;
         }
 
-        var result = await _userManager.DeleteAsync(user);
+        var result = await userManager.DeleteAsync(user);
 
         if(!result.Succeeded)
         {
-            _logger.LogError("Failed to delete user {UserId}: {Errors}", userId, string.Join(", ", result.Errors.Select(e => e.Description)));
+            logger.LogError("Failed to delete user {UserId}: {Errors}", userId, string.Join(", ", result.Errors.Select(e => e.Description)));
         }
     }
 }

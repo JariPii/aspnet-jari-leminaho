@@ -5,5 +5,6 @@ public enum AuthenticationResultType
     Failed,
     SignedIn,
     RequiresVerification,
-    InvalidCode
+    InvalidCode,
+    RequiresAccountCreation
 }

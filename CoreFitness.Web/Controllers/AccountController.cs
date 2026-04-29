@@ -7,18 +7,23 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Enums;
+using CoreFitness.Application.Authentication.Services;
+using CoreFitness.Application.Authentication;
+using CoreFitness.Application.DTOs.Auth;
+using CoreFitness.Application.Authentication.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using CoreFitness.Application.Authentication;
 
 namespace CoreFitness.Web.Controllers;
 
-public class AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<AccountController> logger, IUserRepository userRepository, IUnitOfWork unitOfWork) : Controller
+public class AccountController(IAuthService authService) : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> SignUp()
+    public async Task<IActionResult> SignUp(CancellationToken ct = default)
     {
-        var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
         return View(new SignUpViewModel
         {
-            ExternalProviders = [..schemes.Select(x => x.Name)]
+            ExternalProviders = await authService.GetExternalProvidersAsync(ct)
         });
     }
 
@@ -27,13 +32,6 @@ public class AccountController(SignInManager<ApplicationUser> signInManager, Use
     {
         if(!ModelState.IsValid)
             return View(vm);
-
-        var existingUser = await userManager.FindByEmailAsync(vm.Email);
-        if(existingUser is not null)
-        {
-            ModelState.AddModelError(nameof(vm.Email), "An account with this email already exists");
-            return View(vm);
-        }
 
         TempData["VerifyEmail"] = vm.Email;
 
@@ -62,115 +60,59 @@ public class AccountController(SignInManager<ApplicationUser> signInManager, Use
     public IActionResult SetPassword(string email) => View(new SetUpPasswordViewModel { Email = email });
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> SetPassword(SetUpPasswordViewModel vm)
+    public async Task<IActionResult> SetPassword(SetUpPasswordViewModel vm, CancellationToken ct = default)
     {
         if (!ModelState.IsValid)
             return View(vm);
 
-        var user = new ApplicationUser
+        var result= await authService.RegisterAsync(new RegisterDTO
         {
-            UserName = vm.Email,
             Email = vm.Email,
-            EmailConfirmed = true
-        };
+            Password = vm.Password,
+            FirstName = "",
+            LastName = ""
+        }, ct);
 
-        var result = await userManager.CreateAsync(user, vm.Password);
+        
 
-        if(!result.Succeeded)
+        if(result.Type != AuthenticationResultType.SignedIn)
         {
-            foreach(var error in result.Errors)
-                ModelState.AddModelError(string.Empty, error.Description);
-
+            ModelState.AddModelError(string.Empty, "Failed to create account");
             return View(vm);
         }
 
-        var coreUser = DomainUser.Create(
-            AuthenticationId.Create(user.Id.ToString()),
-            UserEmail.Create(user.Email!),
-            UserName.Create("",""),
-            null,
-            null,
-            UserRole.Member
-        );
-
-        try
-        {
-            await userRepository.AddAsync(coreUser);
-            await unitOfWork.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            
-            logger.LogError("Failed to create domain user, rolling back identity user: {Error}", ex.Message);
-
-            await userManager.DeleteAsync(user);
-
-            ModelState.AddModelError(string.Empty, "Failed to create account. Please try again.");
-
-            return View(vm);
-        }
-
-        await signInManager.SignInAsync(user, isPersistent: false);
-
-        return RedirectToAction(nameof(SignIn), new { returnUrl = "/"});
+        return RedirectToAction("Index", "Profile");
     }
 
     [HttpGet]
     public async Task<IActionResult> SignIn(string? returnUrl = null)
     {
-        var schema = await signInManager.GetExternalAuthenticationSchemesAsync();
-
         return View(new SignInViewModel
         {
             ReturnUrl = returnUrl,
-            ExternalProviders = [..schema.Select(x => x.Name)]
+            ExternalProviders = await authService.GetExternalProvidersAsync()
         });
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> SignIn(SignInViewModel vm)
+    public async Task<IActionResult> SignIn(SignInViewModel vm, CancellationToken ct = default)
     {
         if(!ModelState.IsValid)
             return View(vm);
 
-        var result = await signInManager.PasswordSignInAsync(
-            vm.Email,
-            vm.Password,
-            isPersistent: false,
-            lockoutOnFailure: true
-        );
-
-        if(result.Succeeded)
+        var result = await authService.LoginAsync(new LoginDTO
         {
-            var identityUser = await userManager.FindByEmailAsync(vm.Email);
-            if(identityUser is not null)
-            {
-                var domainUser = await userRepository.GetByAuthenticationIdAsync(
-                    AuthenticationId.Create(identityUser.Id.ToString()));
+            Email = vm.Email,
+            Password = vm.Password
+        }, ct);
 
-                if(domainUser is null)
-                {
-                    await signInManager.SignOutAsync();
-
-                    ModelState.AddModelError(string.Empty, "Account data is incomplete. Please contact support");
-
-                    return View(vm);
-                }
-            }
-
-            return RedirectToLocal(vm.ReturnUrl);
-        }
-
-        if(result.IsLockedOut)
+        if(result.Type != AuthenticationResultType.SignedIn)
         {
-            logger.LogWarning("User {Email} is locked out", vm.Email);
-            ModelState.AddModelError(string.Empty, "Account locked. Try again later");
+            ModelState.AddModelError(string.Empty, "Invalid email or password");
             return View(vm);
         }
 
-        ModelState.AddModelError(string.Empty, "Invalid email or password");
-
-        return View(vm);
+        return RedirectToLocal(vm.ReturnUrl);
     }
 
     private IActionResult RedirectToLocal(string? returnUrl)

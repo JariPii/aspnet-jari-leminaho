@@ -1,99 +1,36 @@
-﻿using CoreFitness.Domain.Entities.Users.ValueObjects;
-using CoreFitness.Domain.Enums;
-using CoreFitness.Domain.Interfaces.UnitOfWork;
-using CoreFitness.Domain.Interfaces.Users;
-using CoreFitness.Infrastructure.Identity;
+﻿using CoreFitness.Application.Authentication;
+using CoreFitness.Application.Authentication.Models;
 using CoreFitness.Web.ViewModels.Auth;
 using CoreFitness.Web.ViewModels.Profile;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace CoreFitness.Web.Controllers
 {
-    public class AuthController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<AuthController> logger, IUserRepository userRepository, IUnitOfWork unitOfWork) : Controller
+    public class AuthController(IAuthService authService) : Controller
     {
-        // [HttpGet]
-        // public async Task<IActionResult> SignIn(string? returnUrl = null)
-        // {
-        //     var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
-
-        //     var vm = new SignInViewModel
-        //     {
-        //         ReturnUrl = returnUrl,
-        //         ExternalProviders = [..schemes.Select(x => x.Name)]
-        //     };
-        //     return View(vm);
-        // }
-
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult ExternalLogin(string provider, string? returnUrl = null)
+        public IActionResult ExternalLogin(string provider, string returnUrl)
         {
-            if (string.IsNullOrWhiteSpace(provider))
-                return RedirectToAction("SignIn", "Account", new { returnUrl });
-
-            var redirectUrl = Url.Action(nameof(ExternalLogInCallback), "Auth", new { returnUrl });
-            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+           var properties = authService.ConfigureExternalLogin(provider, Url.Action("ExternalLoginCallBack", "Auth")!);
 
             return Challenge(properties, provider);
         }
 
         [HttpGet]
-        public async Task<IActionResult> ExternalLogInCallback(string? returnUrl = null, string? remoteError = null)
+        public async Task<IActionResult> ExternalLogInCallback(string? returnUrl = null, string? remoteError = null, CancellationToken ct = default)
         {
-            if(remoteError is not null)
+            var result = await authService.HandleExternalCallbackAsync(returnUrl, remoteError, ct);
+
+            return result.Type switch
             {
-                logger.LogWarning("Remote error from provider: {Error}", remoteError);
-                return ExternalLogInFailed(returnUrl);
-            }
-
-            var externalUser = await GetExternalUserInfo();
-
-            if (externalUser is null)
-                return ExternalLogInFailed(returnUrl);
-
-            var (info, email) = externalUser.Value;
-
-            var result = await signInManager.ExternalLoginSignInAsync(
-                info.LoginProvider,
-                info.ProviderKey,
-                isPersistent: false,
-                bypassTwoFactor: true);
-
-            if (result.Succeeded)
-                return RedirectToLocal(returnUrl);
-
-            // TODO: Hantera lockOut
-
-            //return await HandleNewExternalLogIn(info, returnUrl);            
-
-            return await ExternalVerification(email, returnUrl);
-        }
-
-        private async Task<IActionResult> ExternalVerification(string email, string? returnUrl = null)
-        {
-            //TODO: Generera engångskod, spara i databas/cache skicka via mail.
-            var existingUser = await userManager.FindByEmailAsync(email);
-
-            if(existingUser is null)
-            {
-                return View("NoAccountFound", new NoAccountFoundViewModel
+                AuthenticationResultType.SignedIn => RedirectToAction("Index", "Profile"),
+                AuthenticationResultType.RequiresVerification when result.Email is not null => View("VerifyEmail", new VerifyEmailViewModel
                 {
-                    Email = email,
+                    Email = result.Email,
                     ReturnUrl = returnUrl
-                });
-            }
-
-            return View("VerifyExternalLogIn", new VerifyExternalLogInViewModel
-            {
-                ReturnUrl = returnUrl,
-                Email = email
-            });
-            //var existingUser = await userManager.FindByEmailAsync(email);
-            //if (existingUser is not null)
-            //    return TryLinkExistingUser(existingUser, returnUrl);
-
-            //return Ok();
+                }),
+                _ => ExternalLogInFailed(returnUrl)
+            };
         }
 
 #if DEBUG
@@ -109,148 +46,35 @@ namespace CoreFitness.Web.Controllers
 #endif
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> VerifyExternalLogIn(VerifyExternalLogInViewModel vm)
+        public async Task<IActionResult> VerifyEmailLogIn(VerifyEmailViewModel vm)
         {
             if (!ModelState.IsValid)
-                return View("VerifyExternalLogin", vm);
+                return View(vm);
 
-            //TODO: Validerar koden mot databas/cache
+            var result = await authService.VerifyEmailAsync(vm.Email, vm.Code, vm.ReturnUrl);
 
-            if (!string.Equals(vm.Code, "123456", StringComparison.Ordinal))
+            if(result.Type == AuthenticationResultType.InvalidCode)
             {
                 ModelState.AddModelError(nameof(vm.Code), "Wrong code");
 
-                return View("VerifyExternalLogin", vm);
+                return View(vm);
             }
 
-            var externalUser = await GetExternalUserInfo();
-
-            if (externalUser is null)
-                return ExternalLogInFailed(vm.ReturnUrl);
-
-            var (info, email) = externalUser.Value;
-
-            var existingUser = await userManager.FindByEmailAsync(email);
-
-            if (existingUser is not null)
-                return await LinkExistingUser(existingUser, info, vm.ReturnUrl);
-
-            return await CreateExternalUser(email, info, vm.ReturnUrl);
-        }
-
-        private async Task<IActionResult> CreateExternalUser(string email, ExternalLoginInfo info, string? returnUrl = null)
-        {
-            var user = new ApplicationUser
+            return result.Type switch
             {
-                UserName = email,
-                Email = email,
-                EmailConfirmed = true
+                AuthenticationResultType.SignedIn => RedirectToLocal(result.ReturnUrl),
+                _ => ExternalLogInFailed(result.ReturnUrl)
             };
-
-            var createResult = await userManager.CreateAsync(user);
-            if (!createResult.Succeeded)
-            {
-                logger.LogError("Failed to create user {Email} : {Errors}",
-                    email,
-                    string.Join(",", createResult.Errors.Select(e => e.Description)));
-
-                return ExternalLogInFailed(returnUrl);
-            }
-
-            var linkResult = await userManager.AddLoginAsync(user, info);
-            if (!linkResult.Succeeded)
-            {
-                logger.LogError("Failed to link {Provider} to {Email} : {Errors}",
-                    info.LoginProvider,
-                    user.Email,
-                    string.Join(",", linkResult.Errors.Select(e => e.Description)));
-
-                await userManager.DeleteAsync(user);
-
-                return ExternalLogInFailed(returnUrl);
-            }
-
-            var photoUrl = info.Principal.Claims.FirstOrDefault(c => c.Type == "picture")?.Value;
-            var firstName = info.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value ?? "";
-            var lastName = info.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Surname)?.Value ?? "";
-
-            var coreUser = CoreFitness.Domain.Entities.Users.User.Create(
-                AuthenticationId.Create(user.Id.ToString()),
-                UserEmail.Create(email),
-                UserName.Create(firstName, lastName),
-                null,
-                photoUrl,
-                UserRole.Member);
-
-            try
-            {
-                await userRepository.AddAsync(coreUser);
-                await unitOfWork.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                
-                logger.LogError("Failed to create domain user, rolling back identity user: {Error}", ex.Message);
-
-                await userManager.RemoveLoginAsync(user, info.LoginProvider, info.ProviderKey);
-                await userManager.DeleteAsync(user);
-                
-                return ExternalLogInFailed(returnUrl);
-            }
-
-            await signInManager.SignInAsync(user, isPersistent: false);
-
-            return RedirectToLocal(returnUrl);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateFromExternal(NoAccountFoundViewModel vm)
+        public async Task<IActionResult> StartExternalVerification(NoAccountFoundViewModel vm)
         {
             return View("VerifyExternalLogin", new VerifyExternalLogInViewModel
             {
                 Email = vm.Email,
                 ReturnUrl = vm.ReturnUrl
             });
-        }
-
-        private async Task<IActionResult> LinkExistingUser(ApplicationUser user, ExternalLoginInfo info, string? returnUrl = null)
-        {
-            var result = await userManager.AddLoginAsync(user, info);
-            if (!result.Succeeded)
-            {
-                logger.LogError("Failed to link {Provider} to {Email} : {Errors}",
-                    info.LoginProvider,
-                    user.Email,
-                    string.Join(",", result.Errors.Select(e => e.Description)));
-
-                return ExternalLogInFailed(returnUrl);
-            }
-
-            await signInManager.SignInAsync(user, isPersistent: false);
-            return RedirectToLocal(returnUrl);
-        }
-
-        private async Task<(ExternalLoginInfo Info, string Email)?> GetExternalUserInfo()
-        {
-            var info = await signInManager.GetExternalLoginInfoAsync();
-
-            if (info is null)
-            {
-                logger.LogWarning("Externa login info was null!");
-
-                return null;
-            }
-
-            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                logger.LogWarning("No email claim from {Provider}", info.LoginProvider);
-
-                return null;
-            }
-
-            return (info, email);
         }
 
         private RedirectToActionResult ExternalLogInFailed(string? returnUrl = null)
@@ -265,13 +89,13 @@ namespace CoreFitness.Web.Controllers
             if (Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
 
-            return RedirectToAction("index", "Home");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public new async Task<IActionResult> SignOut()
         {
-            await signInManager.SignOutAsync();
+            await authService.SignOutAsync();
 
             return RedirectToAction("Index", "Home");
         }

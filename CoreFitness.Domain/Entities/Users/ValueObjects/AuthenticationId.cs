@@ -2,7 +2,6 @@
 
 namespace CoreFitness.Domain.Entities.Users.ValueObjects
 {
-    //TODO: Ändra till stringvärde eftersom olika providers kan ha String eller Guid
     public readonly record struct AuthenticationId
     {
         public string Value { get; }
@@ -16,6 +15,6 @@ namespace CoreFitness.Domain.Entities.Users.ValueObjects
         }
 
         public static AuthenticationId Create(string value) => new(value);
-        public override string ToString() => Value.ToString();
+        public override string ToString() => Value;
     }
 }

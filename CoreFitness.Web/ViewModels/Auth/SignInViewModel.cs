@@ -5,7 +5,7 @@ namespace CoreFitness.Web.ViewModels.Auth
     public class SignInViewModel
     {
         public string? ReturnUrl { get; set; }
-        public List<string> ExternalProviders { get; set; } = [];
+        public IReadOnlyList<string> ExternalProviders { get; init; } = [];
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]

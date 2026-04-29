@@ -1,14 +1,15 @@
-﻿using CoreFitness.Application.Identity;
+﻿using CoreFitness.Application.Authentication;
+using CoreFitness.Application.Authentication.Abstractions;
+using CoreFitness.Application.Authentication.Services;
 using CoreFitness.Domain.Interfaces.Memberships;
 using CoreFitness.Domain.Interfaces.TrainingSessions;
 using CoreFitness.Domain.Interfaces.UnitOfWork;
 using CoreFitness.Domain.Interfaces.Users;
+using CoreFitness.Infrastructure.Authentication.Services;
 using CoreFitness.Infrastructure.Identity;
 using CoreFitness.Infrastructure.Persistence;
 using CoreFitness.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -86,8 +87,9 @@ public static class DependencyInjection
 
                 options.CallbackPath = "/signin-google";
             });
-
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IPasswordProvider, PasswordProvider>();
+        services.AddScoped<IExternalAuthProvider, ExternalAuthProvider>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IMembershipRepository, MembershipRepository>();

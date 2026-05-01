@@ -8,7 +8,7 @@ namespace CoreFitness.Domain.Entities.Memberships
         public MembershipTypeId MembershipTypeId { get; private set; }
         public MembershipTypeBenefitDescription Description { get; private set; }
 
-        private MembershipTypeBenefit() { }
+        protected MembershipTypeBenefit() { }
 
         private MembershipTypeBenefit(MembershipTypeBenefitId id, MembershipTypeId membershipTypeId, MembershipTypeBenefitDescription description)
         {
@@ -16,7 +16,6 @@ namespace CoreFitness.Domain.Entities.Memberships
             MembershipTypeId = membershipTypeId;
             Description = description;
         }
-
         public static MembershipTypeBenefit Create(MembershipTypeId membershipTypeId, MembershipTypeBenefitDescription description) =>
             new(MembershipTypeBenefitId.New(), membershipTypeId, description);
     }

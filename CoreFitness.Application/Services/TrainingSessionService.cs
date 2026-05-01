@@ -26,17 +26,26 @@ namespace CoreFitness.Application.Services
         public async Task<Result> BookAsync(Guid sessionId, Guid userId, CancellationToken ct = default)
         {
             var session = await repository.GetByIdAsync(new TrainingSessionId(sessionId), ct);
+
             if (session is null)
                 return Result.NotFound("TrainingSession", sessionId);
 
-            var membership = await membershipRepository.GetByUserIdAsync(new UserId(userId), ct);
-            if (membership is null || !membership.IsActive)
-                return Result.Failure(Error.Failure("User does not have an active membership"));
+            var uId = new UserId(userId);
 
-            session.Book(new UserId(userId));
+            var membership = await membershipRepository.GetByUserIdAsync(uId, ct);
+
+            if (membership is null || !membership.IsActive)
+                return Result.Conflict("User does not have an active membership");
+
+            var bookingResult = session.Book(uId);
+
+            if(bookingResult.IsFailure)
+                return Result.Failure(bookingResult.Error!);
+
             membership.UseSession();
 
             await unitOfWork.SaveChangesAsync(ct);
+
             return Result.Success();
         }
 
@@ -44,17 +53,24 @@ namespace CoreFitness.Application.Services
         public async Task<Result> CancelBookingAsync(Guid sessionId, Guid userId, CancellationToken ct = default)
         {
             var session = await repository.GetByIdAsync(new TrainingSessionId(sessionId), ct);
+
             if (session is null)
                 return Result.NotFound("TrainingSession", sessionId);
 
-            var membership = await membershipRepository.GetByUserIdAsync(new UserId(userId), ct);
+            var uId = new UserId(userId);
 
-            session.CancelBooking(new UserId(userId));
+            var membership = await membershipRepository.GetByUserIdAsync(uId, ct);
+
+            var cancelResult = session.CancelBooking(uId);
+
+            if(cancelResult.IsFailure)
+                return cancelResult;
 
             if (membership is not null && membership.IsActive)
                 membership.RefundSession();
 
             await unitOfWork.SaveChangesAsync(ct);
+
             return Result.Success();
         }
 
@@ -68,6 +84,7 @@ namespace CoreFitness.Application.Services
                 TrainingSessionDuration.FromMinutes(dto.DurationInMinutes));
 
             await repository.AddAsync(session, ct);
+            
             await unitOfWork.SaveChangesAsync(ct);
 
             return Result<TrainingSessionDTO>.Success(session.ToDTO());

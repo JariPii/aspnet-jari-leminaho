@@ -20,6 +20,9 @@ namespace CoreFitness.Domain.Entities.Memberships
 
         public static MembershipType Create(MembershipTypeName name, MembershipTypeDescription description, MembershipTypePrice price, MembershipTypeDuration duration, int sessionLimit, MembershipTypeEnums type)
         {
+            if(sessionLimit <= 0)
+                throw new InvalidSessionLimitException(sessionLimit);
+
             return new(MembershipTypeId.New(), name, description, price, duration, sessionLimit, type);
         }
 
@@ -37,13 +40,16 @@ namespace CoreFitness.Domain.Entities.Memberships
 
         public void UpdatePrice(MembershipTypePrice newPrice)
         {
+            if(newPrice == Price) return;
             Price = newPrice;
+
             UpdateTimeStamp();
         }
 
         public void UpdateDuration(MembershipTypeDuration days)
         {
             Duration = days;
+
             UpdateTimeStamp();
         }
 

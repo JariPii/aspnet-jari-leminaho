@@ -52,6 +52,13 @@
                     <cf-navlink asp-controller="Profile" asp-action="Index" variant="primary">
                         My Account
                     </cf-navlink>
+
+                    @if(User.IsInRole("Admin"))
+                    {
+                        <cf-navlink asp-controller="Admin" asp-action="Index">
+                            Admin Panel
+                        </cf-navlink>
+                    }
                 }
                 else
                 {

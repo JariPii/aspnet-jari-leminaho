@@ -1,0 +1,24 @@
+@using CoreFitness.Web.ViewModels.Admin.Sessions
+@model UpdateSessionViewModel
+
+@{
+    var date = Model?.StartDate > DateTime.MinValue
+        ? Model.StartDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+        : DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
+}
+
+<form asp-action="UpdateSession" method="post">
+    <input type="hidden" asp-for="Id"/>
+
+    <input asp-for="Name" placeholder='Name'/>
+
+    <input asp-for="Description" placeholder='Description' />
+
+    <input name="StartDate" type="datetime-local" value="@date" />
+
+    <input asp-for="Capacity" type="number" />
+    
+    <input asp-for="DurationInMinutes" type="number" />
+
+    <button type="submit">Save</button>
+</form>

@@ -21,8 +21,10 @@ if (app.Environment.IsDevelopment())
     await authDb.Database.EnsureCreatedAsync();
     await coreDb.Database.EnsureCreatedAsync();
 
-    await DbSeeder.SeedRolesAsync(app.Services.CreateScope().ServiceProvider);
-    await DbSeeder.SeedMembershipTypesAsync(app.Services.CreateScope().ServiceProvider);
+    await DbSeeder.SeedRolesAsync(services);
+    await DbSeeder.SeedMembershipTypesAsync(services);
+    await DbSeeder.SeedAdminAsync(services);
+    await DbSeeder.SeedTrainingSessions(services);
 }
 
 if (!app.Environment.IsDevelopment())

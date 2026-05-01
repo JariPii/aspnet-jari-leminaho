@@ -1,4 +1,5 @@
-﻿using CoreFitness.Domain.Entities.Common;
+﻿using System.Diagnostics.Tracing;
+using CoreFitness.Domain.Entities.Common;
 using CoreFitness.Domain.Entities.Memberships.ValueObjects;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Exceptions;
@@ -35,20 +36,40 @@ namespace CoreFitness.Domain.Entities.Memberships
             Id = id;
             UserId = userId;
             TypeId = type;
+            PurchasedPrice = purchasedPrice;
             StartDate = startDate;
             EndDate = endDate;
             SessionLimit = sessionLimit;
         }
 
-        public static Membership Create(UserId userId, MembershipTypeId typeId, decimal purchasedPrice, DateOnly startDate, DateOnly endDate, int sessionLimit) =>
-            new(MembershipId.New(), userId, typeId, purchasedPrice, startDate, endDate, sessionLimit);
+        public static Membership Create(UserId userId, MembershipTypeId typeId, decimal purchasedPrice, DateOnly startDate, DateOnly endDate, int sessionLimit)
+        {
+
+            if(endDate <= startDate)
+                throw new InvalidMembershipPeriodException("Start date can not be in the past");
+
+            if(sessionLimit <0 )
+                throw new InvalidSessionLimitException(sessionLimit);
+
+            if(purchasedPrice < 0)
+                throw new InvalidPriceException(purchasedPrice);
+            
+            return new(
+                MembershipId.New(),
+                userId,
+                typeId,
+                purchasedPrice,
+                startDate,
+                endDate,
+                sessionLimit);
+        }
 
         private Membership() { }
 
         public void Extend(DateOnly newEndDate)
         {
             if (newEndDate <= EndDate)
-                throw new InvalidExtendMembershipException("New date has to later than end date");
+                throw new InvalidExtendMembershipException("End date must be after start date");
 
             EndDate = newEndDate;
         }
@@ -62,8 +83,11 @@ namespace CoreFitness.Domain.Entities.Memberships
                 throw new MembershipExpiredException();
 
             var checkIn = CheckIn.Create(UserId, Id);
+
             _checkIns.Add(checkIn);
+
             UpdateTimeStamp();
+
             return checkIn;
         }
 
@@ -76,14 +100,17 @@ namespace CoreFitness.Domain.Entities.Memberships
                 throw new NoSessionsLeftException();
 
             SessionsUsed++;
+
             UpdateTimeStamp();
         }
 
         public void RefundSession()
         {
-            if (SessionsUsed <= 0) return;
+            if(SessionsUsed <= 0)
+                throw new InvalidSessionStateException("No sessions to refund");
 
             SessionsUsed--;
+
             UpdateTimeStamp();
         }
 

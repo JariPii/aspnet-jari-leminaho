@@ -38,3 +38,15 @@ if (quoteBtn) {
     }
   });
 }
+
+// FaqItems
+// TODO: Add IsActive
+document.querySelectorAll('.faq-btn').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    const answer = btn.nextElementSibling;
+    const icon = btn.querySelector('.fa-chevron-down');
+
+    answer.classList.toggle('hidden');
+    icon.classList.toggle('rotate-180');
+  });
+});

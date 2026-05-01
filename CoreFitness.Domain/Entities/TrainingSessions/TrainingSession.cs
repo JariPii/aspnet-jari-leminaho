@@ -1,4 +1,5 @@
-﻿using CoreFitness.Domain.Entities.Bookings;
+﻿using CoreFitness.Domain.Common;
+using CoreFitness.Domain.Entities.Bookings;
 using CoreFitness.Domain.Entities.Common;
 using CoreFitness.Domain.Entities.TrainingSessions.ValueObjects;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
@@ -44,27 +45,35 @@ namespace CoreFitness.Domain.Entities.TrainingSessions
                 duration);
         }
 
-        public Booking Book(UserId userId)
+        public Result<Booking> Book(UserId userId)
         {
             if (IsFull)
-                throw new TrainingSessionIsFullException();
+                return Result<Booking>.Conflict("Session is full");
 
             if (_bookings.Any(b => b.UserId == userId))
-                throw new DuplicateBookingException();
+                return Result<Booking>.Conflict("User already booked");
 
             var booking = Booking.Create(userId, Id);
+            
             _bookings.Add(booking);
+
             UpdateTimeStamp();
-            return booking;
+
+            return Result<Booking>.Success(booking);
         }
 
-        public void CancelBooking(UserId userId)
+        public Result CancelBooking(UserId userId)
         {
-            var booking = _bookings.FirstOrDefault(b => b.UserId == userId) ??
-                throw new BookingNotFoundException(userId, Id);
+            var booking = _bookings.FirstOrDefault(b => b.UserId == userId);
+                
+            if(booking is null)
+                return Result.NotFound("Booking", userId);
 
             _bookings.Remove(booking);
+
             UpdateTimeStamp();
+
+            return Result.Success();
         }
 
         public void UpdateName(TrainingSessionName newTrainingSessionName)
@@ -102,6 +111,9 @@ namespace CoreFitness.Domain.Entities.TrainingSessions
 
         public void UpdateCapacity(TrainingSessionCapacity newCapacity)
         {
+            if(newCapacity.Value < _bookings.Count)
+                throw new InvalidCapacityException(newCapacity.Value);
+
             if (Capacity == newCapacity) return;
 
             Capacity = newCapacity;

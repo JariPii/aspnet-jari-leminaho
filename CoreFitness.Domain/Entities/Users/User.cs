@@ -87,7 +87,6 @@ namespace CoreFitness.Domain.Entities.Users
         public decimal? BMI => CurrentWeight.HasValue && Height.HasValue ?
             Math.Round(CurrentWeight.Value / (decimal)Math.Pow((double)(Height.Value / 100), 2), 1) :
             null;
-
         public void UpdateWeight(decimal currentWeight, decimal height)
         {
             if (currentWeight <= 0)

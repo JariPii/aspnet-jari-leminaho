@@ -22,6 +22,7 @@ if (app.Environment.IsDevelopment())
     await coreDb.Database.EnsureCreatedAsync();
 
     await DbSeeder.SeedRolesAsync(app.Services.CreateScope().ServiceProvider);
+    await DbSeeder.SeedMembershipTypesAsync(app.Services.CreateScope().ServiceProvider);
 }
 
 if (!app.Environment.IsDevelopment())
@@ -32,6 +33,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseStatusCodePagesWithReExecute("/Home/Error404");
 
 app.UseAuthentication();
 app.UseAuthorization();

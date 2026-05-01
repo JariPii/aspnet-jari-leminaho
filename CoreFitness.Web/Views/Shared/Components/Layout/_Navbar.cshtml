@@ -21,7 +21,7 @@
                 </li>
                 @* TODO: Proper dropdown *@
                 <li class='relative group'>
-                    <button class="flex items-center gap-1 hover:text-lime-400 transition-colors">
+                    <button class="flex items-center gap-1 hover:text-tertiary transition-colors">
                         Training
                     </button>
                     <div class='absolute top-full left-0 mt-2 w-48 bg-white text-gray900 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50'>
@@ -42,13 +42,14 @@
                 </li>
             </ul>
             <div class='hidden md:flex items-center gap-4'>
+                @* TODO: Add dropdown with SignOut and My Account choises *@
                 @if(SignInManager.IsSignedIn(User))
                 {
                     <cf-navlink asp-controller="Memberships" asp-action="Index">
                         Our Classes
                     </cf-navlink>
 
-                    <cf-navlink asp-controller="Profile" asp-action="AboutMe" variant="primary">
+                    <cf-navlink asp-controller="Profile" asp-action="Index" variant="primary">
                         My Account
                     </cf-navlink>
                 }
@@ -58,7 +59,7 @@
                         Our Classes
                     </cf-navlink>
 
-                    <cf-navlink asp-controller="Profile" asp-action="AboutMe" variant="primary">
+                    <cf-navlink asp-controller="Account" asp-action="SignIn" variant="primary">
                         Sign In
                     </cf-navlink>
                 }
@@ -95,7 +96,7 @@
                     }
                     else
                     {
-                        <a asp-controller="Membership" asp-action="Index">Become Member</a>
+                        <a asp-controller="Account" asp-action="SignUp">Become Member</a>
                         <a asp-controller="Account" asp-action="Index">Sign In</a>
                     }
                 </div>

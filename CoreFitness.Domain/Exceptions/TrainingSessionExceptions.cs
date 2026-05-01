@@ -51,4 +51,14 @@ namespace CoreFitness.Domain.Exceptions
     {
         public InvalidSessionLimitException(int limit) : base($"Session limit {limit} must be greater than 0") { }
     }
+
+    public sealed class InvalidMembershipPeriodException : ValidationException
+    {
+        public InvalidMembershipPeriodException(string message) : base(message){}
+    }
+
+    public sealed class InvalidSessionStateException : ValidationException
+    {
+        public InvalidSessionStateException(string message) : base(message) {}
+    }
 }

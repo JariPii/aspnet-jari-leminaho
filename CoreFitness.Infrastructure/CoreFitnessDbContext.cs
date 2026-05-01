@@ -59,8 +59,7 @@ namespace CoreFitness.Infrastructure
                 foreach (var entity in modelBuilder.Model.GetEntityTypes())
                 {
                     var rowVersion = entity.FindProperty("RowVersion");
-                    if (rowVersion != null)
-                        rowVersion.SetDefaultValueSql("randomblob(8)");
+                    rowVersion?.SetDefaultValueSql("randomblob(8)");
                 }
             }
 

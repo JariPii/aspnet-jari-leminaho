@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CoreFitness.Web.ViewModels
+namespace CoreFitness.Web.ViewModels.Auth
 {
     public class VerifyExternalLogInViewModel
     {

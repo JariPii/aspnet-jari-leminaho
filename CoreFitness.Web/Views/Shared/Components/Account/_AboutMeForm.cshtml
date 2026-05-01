@@ -34,6 +34,16 @@
             </div>
         </div>
 
+        
+
         <button type="submit">Save</button>
+    </form>
+
+    <form asp-controller="Profile" asp-action="UploadPhoto" method='post' enctype='multipart/form-data'>
+        <label for="">Profile Image</label>
+
+        <input type="file" name='photo' accept='image/**' />
+
+        <button type="submit">Upload Photo</button>
     </form>
 </div>

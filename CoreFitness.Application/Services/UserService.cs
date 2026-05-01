@@ -7,10 +7,11 @@ using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Enums;
 using CoreFitness.Domain.Interfaces.UnitOfWork;
 using CoreFitness.Domain.Interfaces.Users;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CoreFitness.Application.Services
 {
-    public class UserService(IUserRepository repository, IUnitOfWork unitOfWork) : IUserService
+    public class UserService(IUserRepository repository, IUnitOfWork unitOfWork, IFileStorage fileStorage) : IUserService
     {
         public async Task<Result> DeleteAsync(Guid userId, CancellationToken ct = default)
         {
@@ -65,9 +66,9 @@ namespace CoreFitness.Application.Services
             return Result.Success();
         }
 
-        public async Task<Result> CompleteRegistrationAsync(Guid authenticationId, CompleteProfileDTO dto, CancellationToken ct = default)
+        public async Task<Result> CompleteRegistrationAsync(AuthenticationId authId, CompleteProfileDTO dto, CancellationToken ct = default)
         {
-            var authId = AuthenticationId.Create(authenticationId.ToString());
+            // var authId = AuthenticationId.Create(authenticationId.ToString());
 
             var user = User.Create(
                 authId,
@@ -97,9 +98,9 @@ namespace CoreFitness.Application.Services
             });
         }
 
-        public async Task<Result<UserDTO>> GetByAuthenticationId(Guid authId, CancellationToken ct = default)
+        public async Task<Result<UserDTO>> GetByAuthenticationId(AuthenticationId authId, CancellationToken ct = default)
         {
-            var user = await repository.GetByAuthenticationIdAsync(AuthenticationId.Create(authId.ToString()), ct);
+            var user = await repository.GetByAuthenticationIdAsync(authId, ct);
 
             if(user is null)
                 return Result<UserDTO>.Failure(Error.NotFound("User", authId));
@@ -130,6 +131,31 @@ namespace CoreFitness.Application.Services
             user.SetWeightGoal(targetWeight);
 
             await unitOfWork.SaveChangesAsync(ct);
+            return Result.Success();
+        }
+
+        public async Task<Result> UploadProfilePhotoAsync(AuthenticationId authId, Stream stream, string originalFileName, CancellationToken ct = default)
+        {
+            var user = await repository.GetByAuthenticationIdAsync(authId, ct);
+
+            if(user is null)
+                return Result.Failure(Error.NotFound("User", authId));
+
+            var extension = Path.GetExtension(originalFileName)?.ToLowerInvariant();
+
+            if(string.IsNullOrWhiteSpace(extension) || extension is not (".jpg" or ".jpeg" or ".png" or ".webp"))
+                return Result.Failure(Error.Validation("Invalid file type"));
+
+            var fileName = $"{Guid.NewGuid()}{extension}";
+
+            var photoUrl = await fileStorage.SaveAsync(stream, fileName, ct);
+
+            user.UpdatePhotoUrl(photoUrl);
+
+            // TODO: Add Delete old file
+
+            await unitOfWork.SaveChangesAsync(ct);
+
             return Result.Success();
         }
     }

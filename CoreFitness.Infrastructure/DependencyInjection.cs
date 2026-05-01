@@ -1,14 +1,17 @@
 ﻿using CoreFitness.Application.Authentication;
 using CoreFitness.Application.Authentication.Abstractions;
 using CoreFitness.Application.Authentication.Services;
+using CoreFitness.Application.Interfaces;
 using CoreFitness.Domain.Interfaces.Memberships;
 using CoreFitness.Domain.Interfaces.TrainingSessions;
 using CoreFitness.Domain.Interfaces.UnitOfWork;
 using CoreFitness.Domain.Interfaces.Users;
 using CoreFitness.Infrastructure.Authentication.Services;
+using CoreFitness.Infrastructure.Filestorage;
 using CoreFitness.Infrastructure.Identity;
 using CoreFitness.Infrastructure.Persistence;
 using CoreFitness.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -67,6 +70,11 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<AuthDbContext>()
             .AddDefaultTokenProviders();
 
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.LoginPath = "/Account/SignIn";
+        });
+
         services.AddAuthentication()
             .AddGoogle(options =>
             {
@@ -86,7 +94,26 @@ public static class DependencyInjection
                 //options.ClaimActions.MapJsonKey("email_verified", "email_verified");
 
                 options.CallbackPath = "/signin-google";
+                options.ClaimActions.MapJsonKey("picture", "picture", "url");
+                options.Scope.Add("profile");
+            })
+            .AddGitHub(options =>
+            {
+                var clientId = config["Authentication:GitHub:ClientId"];
+                var clientSecret = config["Authentication:GitHub:ClientSecret"];
+
+                if(string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(clientSecret))
+                    throw new InvalidOperationException(
+                        "Github authentication is missing in comfiguration. " + 
+                        "Please set Authentication:GitHub:ClientId and ClientSecret"
+                    );
+
+                options.ClientId = clientId;
+                options.ClientSecret = clientSecret;
+                options.CallbackPath = "/signin-github";
+                options.Scope.Add("user:email");
             });
+
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPasswordProvider, PasswordProvider>();
         services.AddScoped<IExternalAuthProvider, ExternalAuthProvider>();
@@ -95,6 +122,7 @@ public static class DependencyInjection
         services.AddScoped<IMembershipRepository, MembershipRepository>();
         services.AddScoped<IMembershipTypeRepository, MembershipTypeRepository>();
         services.AddScoped<ITrainingSessionRepository, TrainingSessionRepository>();
+        services.AddScoped<IFileStorage, LocalFileStorage>();
 
         return services;
     }

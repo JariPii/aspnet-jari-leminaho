@@ -6,6 +6,7 @@ using CoreFitness.Web.ViewModels.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using CoreFitness.Web.Extensions;
 
 namespace CoreFitness.Web.Controllers;
 
@@ -14,7 +15,7 @@ public class ProfileController(IUserService userService, UserManager<Application
 {
     public async Task<IActionResult> Index()
     {
-        var authId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var authId = User.GetAuthenticationId();
 
         var userResult = await userService.GetByAuthenticationId(authId);
         if(!userResult.IsSuccess)
@@ -100,7 +101,7 @@ public class ProfileController(IUserService userService, UserManager<Application
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete()
     {
-        var authId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var authId = User.GetAuthenticationId();
 
         var userResult = await userService.GetByAuthenticationId(authId);
         if(!userResult.IsSuccess)
@@ -126,5 +127,28 @@ public class ProfileController(IUserService userService, UserManager<Application
 
         await signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> UploadPhoto(IFormFile photo, CancellationToken ct = default)
+    {
+        if(photo is null || photo.Length == 0)
+            return RedirectToAction("Index");
+
+        var authId = User.GetAuthenticationId();
+
+        using var stream = photo.OpenReadStream();
+
+        var result = await userService.UploadProfilePhotoAsync(
+            authId,
+            stream,
+            photo.FileName,
+            ct
+        );
+
+        if(!result.IsSuccess)
+            TempData["Error"] = "Failed to upload image";
+
+        return RedirectToAction("Index");
     }
 }

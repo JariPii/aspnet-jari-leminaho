@@ -1,4 +1,5 @@
-﻿using CoreFitness.Domain.Entities.Bookings;
+﻿using CoreFitness.Domain.Common;
+using CoreFitness.Domain.Entities.Bookings;
 using CoreFitness.Domain.Entities.Common;
 using CoreFitness.Domain.Entities.TrainingSessions.ValueObjects;
 using CoreFitness.Domain.Entities.Users.ValueObjects;

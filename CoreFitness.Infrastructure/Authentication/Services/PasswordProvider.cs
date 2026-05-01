@@ -1,5 +1,6 @@
 using CoreFitness.Application.Authentication.Abstractions;
 using CoreFitness.Application.Authentication.Models;
+using CoreFitness.Domain.Common;
 using CoreFitness.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -83,20 +84,27 @@ public class PasswordProvider(UserManager<ApplicationUser> userManager, SignInMa
     public async Task SignOutAsync(CancellationToken ct = default) =>
         await signInManager.SignOutAsync();
 
-    public async Task DeleteUserAsync(string userId, CancellationToken ct = default)
+    public async Task<Result> DeleteUserAsync(string userId, CancellationToken ct = default)
     {
         var user = await userManager.FindByIdAsync(userId);
+        
         if(user is null)
         {
             logger.LogWarning("Failed to delete user. User not found: {UserId}", userId);
-            return;
+            return Result.Failure(Error.NotFound("User", userId));
         }
 
         var result = await userManager.DeleteAsync(user);
 
         if(!result.Succeeded)
         {
-            logger.LogError("Failed to delete user {UserId}: {Errors}", userId, string.Join(", ", result.Errors.Select(e => e.Description)));
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+
+            logger.LogError("Failed to delete user {UserId}: {Errors}", userId, errors);
+
+            return Result.Failure(Error.Failure(errors));
         }
+
+        return Result.Success();
     }
 }

@@ -14,4 +14,5 @@ public class ProfilePageViewModel
     public decimal? Height { get; set; }
     public decimal? TargetWeight { get; set; }
     public UserStatisticsDTO? Statistics { get; set; }
+    // public byte[] RowVersion { get; set; } = default!;
 }

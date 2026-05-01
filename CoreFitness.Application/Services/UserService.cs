@@ -1,4 +1,5 @@
-﻿using CoreFitness.Application.DTOs.User;
+﻿using CoreFitness.Application.Authentication.Abstractions;
+using CoreFitness.Application.DTOs.User;
 using CoreFitness.Application.Interfaces;
 using CoreFitness.Application.Mappings;
 using CoreFitness.Domain.Common;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CoreFitness.Application.Services
 {
-    public class UserService(IUserRepository repository, IUnitOfWork unitOfWork, IFileStorage fileStorage) : IUserService
+    public class UserService(IUserRepository repository, IUnitOfWork unitOfWork, IFileStorage fileStorage, IPasswordProvider passwordProvider) : IUserService
     {
         public async Task<Result> DeleteAsync(Guid userId, CancellationToken ct = default)
         {
@@ -63,6 +64,43 @@ namespace CoreFitness.Application.Services
                 user.UpdatePhotoUrl(dto.PhotoUrl);
 
             await unitOfWork.SaveChangesAsync(ct);
+            return Result.Success();
+        }
+
+        public async Task<Result> UpdateProfileAsync(UpdateProfileDTO dto, CancellationToken ct = default)
+        {
+            var user = await repository.GetByIdAsync(new UserId(dto.Id), ct);
+
+            if(user is null)
+                return Result.Failure(Error.NotFound("User", dto.Id));
+
+            if(dto.Email is not null && dto.Email != user.Email.Value)
+            {
+                var email = UserEmail.Create(dto.Email);
+
+                if(await repository.ExistsByEmailAsync(email, ct))
+                    return Result.Failure(Error.Conflict($"Email {dto.Email} is already in use"));
+
+                user.UpdateEmail(email);
+            }
+
+            if(dto.FirstName is not null)
+                user.UpdateFirstName(dto.FirstName);
+
+            if(dto.LastName is not null)
+                user.UpdateLastName(dto.LastName);
+
+            if(dto.PhoneNumber is not null)
+                user.UpdatePhoneNumber(UserPhoneNumber.Create(dto.PhoneNumber));
+
+            if(dto.Weight.HasValue && dto.Height.HasValue)
+                user.UpdateWeight(dto.Weight.Value, dto.Height.Value);
+
+            if(dto.TargetWeight.HasValue)
+                user.SetWeightGoal(dto.TargetWeight.Value);
+                
+            await unitOfWork.SaveChangesAsync(ct);
+
             return Result.Success();
         }
 
@@ -153,6 +191,25 @@ namespace CoreFitness.Application.Services
             user.UpdatePhotoUrl(photoUrl);
 
             // TODO: Add Delete old file
+
+            await unitOfWork.SaveChangesAsync(ct);
+
+            return Result.Success();
+        }
+
+        public async Task<Result> DeleteAccountAsync(AuthenticationId authId, CancellationToken ct = default)
+        {
+            var user = await repository.GetByAuthenticationIdAsync(authId, ct);
+
+            if(user is null)
+                return Result.Failure(Error.NotFound("User", authId));
+
+            var identityResult = await passwordProvider.DeleteUserAsync(authId.Value, ct);
+
+            if(!identityResult.IsSuccess)
+                return identityResult;
+
+            await repository.DeleteAsync(user.Id, ct);
 
             await unitOfWork.SaveChangesAsync(ct);
 

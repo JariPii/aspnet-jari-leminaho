@@ -2,6 +2,7 @@ using System.IO.Compression;
 using System.Security.Claims;
 using CoreFitness.Application.Authentication.Abstractions;
 using CoreFitness.Application.Authentication.Models;
+using CoreFitness.Domain.Common;
 using CoreFitness.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -73,7 +74,7 @@ public class ExternalAuthProvider(SignInManager<ApplicationUser> signInManager, 
 
         if(user is null)
         {
-            logger.LogError("LinkExternalLogin failed. User not found: {UserId}", userId);
+            logger.LogWarning("LinkExternalLogin failed. User not found: {UserId}", userId);
             return LinkResult.Failed("User nod found");
         }
 
@@ -86,7 +87,7 @@ public class ExternalAuthProvider(SignInManager<ApplicationUser> signInManager, 
             logger.LogError("Failed to link {Provider} to {UserId}: {Errors}", provider, userId,
             string.Join(", ", result.Errors.Select(e => e.Description)));
 
-            return LinkResult.Failed();
+            return LinkResult.Failed("Failed to link external provider");
         }
 
         return LinkResult.Success();
@@ -102,6 +103,20 @@ public class ExternalAuthProvider(SignInManager<ApplicationUser> signInManager, 
             return LinkResult.Failed("User not found");
         }
 
+        var logins = await userManager.GetLoginsAsync(user);
+
+        var login = logins.FirstOrDefault(l => l.LoginProvider == provider && l.ProviderKey == providerKey);
+
+        if(login is null)
+        {
+            return LinkResult.Failed("Login not found");
+        }
+
+        if(logins.Count == 1 && !await userManager.HasPasswordAsync(user))
+        {
+            return LinkResult.Failed("Can not remove the only login method");
+        }
+
         var result = await userManager.RemoveLoginAsync(user, provider, providerKey);
 
         if(!result.Succeeded)
@@ -109,7 +124,7 @@ public class ExternalAuthProvider(SignInManager<ApplicationUser> signInManager, 
             logger.LogError("Failed to remove {Provider} from {UserId}: {Errors}",
             provider, userId, string.Join(", ", result.Errors.Select(e => e.Description)));
 
-            return LinkResult.Failed("Failed");
+            return LinkResult.Failed("Failed to remove external login");
         }
 
         return LinkResult.Success();

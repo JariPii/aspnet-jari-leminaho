@@ -37,6 +37,9 @@ namespace CoreFitness.Application.Services
             if (membership is null || !membership.IsActive)
                 return Result.Conflict("User does not have an active membership");
 
+            if(!membership.HasSessionsLeft)
+                return Result.Conflict("So sessions left");
+
             var bookingResult = session.Book(uId);
 
             if(bookingResult.IsFailure)

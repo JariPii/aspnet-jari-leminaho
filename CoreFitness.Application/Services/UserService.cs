@@ -25,6 +25,25 @@ namespace CoreFitness.Application.Services
             return Result.Success();
         }
 
+        public async Task<Result> DeleteAccountAsync(AuthenticationId authId, CancellationToken ct = default)
+        {
+            var user = await repository.GetByAuthenticationIdAsync(authId, ct);
+
+            if(user is null)
+                return Result.Failure(Error.NotFound("User", authId));
+
+            var identityResult = await passwordProvider.DeleteUserAsync(authId.Value, ct);
+
+            if(!identityResult.IsSuccess)
+                return identityResult;
+
+            await repository.DeleteAsync(user.Id, ct);
+
+            await unitOfWork.SaveChangesAsync(ct);
+
+            return Result.Success();
+        }
+
         public async Task<Result<UserDTO>> GetByIdAsync(Guid userId, CancellationToken ct = default)
         {
             var user = await repository.GetByIdAsync(new UserId(userId), ct);
@@ -191,25 +210,6 @@ namespace CoreFitness.Application.Services
             user.UpdatePhotoUrl(photoUrl);
 
             // TODO: Add Delete old file
-
-            await unitOfWork.SaveChangesAsync(ct);
-
-            return Result.Success();
-        }
-
-        public async Task<Result> DeleteAccountAsync(AuthenticationId authId, CancellationToken ct = default)
-        {
-            var user = await repository.GetByAuthenticationIdAsync(authId, ct);
-
-            if(user is null)
-                return Result.Failure(Error.NotFound("User", authId));
-
-            var identityResult = await passwordProvider.DeleteUserAsync(authId.Value, ct);
-
-            if(!identityResult.IsSuccess)
-                return identityResult;
-
-            await repository.DeleteAsync(user.Id, ct);
 
             await unitOfWork.SaveChangesAsync(ct);
 

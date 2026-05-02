@@ -61,5 +61,13 @@ namespace CoreFitness.Infrastructure.Converters
             v => v.HasValue ? v.Value.Value : null,
             v => v != null ? UserPhoneNumber.Create(v) : null
             );
+
+        public class DateTimeOffsetConverter : ValueConverter<DateTimeOffset, DateTime>
+        {
+            public DateTimeOffsetConverter() : base(
+                v => v.UtcDateTime,
+                v => new DateTimeOffset(v, TimeSpan.Zero)
+            ) {}
+        }
     }
 }

@@ -1,9 +1,16 @@
 ﻿using CoreFitness.Domain.Entities.Memberships;
 using CoreFitness.Domain.Entities.Memberships.ValueObjects;
 using CoreFitness.Domain.Enums;
+using CoreFitness.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using CoreFitness.Domain.Interfaces.Users;
+using CoreFitness.Domain.Interfaces.UnitOfWork;
+using CoreFitness.Domain.Entities.Users.ValueObjects;
+using CoreFitness.Domain.Entities.Users;
+using CoreFitness.Domain.Entities.TrainingSessions;
+using CoreFitness.Domain.Entities.TrainingSessions.ValueObjects;
 
 namespace CoreFitness.Infrastructure.Seeders
 {
@@ -16,6 +23,58 @@ namespace CoreFitness.Infrastructure.Seeders
             {
                 if (!await roleManager.RoleExistsAsync(role))
                     await roleManager.CreateAsync(new IdentityRole<Guid>(role));
+            }
+        }
+
+        public static async Task SeedAdminAsync(IServiceProvider services)
+        {
+            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+            var userRepository = services.GetRequiredService<IUserRepository>();
+            var unitOfWork = services.GetRequiredService<IUnitOfWork>();
+
+            var adminEmail = "admin@core.com";
+            var adminPassword = "Admin12!";
+
+            var identityUser = await userManager.FindByEmailAsync(adminEmail);
+
+            if(identityUser is null)
+            {
+                identityUser = new ApplicationUser
+                {
+                    UserName = adminEmail,
+                    Email = adminEmail,
+                    EmailConfirmed = true
+                };
+
+            var result = await userManager.CreateAsync(identityUser, adminPassword);
+
+            if(!result.Succeeded)
+                throw new Exception("Failed to create admin user");
+            }
+
+            if(!await userManager.IsInRoleAsync(identityUser, "Admin"))
+            {
+                await userManager.AddToRoleAsync(identityUser, "Admin");
+            }
+
+            var authId = AuthenticationId.Create(identityUser.Id.ToString());
+
+            var existiongUser = await userRepository.GetByAuthenticationIdAsync(authId);
+
+            if(existiongUser is null)
+            {
+                var domainUser = User.Create(
+                    authId,
+                    UserEmail.Create(adminEmail),
+                    UserName.Create("Admin", "User"),
+                    null,
+                    null,
+                    UserRole.Admin
+                );
+
+                await userRepository.AddAsync(domainUser);
+
+                await unitOfWork.SaveChangesAsync();
             }
         }
 
@@ -65,6 +124,36 @@ namespace CoreFitness.Infrastructure.Seeders
             premium.AddBenefit(MembershipTypeBenefitDescription.Create("Motivating & supportive environment"));
 
             await context.MembershipTypes.AddRangeAsync(trial, standard, premium);
+            await context.SaveChangesAsync();
+        }
+
+        public static async Task SeedTrainingSessions(IServiceProvider services)
+        {
+            var context = services.GetRequiredService<CoreFitnessDbContext>();
+
+            if(await context.TrainingSessions.AnyAsync()) return;
+
+            var now = DateTimeOffset.UtcNow;
+
+            var sessions = new []
+                {
+                TrainingSession.Create(
+                    TrainingSessionName.Create("Yoga"),
+                    TrainingSessionDescription.Create("Relax and take a deep breath"),
+                    now.AddDays(5),
+                    TrainingSessionCapacity.Create(40),
+                    TrainingSessionDuration.FromMinutes(60)
+                ),
+                TrainingSession.Create(
+                    TrainingSessionName.Create("Core fitness"),
+                    TrainingSessionDescription.Create("Spinn wheels and do rope waves"),
+                    now.AddDays(2),
+                    TrainingSessionCapacity.Create(20),
+                    TrainingSessionDuration.FromMinutes(30)
+                ),
+            };
+
+            await context.TrainingSessions.AddRangeAsync(sessions);
             await context.SaveChangesAsync();
         }
     }

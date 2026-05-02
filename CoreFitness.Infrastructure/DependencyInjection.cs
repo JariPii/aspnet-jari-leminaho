@@ -2,6 +2,7 @@
 using CoreFitness.Application.Authentication.Abstractions;
 using CoreFitness.Application.Authentication.Services;
 using CoreFitness.Application.Interfaces;
+using CoreFitness.Application.Services;
 using CoreFitness.Domain.Interfaces.Memberships;
 using CoreFitness.Domain.Interfaces.TrainingSessions;
 using CoreFitness.Domain.Interfaces.UnitOfWork;
@@ -115,6 +116,8 @@ public static class DependencyInjection
             });
 
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IMembershipService, MembershipService>();
+        services.AddScoped<IMembershipTypeService, MembershipTypeService>();
         services.AddScoped<IPasswordProvider, PasswordProvider>();
         services.AddScoped<IExternalAuthProvider, ExternalAuthProvider>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();

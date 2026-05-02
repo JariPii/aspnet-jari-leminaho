@@ -54,6 +54,21 @@ namespace CoreFitness.Infrastructure
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(CoreFitnessDbContext).Assembly);
 
+            foreach(var entity in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach(var property in entity.GetProperties())
+                {
+                    var isDateTimeOffset =
+                    property.ClrType == typeof(DateTimeOffset) ||
+                    property.ClrType == typeof(DateTimeOffset?);
+
+                    if(isDateTimeOffset && property.GetValueConverter() is null)
+                    {
+                        property.SetValueConverter(new DateTimeOffsetConverter());
+                    }
+                }
+            }
+
             if (Database.IsSqlite())
             {
                 foreach (var entity in modelBuilder.Model.GetEntityTypes())

@@ -1,0 +1,41 @@
+@using CoreFitness.Application.DTOs.TrainingSession
+
+@model IEnumerable<TrainingSessionDTO>
+
+
+    <table class='w-full border'>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Capacity</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var s in Model)
+            {
+                var startDate = s.StartDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm");
+
+                <tr>
+                    <td>@s.Name</td>
+                    <td>@startDate</td>
+                    <td>@s.Capacity</td>
+                    <td>
+                        @* TODO: Change to icons *@
+                        <form asp-action="Delete" method='post'>
+                            <input type="hidden" name='id' value="@s.Id"/>
+                            <button type='submit'>Delete</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form asp-action="Edit" asp-route-id="@s.Id" method='get'>
+                            <input type="hidden" name='id' value="@s.Id"/>
+                            <button type='submit'>Edit</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

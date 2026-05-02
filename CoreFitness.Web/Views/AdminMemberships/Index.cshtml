@@ -1,0 +1,13 @@
+@using CoreFitness.Web.ViewModels.Admin.Memberships
+@model AdminMembershipsViewModel
+
+@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<h1>Memberships</h1>
+
+@foreach(var type in Model.MembershipTypes)
+{
+    <p>@type.Name</p>
+}

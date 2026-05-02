@@ -1,18 +1,9 @@
-using DomainUser = CoreFitness.Domain.Entities.Users.User;
-using CoreFitness.Domain.Interfaces.UnitOfWork;
-using CoreFitness.Domain.Interfaces.Users;
-using CoreFitness.Infrastructure.Identity;
+
 using CoreFitness.Web.ViewModels.Auth;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using CoreFitness.Domain.Entities.Users.ValueObjects;
-using CoreFitness.Domain.Enums;
-using CoreFitness.Application.Authentication.Services;
 using CoreFitness.Application.Authentication;
 using CoreFitness.Application.DTOs.Auth;
 using CoreFitness.Application.Authentication.Models;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using CoreFitness.Application.Authentication;
 
 namespace CoreFitness.Web.Controllers;
 
@@ -27,7 +18,7 @@ public class AccountController(IAuthService authService) : Controller
         });
     }
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [HttpPost]
     public async Task<IActionResult> SignUp(SignUpViewModel vm)
     {
         if(!ModelState.IsValid)
@@ -41,7 +32,7 @@ public class AccountController(IAuthService authService) : Controller
     [HttpGet]
     public IActionResult VerifyEmail(string email) => View(new VerifyEmailViewModel { Email = email });
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [HttpPost]
     public IActionResult VerifyEmail(VerifyEmailViewModel vm)
     {
         if (!ModelState.IsValid)
@@ -59,7 +50,7 @@ public class AccountController(IAuthService authService) : Controller
     [HttpGet]
     public IActionResult SetPassword(string email) => View(new SetUpPasswordViewModel { Email = email });
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [HttpPost]
     public async Task<IActionResult> SetPassword(SetUpPasswordViewModel vm, CancellationToken ct = default)
     {
         if (!ModelState.IsValid)
@@ -94,7 +85,7 @@ public class AccountController(IAuthService authService) : Controller
         });
     }
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [HttpPost]
     public async Task<IActionResult> SignIn(SignInViewModel vm, CancellationToken ct = default)
     {
         if(!ModelState.IsValid)

@@ -17,6 +17,7 @@ namespace CoreFitness.Application.Services
         public async Task<Result<TrainingSessionDTO>> GetByIdAsync(Guid sessionId, CancellationToken ct = default)
         {
             var session = await repository.GetByIdAsync(new TrainingSessionId(sessionId), ct);
+            
             if (session is null)
                 return Result<TrainingSessionDTO>.NotFound("TrainingSession", sessionId);
 

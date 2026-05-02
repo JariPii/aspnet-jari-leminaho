@@ -8,7 +8,7 @@ namespace CoreFitness.Web.Controllers
 {
     public class AuthController(IAuthService authService) : Controller
     {
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public IActionResult ExternalLogin(string provider, string returnUrl)
         {
            var properties = authService.ConfigureExternalLogin(provider, Url.Action("ExternalLoginCallBack", "Auth")!);
@@ -50,7 +50,7 @@ namespace CoreFitness.Web.Controllers
         }
 #endif
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> VerifyEmailLogIn(VerifyEmailViewModel vm)
         {
             if (!ModelState.IsValid)
@@ -72,7 +72,7 @@ namespace CoreFitness.Web.Controllers
             };
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> StartExternalVerification(NoAccountFoundViewModel vm)
         {
             return View("VerifyExternalLogin", new VerifyExternalLogInViewModel
@@ -82,7 +82,7 @@ namespace CoreFitness.Web.Controllers
             });
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> ConfirmExternalAccount(ConfirmExternalAccountViewModel vm, CancellationToken ct = default)
         {
             var result = await authService.HandleExternalCallbackAsync(vm.ReturnUrl, null, confirmed: true, ct);
@@ -109,7 +109,7 @@ namespace CoreFitness.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public new async Task<IActionResult> SignOut()
         {
             await authService.SignOutAsync();

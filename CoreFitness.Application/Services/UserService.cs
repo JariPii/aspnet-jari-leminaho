@@ -8,7 +8,6 @@ using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Enums;
 using CoreFitness.Domain.Interfaces.UnitOfWork;
 using CoreFitness.Domain.Interfaces.Users;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace CoreFitness.Application.Services
 {
@@ -214,6 +213,13 @@ namespace CoreFitness.Application.Services
             await unitOfWork.SaveChangesAsync(ct);
 
             return Result.Success();
+        }
+
+        public async Task<Result<IEnumerable<UserDTO>>> GetAllAsync(CancellationToken ct = default)
+        {
+            var users = await repository.GetAllAsync(ct);
+
+            return Result<IEnumerable<UserDTO>>.Success(users.Select(u => u.ToDTO()));
         }
     }
 }

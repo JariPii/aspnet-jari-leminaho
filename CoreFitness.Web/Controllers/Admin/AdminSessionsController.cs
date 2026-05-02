@@ -29,6 +29,7 @@ public class AdminSessionsController(ITrainingSessionService trainingSessionServ
         if(!ModelState.IsValid)
             return RedirectToAction(nameof(Index));
 
+// TODO: Rework or even maybe delete time conversion due to db changes, there was a bug before!
         var startDate = DateTime.SpecifyKind(vm.StartDate, DateTimeKind.Local);
         var startDateOffset = new DateTimeOffset(startDate);
 
@@ -63,7 +64,7 @@ public class AdminSessionsController(ITrainingSessionService trainingSessionServ
         var result = await trainingSessionService.GetByIdAsync(id);
 
         if(!result.IsSuccess)
-            return NotFound();
+            return RedirectToAction(nameof(Index));
 
         var session = result.Value;
 

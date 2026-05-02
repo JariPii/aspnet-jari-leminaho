@@ -214,12 +214,5 @@ namespace CoreFitness.Application.Services
 
             return Result.Success();
         }
-
-        public async Task<Result<IEnumerable<UserDTO>>> GetAllAsync(CancellationToken ct = default)
-        {
-            var users = await repository.GetAllAsync(ct);
-
-            return Result<IEnumerable<UserDTO>>.Success(users.Select(u => u.ToDTO()));
-        }
     }
 }

@@ -1,5 +1,3 @@
-@using CoreFitness.Application.DTOs.TrainingSession
-
 @model IEnumerable<TrainingSessionDTO>
 
 
@@ -30,10 +28,7 @@
                         </form>
                     </td>
                     <td>
-                        <form asp-action="Edit" asp-route-id="@s.Id" method='get'>
-                            <input type="hidden" name='id' value="@s.Id"/>
-                            <button type='submit'>Edit</button>
-                        </form>
+                        <a asp-action="Edit" asp-route-id="@s.Id">Edit</a>
                     </td>
                 </tr>
             }

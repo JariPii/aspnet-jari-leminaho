@@ -42,8 +42,7 @@ public class MembershipTypeService(IMembershipTypeRepository repository, IMember
             MembershipTypeDescription.Create(dto.Description),
             MembershipTypePrice.Create(dto.Price),
             MembershipTypeDuration.Create(dto.DurationInDays),
-            dto.SessionLimit,
-            dto.Type
+            dto.SessionLimit
         );
 
         await repository.AddAsync(type, ct);

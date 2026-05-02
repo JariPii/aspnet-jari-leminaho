@@ -13,15 +13,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreFitness.Infrastructure.Migrations.Core
 {
     [DbContext(typeof(CoreFitnessDbContext))]
-    [Migration("20260422112209_InitialCore")]
-    partial class InitialCore
+    [Migration("20260502191952_InitialCoreFitness")]
+    partial class InitialCoreFitness
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.5")
+                .HasAnnotation("ProductVersion", "10.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -106,6 +106,9 @@ namespace CoreFitness.Infrastructure.Migrations.Core
                     b.Property<bool>("IsManuallyDeactivated")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("PurchasedPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .IsRequired()
@@ -133,6 +136,9 @@ namespace CoreFitness.Infrastructure.Migrations.Core
                     b.HasKey("Id");
 
                     b.HasIndex("TypeId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Memberships");
                 });
@@ -169,11 +175,6 @@ namespace CoreFitness.Infrastructure.Migrations.Core
 
                     b.Property<int>("SessionLimit")
                         .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("datetimeoffset");
@@ -370,6 +371,12 @@ namespace CoreFitness.Infrastructure.Migrations.Core
                     b.HasOne("CoreFitness.Domain.Entities.Memberships.MembershipType", null)
                         .WithMany()
                         .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoreFitness.Domain.Entities.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -1,14 +1,20 @@
 @model MembershipTypeDTO
 
-<div>
+@* TODO: Only show Standard and Premium! Change Model to IEnumerable *@
+
+
+<cf-card>
     <img src="~/images/dumbell.svg" alt="">
-    <h2>@Model.Name Membership</h2>
+
+    <h2 class='font-header font-semibold mt-4'>@Model.Name Membership</h2>
+
+    <hr />
+
     <p>@Model.Description</p>
     
     @foreach (var benefit in Model.Benefits)
     {
-        <div>
-
+        <div class='flex items-center gap-2'>
             <i class="fa-solid fa-circle-check text-tertiary"></i>
             <p>@benefit</p>
         </div>
@@ -27,4 +33,4 @@
         <div class='h-1 bg-tertiary/20'></div>
         <p>Try Any Membership Fre for 1 Week</p>
     </div>
-</div>
+</cf-card>

@@ -10,7 +10,6 @@
         protected BaseEntity()
         {
             CreatedAt = DateTimeOffset.UtcNow;
-            RowVersion = new byte[8];
         }
 
         public void UpdateTimeStamp() => UpdatedAt = DateTimeOffset.UtcNow;

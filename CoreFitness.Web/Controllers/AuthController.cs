@@ -2,6 +2,7 @@
 using CoreFitness.Application.Authentication.Models;
 using CoreFitness.Web.ViewModels.Auth;
 using CoreFitness.Web.ViewModels.Profile;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreFitness.Web.Controllers
@@ -11,9 +12,14 @@ namespace CoreFitness.Web.Controllers
         [HttpPost]
         public IActionResult ExternalLogin(string provider, string returnUrl)
         {
-           var properties = authService.ConfigureExternalLogin(provider, Url.Action("ExternalLoginCallBack", "Auth")!);
+            var redirectUrl = Url.Action("ExternalLoginCallBack", "Auth");
 
-            return Challenge(properties, provider);
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = redirectUrl
+            };
+
+           return Challenge(properties, provider);
         }
 
         [HttpGet]

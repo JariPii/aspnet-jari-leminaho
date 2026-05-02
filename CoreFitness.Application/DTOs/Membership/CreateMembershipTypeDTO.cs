@@ -9,5 +9,4 @@ public record CreateMembershipTypeDTO
     public decimal Price { get; init; }
     public int DurationInDays { get; init; }
     public int SessionLimit { get; init; }
-    public MembershipTypeEnums Type { get; init; }
 }

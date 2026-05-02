@@ -29,7 +29,6 @@ namespace CoreFitness.Application.Mappings
             Price = type.Price.Value,
             DurationInDays = type.Duration.Value,
             SessionLimit = type.SessionLimit,
-            Type = type.Type.ToString(),
             Benefits = [.. type.Benefits.Select(b => b.Description.Value)]
         };
 

@@ -13,9 +13,6 @@ namespace CoreFitness.Application.Authentication.Services;
 
 public class AuthService(IUserRepository userRepository,IPasswordProvider passwordProvider, IExternalAuthProvider externalAuthProvider, IUnitOfWork unitOfWork, ILogger<AuthService> logger) : IAuthService
 {
-    public AuthenticationProperties ConfigureExternalLogin(string provider, string redirectUrl) =>
-        externalAuthProvider.ConfigureExternalLogin(provider, redirectUrl);
-
     public async Task<IReadOnlyList<string>> GetExternalProvidersAsync(CancellationToken ct = default) => await externalAuthProvider.GetExternalProvidersAsync(ct);
 
     public async Task<AuthenticationResult> LoginAsync(LoginDTO dto, CancellationToken ct = default)

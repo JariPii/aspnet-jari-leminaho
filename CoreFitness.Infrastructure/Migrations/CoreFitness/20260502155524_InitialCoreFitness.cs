@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CoreFitness.Infrastructure.Migrations.Core
+namespace CoreFitness.Infrastructure.Migrations.CoreFitness
 {
     /// <inheritdoc />
-    public partial class InitialCore : Migration
+    public partial class InitialCoreFitness : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,6 @@ namespace CoreFitness.Infrastructure.Migrations.Core
                     Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     SessionLimit = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
@@ -94,6 +93,7 @@ namespace CoreFitness.Infrastructure.Migrations.Core
                     StartDate = table.Column<DateTime>(type: "date", nullable: false),
                     EndDate = table.Column<DateTime>(type: "date", nullable: false),
                     TypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PurchasedPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IsManuallyDeactivated = table.Column<bool>(type: "bit", nullable: false),
                     SessionsUsed = table.Column<int>(type: "int", nullable: false),
                     SessionLimit = table.Column<int>(type: "int", nullable: false),

@@ -89,8 +89,7 @@ namespace CoreFitness.Infrastructure.Seeders
                 MembershipTypeDescription.Create("A 7 day trial membership to try out our amazing gym!"),
                 MembershipTypePrice.Create(0),
                 MembershipTypeDuration.Create(7),
-                5,
-                MembershipTypeEnums.Trial
+                5
                 );
 
             trial.AddBenefit(MembershipTypeBenefitDescription.Create("Access to our premium locker"));
@@ -102,8 +101,7 @@ namespace CoreFitness.Infrastructure.Seeders
                 MembershipTypeDescription.Create("With the Standard Membership, get access to our full range of gym facilities"),
                 MembershipTypePrice.Create(495),
                 MembershipTypeDuration.Create(30),
-                20,
-                MembershipTypeEnums.Standard
+                20
                 );
 
             standard.AddBenefit(MembershipTypeBenefitDescription.Create("Standard locker"));
@@ -115,8 +113,7 @@ namespace CoreFitness.Infrastructure.Seeders
                 MembershipTypeDescription.Create("With the Premium Membership, get access to our full range of gym facilities"),
                 MembershipTypePrice.Create(595),
                 MembershipTypeDuration.Create(30),
-                20,
-                MembershipTypeEnums.Premium
+                20
                 );
 
             premium.AddBenefit(MembershipTypeBenefitDescription.Create("Priority Support & Premium locker"));

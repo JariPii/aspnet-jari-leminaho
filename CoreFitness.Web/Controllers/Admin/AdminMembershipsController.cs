@@ -2,6 +2,7 @@ using CoreFitness.Application.Interfaces;
 using CoreFitness.Web.ViewModels.Admin.Memberships;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace CoreFitness.Web.Controllers.Admin;
 
@@ -21,4 +22,13 @@ public class AdminMembershipsController(IMembershipService membershipService, IM
 
         return View(vm);
     }
+
+    // [HttpPost("Create")]
+    // public Task<IActionResult> Create(CreateMembershipTypeViewModel vm)
+    // {
+    //     if(!ModelState.IsValid)
+    //         return RedirectToAction(nameof(Index));
+
+        
+    // }
 }

@@ -15,9 +15,9 @@ namespace CoreFitness.Infrastructure.Repositories
             .AsNoTracking()
             .ToListAsync(ct);
 
-        public async Task<MembershipType?> GetByTypeAsync(MembershipTypeEnums type, CancellationToken ct = default)
-        {
-            return await _context.MembershipTypes.FirstOrDefaultAsync(mt => mt.Type == type, ct);
-        }
+        // public async Task<MembershipType?> GetByTypeAsync(MembershipTypeEnums type, CancellationToken ct = default)
+        // {
+        //     return await _context.MembershipTypes.FirstOrDefaultAsync(mt => mt.Type == type, ct);
+        // }
     }
 }

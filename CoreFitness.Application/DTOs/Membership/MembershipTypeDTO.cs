@@ -8,7 +8,6 @@
         public decimal Price { get; init; }
         public int DurationInDays { get; init; }
         public int SessionLimit { get; init; }
-        public string Type { get; init; } = string.Empty;
         public IReadOnlyList<string> Benefits { get; init; } = [];
     }
 }

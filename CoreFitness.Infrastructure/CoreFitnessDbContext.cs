@@ -52,27 +52,24 @@ namespace CoreFitness.Infrastructure
         {
             modelBuilder.Entity<IntResult>().HasNoKey();
 
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CoreFitnessDbContext).Assembly);
-
-            foreach(var entity in modelBuilder.Model.GetEntityTypes())
-            {
-                foreach(var property in entity.GetProperties())
-                {
-                    var isDateTimeOffset =
-                    property.ClrType == typeof(DateTimeOffset) ||
-                    property.ClrType == typeof(DateTimeOffset?);
-
-                    if(isDateTimeOffset && property.GetValueConverter() is null)
-                    {
-                        property.SetValueConverter(new DateTimeOffsetConverter());
-                    }
-                }
-            }
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CoreFitnessDbContext).Assembly);           
 
             if (Database.IsSqlite())
             {
                 foreach (var entity in modelBuilder.Model.GetEntityTypes())
                 {
+                    foreach (var property in entity.GetProperties())
+                    {
+                        var isDateTimeOffset =
+                        property.ClrType == typeof(DateTimeOffset) ||
+                        property.ClrType == typeof(DateTimeOffset?);
+
+                        if (isDateTimeOffset && property.GetValueConverter() is null)
+                        {
+                            property.SetValueConverter(new DateTimeOffsetConverter());
+                        }
+                    }
+
                     var rowVersion = entity.FindProperty("RowVersion");
                     rowVersion?.SetDefaultValueSql("randomblob(8)");
                 }

@@ -23,13 +23,14 @@
                     <td>@startDate</td>
                     <td>@s.Capacity</td>
                     <td>
-                        <form asp-action="DeleteSession" method='post'>
+                        @* TODO: Change to icons *@
+                        <form asp-action="Delete" method='post'>
                             <input type="hidden" name='id' value="@s.Id"/>
                             <button type='submit'>Delete</button>
                         </form>
                     </td>
                     <td>
-                        <form asp-action="EditSession" method='get'>
+                        <form asp-action="Edit" asp-route-id="@s.Id" method='get'>
                             <input type="hidden" name='id' value="@s.Id"/>
                             <button type='submit'>Edit</button>
                         </form>

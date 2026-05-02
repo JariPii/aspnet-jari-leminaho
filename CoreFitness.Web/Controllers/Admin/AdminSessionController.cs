@@ -4,19 +4,14 @@ using CoreFitness.Web.ViewModels.Admin.Sessions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CoreFitness.Web.Controllers;
+namespace CoreFitness.Web.Controllers.Admin;
 
 [Authorize(Roles = "Admin")]
-public class AdminController(ITrainingSessionService trainingSessionService) : Controller
+[Route("Admin/Sessions")]
+public class AdminSessionsController(ITrainingSessionService trainingSessionService) : Controller
 {
-    private readonly ITrainingSessionService trainingSessionService = trainingSessionService;
-
-    public IActionResult Index()
-    {
-        return View();
-    }
-
-    public async Task<IActionResult> Sessions()
+    [HttpGet("")]
+    public async Task<IActionResult> Index()
     {
         var result = await trainingSessionService.GetUpcomingAsync();
 
@@ -28,11 +23,11 @@ public class AdminController(ITrainingSessionService trainingSessionService) : C
         return View(vm);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateSession(CreateSessionViewModel vm)
+    [HttpPost("Create")]
+    public async Task<IActionResult> Create(CreateSessionViewModel vm)
     {
         if(!ModelState.IsValid)
-            return RedirectToAction(nameof(Sessions));
+            return RedirectToAction(nameof(Index));
 
         var startDate = DateTime.SpecifyKind(vm.StartDate, DateTimeKind.Local);
         var startDateOffset = new DateTimeOffset(startDate);
@@ -51,19 +46,19 @@ public class AdminController(ITrainingSessionService trainingSessionService) : C
         if(!result.IsSuccess)
             TempData["Error"] = result.Error!.Message;
 
-        return RedirectToAction(nameof(Sessions));
+        return RedirectToAction(nameof(Index));
     }
 
-    [HttpPost]
-    public async Task<IActionResult> DeleteSession(Guid id)
+    [HttpPost("Delete")]
+    public async Task<IActionResult> Delete(Guid id)
     {
         await trainingSessionService.DeleteAsync(id);
 
-        return RedirectToAction(nameof(Sessions));
+        return RedirectToAction(nameof(Index));
     }
 
-    [HttpGet]
-    public async Task<IActionResult> EditSession(Guid id)
+    [HttpGet("Edit/{id}")]
+    public async Task<IActionResult> Edit(Guid id)
     {
         var result = await trainingSessionService.GetByIdAsync(id);
 
@@ -85,8 +80,8 @@ public class AdminController(ITrainingSessionService trainingSessionService) : C
         return View(vm);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> UpdateSession(UpdateSessionViewModel vm)
+    [HttpPost("Update")]
+    public async Task<IActionResult> Update(UpdateSessionViewModel vm)
     {
         if(!ModelState.IsValid)
             return View("EditSession", vm);
@@ -109,9 +104,9 @@ public class AdminController(ITrainingSessionService trainingSessionService) : C
         if(!result.IsSuccess)
         {
             TempData["Error"] = result.Error!.Message;
-            return View("EditSession", vm);
+            return View("Edit", vm);
         };
 
-        return RedirectToAction(nameof(Sessions));
+        return RedirectToAction(nameof(Index));
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreFitness.Infrastructure.Migrations.Auth
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20260502160242_InitialAuth")]
+    [Migration("20260502192031_InitialAuth")]
     partial class InitialAuth
     {
         /// <inheritdoc />

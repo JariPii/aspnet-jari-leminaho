@@ -6,7 +6,6 @@ using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Enums;
 using CoreFitness.Domain.Interfaces.UnitOfWork;
 using CoreFitness.Domain.Interfaces.Users;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 
 namespace CoreFitness.Application.Authentication.Services;

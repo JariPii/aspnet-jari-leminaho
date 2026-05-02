@@ -7,13 +7,7 @@
 
 <h1>Memberships</h1>
 
-@foreach(var type in Model.MembershipTypes)
-{
-    <cf-card>
-        <h2>
-            <p>@type.Name</p>
-        </h2>
+@await Html.PartialAsync("Partials/_MembershipTypeTable", Model.MembershipTypes)
 
-        
-    </cf-card>
-}
+@await Html.PartialAsync("Partials/_MembershipTypeForm", Model.UpdateMembershipType ?? new MembershipTypeFormViewModel())
+

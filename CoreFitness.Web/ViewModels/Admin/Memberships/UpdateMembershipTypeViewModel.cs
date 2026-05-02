@@ -1,8 +1,6 @@
-using CoreFitness.Domain.Enums;
+namespace CoreFitness.Web.ViewModels.Admin.Memberships;
 
-namespace CoreFitness.Application.DTOs.Membership;
-
-public record UpdateMembershipTypeDTO
+public class UpdateMembershipTypeViewModel
 {
     public Guid Id { get; init; }
     public string Name { get; init; } = string.Empty;

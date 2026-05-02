@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CoreFitness.Infrastructure.Migrations.CoreFitness
+namespace CoreFitness.Infrastructure.Migrations.Core
 {
     [DbContext(typeof(CoreFitnessDbContext))]
     partial class CoreFitnessDbContextModelSnapshot : ModelSnapshot
@@ -133,6 +133,9 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                     b.HasKey("Id");
 
                     b.HasIndex("TypeId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Memberships");
                 });
@@ -365,6 +368,12 @@ namespace CoreFitness.Infrastructure.Migrations.CoreFitness
                     b.HasOne("CoreFitness.Domain.Entities.Memberships.MembershipType", null)
                         .WithMany()
                         .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoreFitness.Domain.Entities.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

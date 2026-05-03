@@ -24,9 +24,9 @@ else
             <p class='underline'>Purchase date</p>
             @m.StartDate.ToString("yyyy-MM-dd")
         </div>
-        <form asp-controller="Membership" asp-action="Cancel" method="post">
+        <form asp-controller="Membership" asp-action="Delete" method="post">
         <button type="submit" class='bg-tertiary px-4 py-2'>
-            Cancel
+            Delete membership
         </button>
     </form>
     </cf-card>

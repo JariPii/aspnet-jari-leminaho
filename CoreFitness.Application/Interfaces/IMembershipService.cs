@@ -9,8 +9,9 @@ namespace CoreFitness.Application.Interfaces
         Task<Result<MembershipDTO>> GetByUserIdAsync(AuthenticationId authenticationId, CancellationToken ct = default);
         Task<Result<IEnumerable<MembershipTypeDTO>>> GetMembershipTypesAsync(CancellationToken ct = default);
         Task<Result> CreateAsync(AuthenticationId authenticationId, CreateMembershipDTO dto, CancellationToken ct = default);
-        Task<Result> DeactivateAsync(Guid userId, CancellationToken ct = default);
-        Task<Result> ActivateAsync(Guid userId, CancellationToken ct = default);
+        Task<Result> DeactivateAsync(AuthenticationId authenticationId, CancellationToken ct = default);
+        Task<Result> ActivateAsync(AuthenticationId authenticationId, CancellationToken ct = default);
         Task<Result> CheckInAsync(Guid userId, CancellationToken ct = default);
+        Task<Result> DeleteAsync(AuthenticationId authenticationId, CancellationToken ct = default);
     }
 }

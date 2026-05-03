@@ -50,3 +50,9 @@ document.querySelectorAll('.faq-btn').forEach(function (btn) {
     icon.classList.toggle('rotate-180');
   });
 });
+
+setTimeout(function () {
+  document.querySelectorAll('.toast-message').forEach(function (el) {
+    el.remove();
+  });
+}, 3000);

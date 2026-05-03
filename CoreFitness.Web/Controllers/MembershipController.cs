@@ -47,29 +47,40 @@ namespace CoreFitness.Web.Controllers
             return RedirectToAction("Index", "Profile");
         }
 
+// TODO: Is Allready deactivated!
         [Authorize]
         [HttpPost("Cancel")]
         public async Task<IActionResult> Cancel(CancellationToken ct = default)
         {
             var authId = User.GetAuthenticationId();
 
-            var userResult = await userService.GetByAuthenticationId(authId, ct);
-
-            if(!userResult.IsSuccess)
-            {
-                TempData["Error"] = "User not found";
-
-                return RedirectToAction("Index", "Profile");
-            }
-
-            var result = await membershipService.DeactivateAsync(userResult.Value!.Id, ct);
+            var result = await membershipService.DeactivateAsync(authId, ct);
 
             if(!result.IsSuccess)
             {
                 TempData["Error"] = result.Error?.Message ?? "Could not cancel membership";
+                return RedirectToAction("Index", "Profile");
             }
 
             TempData["Success"] = "Membeship cancelled";
+            return RedirectToAction("Index", "Profile");
+        }
+
+        [Authorize]
+        [HttpPost("Delete")]
+        public async Task<IActionResult> Delete(CancellationToken ct = default)
+        {
+            var authId = User.GetAuthenticationId();
+
+            var result = await membershipService.DeleteAsync(authId, ct);
+
+            if(!result.IsSuccess)
+            {
+                TempData["Error"] = result.Error?.Message ?? "Could not delete membeship";
+                return RedirectToAction("Index", "Profile");
+            }
+
+            TempData["Success"] = "Membership deleted";
             return RedirectToAction("Index", "Profile");
         }
     }

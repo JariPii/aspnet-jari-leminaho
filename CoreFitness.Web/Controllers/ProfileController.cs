@@ -9,13 +9,14 @@ using CoreFitness.Application.Authentication;
 namespace CoreFitness.Web.Controllers;
 
 [Authorize]
-public class ProfileController(IUserService userService, IAuthService authService, ILogger<ProfileController> logger) : Controller
+public class ProfileController(IUserService userService, IAuthService authService, IMembershipService membershipService, ILogger<ProfileController> logger) : Controller
 {
     public async Task<IActionResult> Index()
     {
         var authId = User.GetAuthenticationId();
 
         var userResult = await userService.GetByAuthenticationId(authId);
+
         if(!userResult.IsSuccess)
         {
             await authService.SignOutAsync();
@@ -26,6 +27,7 @@ public class ProfileController(IUserService userService, IAuthService authServic
         }
 
         var statsResult = await userService.GetStatisticsAsync(userResult.Value!.Id);
+        var membershipResult = await membershipService.GetByUserIdAsync(authId);
 
         var vm = new ProfilePageViewModel
         {
@@ -38,7 +40,9 @@ public class ProfileController(IUserService userService, IAuthService authServic
             Statistics = statsResult.IsSuccess ? statsResult.Value : null,
             Weight = statsResult.IsSuccess ? statsResult.Value?.CurrentWeight : null,
             Height = statsResult.IsSuccess ? statsResult.Value?.Height : null,
-            TargetWeight = statsResult.IsSuccess ? statsResult.Value?.TargetWeight : null
+            TargetWeight = statsResult.IsSuccess ? statsResult.Value?.TargetWeight : null,
+
+            Membership = membershipResult.IsSuccess ? membershipResult.Value : null
         };
 
         return View(vm);

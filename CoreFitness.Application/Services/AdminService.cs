@@ -1,22 +1,16 @@
-using CoreFitness.Application.DTOs.Membership;
 using CoreFitness.Application.DTOs.User;
 using CoreFitness.Application.Interfaces;
 using CoreFitness.Domain.Common;
-using CoreFitness.Domain.Interfaces.Memberships;
-using CoreFitness.Domain.Interfaces.Users;
 
 namespace CoreFitness.Application.Services;
 
-public class AdminService(IUserRepository userRepository,
-IMembershipRepository membershipRepository,
-IMembershipTypeRepository membershipTypeRepository) : IAdminService
+public class AdminService(IAdminQueries adminQueries) : IAdminService
 {
     public async Task<Result<IEnumerable<AdminUserDTO>>> GetAllUsersAsync(CancellationToken ct = default)
     {
-        //var users = await userRepository.GetAllAsync(ct);
+        var users = await adminQueries.GetAllUsersAsync(ct);
 
-        //var
-        throw new NotImplementedException();
+        return Result<IEnumerable<AdminUserDTO>>.Success(users);
     }
 
 }

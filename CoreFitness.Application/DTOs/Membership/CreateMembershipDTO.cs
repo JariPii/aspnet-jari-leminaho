@@ -2,6 +2,6 @@
 {
     public record CreateMembershipDTO
     {
-        public Guid MembershipTypeId { get; init; }
+                public Guid MembershipTypeId { get; init; }
     }
 }

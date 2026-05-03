@@ -9,10 +9,10 @@
 </div>
 <div class='grid grid-cols-2'>
     <div>
-        @await Html.PartialAsync("Components/Account/_ProfileSidebar", Model)
+        @await Html.PartialAsync("Partials/_ProfileSidebar", Model)
     </div>
     <div>
-        @await Html.PartialAsync("Components/Account/_AboutMeForm", Model)
-        @await Html.PartialAsync("Components/Account/_MyStatistics", Model.Statistics)
+        @await Html.PartialAsync("Partials/_AboutMeForm", Model)
+        @await Html.PartialAsync("Partials/_MyStatistics", Model.Statistics)
     </div>
 </div>

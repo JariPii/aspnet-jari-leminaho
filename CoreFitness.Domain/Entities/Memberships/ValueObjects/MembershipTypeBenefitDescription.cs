@@ -1,5 +1,5 @@
-﻿using CoreFitness.Domain.Entities.Common;
-using CoreFitness.Domain.Exceptions;
+﻿using CoreFitness.Domain.Exceptions;
+using CoreFitness.Domain.Primitives;
 
 namespace CoreFitness.Domain.Entities.Memberships.ValueObjects
 {

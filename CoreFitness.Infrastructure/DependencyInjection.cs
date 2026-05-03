@@ -11,6 +11,7 @@ using CoreFitness.Infrastructure.Authentication.Services;
 using CoreFitness.Infrastructure.Filestorage;
 using CoreFitness.Infrastructure.Identity;
 using CoreFitness.Infrastructure.Persistence;
+using CoreFitness.Infrastructure.Queries;
 using CoreFitness.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -126,6 +127,8 @@ public static class DependencyInjection
         services.AddScoped<IMembershipTypeRepository, MembershipTypeRepository>();
         services.AddScoped<ITrainingSessionRepository, TrainingSessionRepository>();
         services.AddScoped<IFileStorage, LocalFileStorage>();
+        services.AddScoped<IAdminQueries, AdminQueries>();
+        services.AddScoped<IAdminService, AdminService>();
 
         return services;
     }

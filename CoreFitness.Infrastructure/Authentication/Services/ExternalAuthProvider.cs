@@ -1,8 +1,6 @@
-using System.IO.Compression;
 using System.Security.Claims;
 using CoreFitness.Application.Authentication.Abstractions;
 using CoreFitness.Application.Authentication.Models;
-using CoreFitness.Domain.Common;
 using CoreFitness.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;

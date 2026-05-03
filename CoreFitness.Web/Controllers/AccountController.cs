@@ -75,6 +75,8 @@ public class AccountController(IAuthService authService) : Controller
         return RedirectToAction("Index", "Profile");
     }
 
+
+// TODO: Move to AuthController
     [HttpGet]
     public async Task<IActionResult> SignIn(string? returnUrl = null)
     {

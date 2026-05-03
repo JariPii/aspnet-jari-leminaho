@@ -1,23 +1,21 @@
 ﻿using CoreFitness.Application.Authentication;
 using CoreFitness.Application.Authentication.Models;
+using CoreFitness.Infrastructure.Identity;
 using CoreFitness.Web.ViewModels.Auth;
 using CoreFitness.Web.ViewModels.Profile;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreFitness.Web.Controllers
 {
-    public class AuthController(IAuthService authService) : Controller
+    public class AuthController(IAuthService authService, SignInManager<ApplicationUser> signInManager) : Controller
     {
         [HttpPost]
-        public IActionResult ExternalLogin(string provider, string returnUrl)
+        public IActionResult ExternalLogin(string provider, string? returnUrl)
         {
-            var redirectUrl = Url.Action("ExternalLoginCallBack", "Auth");
+            var redirectUrl = Url.Action("ExternalLogInCallback", "Auth", null, Request.Scheme);
 
-            var properties = new AuthenticationProperties
-            {
-                RedirectUri = redirectUrl
-            };
+            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
 
            return Challenge(properties, provider);
         }
@@ -55,28 +53,6 @@ namespace CoreFitness.Web.Controllers
             });
         }
 #endif
-
-        [HttpPost]
-        public async Task<IActionResult> VerifyEmailLogIn(VerifyEmailViewModel vm)
-        {
-            if (!ModelState.IsValid)
-                return View(vm);
-
-            var result = await authService.VerifyEmailAsync(vm.Email, vm.Code, vm.ReturnUrl);
-
-            if(result.Type == AuthenticationResultType.InvalidCode)
-            {
-                ModelState.AddModelError(nameof(vm.Code), "Wrong code");
-
-                return View(vm);
-            }
-
-            return result.Type switch
-            {
-                AuthenticationResultType.SignedIn => RedirectToLocal(result.ReturnUrl),
-                _ => ExternalLogInFailed(result.ReturnUrl)
-            };
-        }
 
         [HttpPost]
         public async Task<IActionResult> StartExternalVerification(NoAccountFoundViewModel vm)

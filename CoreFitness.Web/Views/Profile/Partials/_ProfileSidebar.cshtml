@@ -1,0 +1,38 @@
+@model ProfilePageViewModel
+
+<div class='w-64'>
+    <div class='rounded-3xl  h-100 w-100 bg-amber-200 overflow-hidden'>
+        @if(Model.PhotoUrl is not null)
+        {
+            <img src="@Model.PhotoUrl.Replace("=s96-c", "=s440-c")" class='object-cover' alt='Profile photo' />
+        }
+        else
+        {
+            <div class='h-32 w-32 bg-gray-400'>AVATARIMAGE</div>        
+        }
+    </div>
+
+    <div class='flex flex-col'>
+        <h2 class='bg-tertiary'>Menu Options</h2>
+        <h2>About Me</h2>
+        <h2>My Membership</h2>
+        <h2>My Bookings</h2>
+    </div>
+
+    @* @if(Model.Membership is not null)
+    {
+        @Model.Membership.MembershipTypeName
+    } *@
+
+    <cf-navlink>
+        Bookings
+    </cf-navlink>
+
+    <form asp-controller="Auth" asp-action="SignOut" method="post">
+        <button type="submit">Sign Out</button>
+    </form>
+
+    <form asp-controller="Profile" asp-action="Delete" method="post">
+        <button type="submit" onclick='return confirm("Are tou sure you want to delete your account?")'>Remove Account</button>
+    </form>
+</div>

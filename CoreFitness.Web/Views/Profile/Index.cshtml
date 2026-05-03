@@ -19,7 +19,7 @@
         @if(Model.ActiveTab == ProfileTabs.About)
         {
             @* @await Html.PartialAsync("Partials/_AboutMeForm", Model) *@
-            <partial name="Partials/_AboutMeForm" model="Model" />
+            <partial name="Partials/_AboutMeForm" model="Model.UpdateForm" />
         }
         else if(Model.ActiveTab == ProfileTabs.Membership)
         {

@@ -8,6 +8,7 @@ public class ProfilePageViewModel
 {
     public Guid Id { get; set; }
 
+
     public string? Email { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
@@ -23,4 +24,6 @@ public class ProfilePageViewModel
     public MembershipDTO? Membership { get; set; }
     public ProfileTabs ActiveTab { get; set; }
     public IEnumerable<BookingDTO> Bookings { get; set; } = [];
+
+    public UpdateProfileViewModel UpdateForm { get; set; } = new();
 }

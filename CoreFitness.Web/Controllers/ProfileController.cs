@@ -46,7 +46,20 @@ public class ProfileController(IUserService userService, IAuthService authServic
 
             Membership = membershipResult.IsSuccess ? membershipResult.Value : null,
             
-            ActiveTab = tab
+            ActiveTab = tab,
+
+            UpdateForm = new UpdateProfileViewModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Weight = statsResult.IsSuccess ? statsResult.Value?.CurrentWeight : null,
+                Height = statsResult.IsSuccess ? statsResult.Value?.Height : null,
+                TargetWeight = statsResult.IsSuccess ? statsResult.Value?.TargetWeight : null,
+                RowVersion = user.RowVersion
+            }
         };
 
         if(tab == ProfileTabs.Bookings)
@@ -60,10 +73,18 @@ public class ProfileController(IUserService userService, IAuthService authServic
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(ProfilePageViewModel vm, CancellationToken ct = default)
+    public async Task<IActionResult> Update(UpdateProfileViewModel vm, CancellationToken ct = default)
     {
         if(!ModelState.IsValid)
-            return View("Index", vm);
+        {
+            
+            foreach (var error in ModelState)
+{
+    Console.WriteLine($"{error.Key}: {string.Join(",", error.Value.Errors.Select(e => e.ErrorMessage))}");
+}
+            TempData["Error"] = "Repair errprs";
+            return RedirectToAction(nameof(Index));
+        }
 
         var dto = new UpdateProfileDTO
         {
@@ -75,16 +96,16 @@ public class ProfileController(IUserService userService, IAuthService authServic
             Weight = vm.Weight,
             Height = vm.Height,
             TargetWeight = vm.TargetWeight,
-            // RowVersion = vm.RowVersion
+            RowVersion = vm.RowVersion
         };
 
         var result = await userService.UpdateProfileAsync(dto, ct);
 
         if(!result.IsSuccess)
         {
-            ModelState.AddModelError(string.Empty, result?.Error?.Message ?? "Update failed");
+            TempData["Error"] = result?.Error?.Message ?? "Update failed";
 
-            return View("Index", vm);
+            return RedirectToAction(nameof(Index));
         }
 
         TempData["Success"] = "Profile updated successfully";

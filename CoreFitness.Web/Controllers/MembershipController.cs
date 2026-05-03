@@ -46,5 +46,31 @@ namespace CoreFitness.Web.Controllers
 
             return RedirectToAction("Index", "Profile");
         }
+
+        [Authorize]
+        [HttpPost("Cancel")]
+        public async Task<IActionResult> Cancel(CancellationToken ct = default)
+        {
+            var authId = User.GetAuthenticationId();
+
+            var userResult = await userService.GetByAuthenticationId(authId, ct);
+
+            if(!userResult.IsSuccess)
+            {
+                TempData["Error"] = "User not found";
+
+                return RedirectToAction("Index", "Profile");
+            }
+
+            var result = await membershipService.DeactivateAsync(userResult.Value!.Id, ct);
+
+            if(!result.IsSuccess)
+            {
+                TempData["Error"] = result.Error?.Message ?? "Could not cancel membership";
+            }
+
+            TempData["Success"] = "Membeship cancelled";
+            return RedirectToAction("Index", "Profile");
+        }
     }
 }

@@ -7,10 +7,11 @@ using CoreFitness.Domain.Entities.Memberships.ValueObjects;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Interfaces.Memberships;
 using CoreFitness.Domain.Interfaces.UnitOfWork;
+using CoreFitness.Domain.Interfaces.Users;
 
 namespace CoreFitness.Application.Services
 {
-    public class MembershipService(IMembershipRepository repository, IMembershipTypeRepository membershipTypeRepository, IUnitOfWork unitOfWork) : IMembershipService
+    public class MembershipService(IMembershipRepository repository, IMembershipTypeRepository membershipTypeRepository, IUserRepository userRepository, IUnitOfWork unitOfWork) : IMembershipService
     {
         public async Task<Result> ActivateAsync(Guid userId, CancellationToken ct = default)
         {
@@ -25,21 +26,29 @@ namespace CoreFitness.Application.Services
         }
 
         // TODO: Check if membership is active or expired exception to create a new
-        public async Task<Result> CreateAsync(Guid userId, CreateMembershipDTO dto, CancellationToken ct = default)
+        public async Task<Result> CreateAsync(AuthenticationId authenticationId, CreateMembershipDTO dto, CancellationToken ct = default)
         {
+            var user = await userRepository.GetByAuthenticationIdAsync(authenticationId, ct);
+
+            if(user is null)
+                return Result.NotFound("User", authenticationId);
+
             var membershipType = await membershipTypeRepository.GetByIdAsync(new MembershipTypeId(dto.MembershipTypeId), ct);
+
             if (membershipType is null)
                 return Result.NotFound("MembershipType", dto.MembershipTypeId);
 
-            var existing = await repository.GetByUserIdAsync(new UserId(userId), ct);
+            var existing = await repository.GetByUserIdAsync(user.Id, ct);
+
             if (existing is not null && existing.IsActive)
                 return Result.Conflict("User already has an active membership");
 
             var startDate = DateOnly.FromDateTime(DateTime.UtcNow);
+
             var endDate = startDate.AddDays(membershipType.Duration.Value);
 
             var membership = Membership.Create(
-                new UserId(userId),
+                user.Id,
                 membershipType.Id,
                 membershipType.Price.Value,
                 startDate,
@@ -48,7 +57,9 @@ namespace CoreFitness.Application.Services
                 );
 
             await repository.AddAsync(membership, ct);
+
             await unitOfWork.SaveChangesAsync(ct);
+
             return Result.Success();
         }
 
@@ -64,17 +75,24 @@ namespace CoreFitness.Application.Services
             return Result.Success();
         }
 
-        public async Task<Result<MembershipDTO>> GetByUserIdAsync(Guid userId, CancellationToken ct = default)
+        public async Task<Result<MembershipDTO>> GetByUserIdAsync(AuthenticationId authenticationId, CancellationToken ct = default)
         {
-            var membership = await repository.GetByUserIdAsync(new UserId(userId), ct);
-            if (membership is null)
-                return Result<MembershipDTO>.NotFound("Membership", userId);
+            var user = await userRepository.GetByAuthenticationIdAsync(authenticationId, ct);
+
+            if(user is null)
+                return Result<MembershipDTO>.NotFound("User", authenticationId);
+
+            var membership = await repository.GetByUserIdAsync(user.Id, ct);
+
+            if(membership is null)
+                return Result<MembershipDTO>.NotFound("Membership", user.Id.Value);
 
             var membershipType = await membershipTypeRepository.GetByIdAsync(membership.TypeId, ct);
-            if (membershipType is null)
-                return Result<MembershipDTO>.NotFound("MembershipType", membership.TypeId);
 
-            return Result<MembershipDTO>.Success(membership.ToDTO(membershipType.Name.Value, membershipType.Price.Value));
+            return Result<MembershipDTO>.Success(membership.ToDTO(
+                membershipType?.Name.Value ?? "",
+                membershipType?.Price.Value ?? 0
+            ));
         }
 
         public async Task<Result<IEnumerable<MembershipTypeDTO>>> GetMembershipTypesAsync(CancellationToken ct = default)

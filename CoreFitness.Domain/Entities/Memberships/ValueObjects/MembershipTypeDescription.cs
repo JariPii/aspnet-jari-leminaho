@@ -1,4 +1,4 @@
-﻿using CoreFitness.Domain.Entities.Common;
+﻿using CoreFitness.Domain.Primitives;
 using CoreFitness.Domain.Exceptions;
 
 namespace CoreFitness.Domain.Entities.Memberships.ValueObjects

@@ -1,5 +1,5 @@
-﻿using CoreFitness.Domain.Entities.Common;
-using CoreFitness.Domain.Exceptions;
+﻿using CoreFitness.Domain.Exceptions;
+using CoreFitness.Domain.Primitives;
 using System.Text.RegularExpressions;
 
 namespace CoreFitness.Domain.Entities.Users.ValueObjects

@@ -22,10 +22,6 @@
                         </form>
                     </td>
                     <td>
-                        @* <form asp-action="Edit" asp-route-id="@t.Id" method='get'>
-                            <input type="hidden" name='id' value="@t.Id"/>
-                            <button type='submit'>Edit</button>
-                        </form> *@
                         <a asp-action="Edit" asp-route-id="@t.Id">Edit</a>
                     </td>
                 </tr>

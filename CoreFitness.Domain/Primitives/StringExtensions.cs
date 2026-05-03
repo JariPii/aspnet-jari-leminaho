@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace CoreFitness.Domain.Entities.Common
+namespace CoreFitness.Domain.Primitives
 {
     public static partial class StringExtensions
     {

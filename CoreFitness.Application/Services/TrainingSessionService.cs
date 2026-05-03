@@ -9,10 +9,11 @@ using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Interfaces.Memberships;
 using CoreFitness.Domain.Interfaces.TrainingSessions;
 using CoreFitness.Domain.Interfaces.UnitOfWork;
+using CoreFitness.Domain.Interfaces.Users;
 
 namespace CoreFitness.Application.Services
 {
-    public class TrainingSessionService(ITrainingSessionRepository repository, IMembershipRepository membershipRepository, IUnitOfWork unitOfWork) : ITrainingSessionService
+    public class TrainingSessionService(ITrainingSessionRepository repository, IUserRepository userRepository, IMembershipRepository membershipRepository, IUnitOfWork unitOfWork) : ITrainingSessionService
     {
         public async Task<Result<TrainingSessionDTO>> GetByIdAsync(Guid sessionId, CancellationToken ct = default)
         {
@@ -24,14 +25,20 @@ namespace CoreFitness.Application.Services
             return Result<TrainingSessionDTO>.Success(session.ToDTO());
         }
 
-        public async Task<Result> BookAsync(Guid sessionId, Guid userId, CancellationToken ct = default)
+        public async Task<Result> BookAsync(Guid sessionId, AuthenticationId authId, CancellationToken ct = default)
         {
             var session = await repository.GetByIdAsync(new TrainingSessionId(sessionId), ct);
 
             if (session is null)
                 return Result.NotFound("TrainingSession", sessionId);
+            
 
-            var uId = new UserId(userId);
+            var user = await userRepository.GetByAuthenticationIdAsync(authId, ct);
+
+            if(user is null)
+                return Result.NotFound("User", authId);
+
+            var uId = user.Id;
 
             var membership = await membershipRepository.GetByUserIdAsync(uId, ct);
 
@@ -54,14 +61,19 @@ namespace CoreFitness.Application.Services
         }
 
         // TODO: Return session to member?
-        public async Task<Result> CancelBookingAsync(Guid sessionId, Guid userId, CancellationToken ct = default)
+        public async Task<Result> CancelBookingAsync(Guid sessionId, AuthenticationId authId, CancellationToken ct = default)
         {
             var session = await repository.GetByIdAsync(new TrainingSessionId(sessionId), ct);
 
             if (session is null)
                 return Result.NotFound("TrainingSession", sessionId);
 
-            var uId = new UserId(userId);
+            var user = await userRepository.GetByAuthenticationIdAsync(authId, ct);
+
+            if(user is null)
+                return Result.NotFound("User", authId);
+
+            var uId = user.Id;
 
             var membership = await membershipRepository.GetByUserIdAsync(uId, ct);
 
@@ -108,12 +120,19 @@ namespace CoreFitness.Application.Services
         public async Task<Result<IEnumerable<TrainingSessionDTO>>> GetUpcomingAsync(CancellationToken ct = default)
         {
             var sessions = await repository.GetUpcomingAsync(ct);
+            
             return Result<IEnumerable<TrainingSessionDTO>>.Success(sessions.Select(s => s.ToDTO()));
         }
 
         public async Task<Result<IEnumerable<BookingDTO>>> GetUserBookingsAsync(Guid userId, CancellationToken ct = default)
         {
             var sessions = await repository.GetUpcomingAsync(ct);
+
+                foreach(var s in sessions)
+        foreach(var b in s.Bookings)
+            Console.WriteLine($"Booking UserId: {b.UserId}");
+
+    Console.WriteLine($"Looking for userId: {userId}");
 
             var bookings = sessions
                 .SelectMany(s => s.Bookings

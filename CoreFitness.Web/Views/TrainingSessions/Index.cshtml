@@ -1,0 +1,23 @@
+@model IEnumerable<TrainingSessionDTO>
+
+
+<h2>Our Classes</h2>
+
+@if(TempData["Error"] is string error){
+    <div class='bg-red-100 text-red-800 px-4 py-2 rounded'>@error</div>
+}
+@if(TempData["Success"] is string success){
+    <div class='bg-green-100 px-4 py-2 rounded'>@success</div>
+}
+
+@foreach(var session in Model)
+{
+    <h3>@session.Name</h3>
+
+    <form asp-controller="Booking" asp-action="Book" method="post">
+        <input type="hidden" name='sessionId' value="@session.Id" />
+        <button type="submit" class='bg-tertiary px-4 py-2'>
+            Book
+        </button>
+    </form>
+}

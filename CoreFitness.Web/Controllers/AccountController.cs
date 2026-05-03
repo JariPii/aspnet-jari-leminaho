@@ -10,12 +10,9 @@ namespace CoreFitness.Web.Controllers;
 public class AccountController(IAuthService authService) : Controller
 {
     [HttpGet]
-    public async Task<IActionResult> SignUp(CancellationToken ct = default)
+    public IActionResult SignUp()
     {
-        return View(new SignUpViewModel
-        {
-            ExternalProviders = await authService.GetExternalProvidersAsync(ct)
-        });
+        return View(new SignUpViewModel());
     }
 
     [HttpPost]
@@ -83,7 +80,7 @@ public class AccountController(IAuthService authService) : Controller
         return View(new SignInViewModel
         {
             ReturnUrl = returnUrl,
-            ExternalProviders = await authService.GetExternalProvidersAsync()
+            // ExternalProviders = await authService.GetExternalProvidersAsync()
         });
     }
 

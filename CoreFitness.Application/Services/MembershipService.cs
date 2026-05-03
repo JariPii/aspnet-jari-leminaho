@@ -13,15 +13,22 @@ namespace CoreFitness.Application.Services
 {
     public class MembershipService(IMembershipRepository repository, IMembershipTypeRepository membershipTypeRepository, IUserRepository userRepository, IUnitOfWork unitOfWork) : IMembershipService
     {
-        public async Task<Result> ActivateAsync(Guid userId, CancellationToken ct = default)
+        public async Task<Result> ActivateAsync(AuthenticationId authenticationId, CancellationToken ct = default)
         {
-            var membership = await repository.GetByUserIdAsync(new UserId(userId), ct);
+            var user = await userRepository.GetByAuthenticationIdAsync(authenticationId, ct);
+
+            if(user is null)
+                return Result.NotFound("User", authenticationId);
+
+            var membership = await repository.GetByUserIdAsync(user.Id, ct);
+
             if (membership is null)
-                return Result.NotFound("Membership", userId);
+                return Result.NotFound("Membership", user.Id.Value);
 
             membership.ActivateMembership();
 
             await unitOfWork.SaveChangesAsync(ct);
+            
             return Result.Success();
         }
 
@@ -63,11 +70,17 @@ namespace CoreFitness.Application.Services
             return Result.Success();
         }
 
-        public async Task<Result> DeactivateAsync(Guid userId, CancellationToken ct = default)
+        public async Task<Result> DeactivateAsync(AuthenticationId authenticationId, CancellationToken ct = default)
         {
-            var membership = await repository.GetByUserIdAsync(new UserId(userId), ct);
+            var user = await userRepository.GetByAuthenticationIdAsync(authenticationId, ct);
+
+            if(user is null)
+                return Result.NotFound("user", authenticationId);
+
+            var membership = await repository.GetByUserIdAsync(user.Id, ct);
+
             if (membership is null)
-                return Result.NotFound("Membership", userId);
+                return Result.NotFound("Membership", user.Id.Value);
 
             membership.DeactivateMembership();
 
@@ -110,6 +123,24 @@ namespace CoreFitness.Application.Services
             membership.RegisterCheckIn();
 
             await unitOfWork.SaveChangesAsync(ct);
+            return Result.Success();
+        }
+
+        public async Task<Result> DeleteAsync(AuthenticationId authenticationId, CancellationToken ct = default)
+        {
+            var user = await userRepository.GetByAuthenticationIdAsync(authenticationId, ct);
+
+            if(user is null)
+                return Result.NotFound("User", authenticationId);
+
+            var membership = await repository.GetByUserIdAsync(user.Id, ct);
+
+            if(membership is null)
+                return Result.NotFound("Membership", user.Id.Value);
+
+            await repository.DeleteAsync(membership.Id, ct);
+            await unitOfWork.SaveChangesAsync(ct);
+
             return Result.Success();
         }
     }

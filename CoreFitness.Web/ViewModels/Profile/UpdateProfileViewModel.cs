@@ -2,14 +2,13 @@ namespace CoreFitness.Web.ViewModels.Profile;
 
 public class UpdateProfileViewModel
 {
-    public Guid Id { get; init; }
-    public string? Email { get; init; }
-    public string? FirstName { get; init; }
-    public string? LastName { get; init; }
-    public string? PhoneNumber { get; init; }
-
-    public decimal? Weight { get; init; }
-    public decimal? Height { get; init; }
-    public decimal? TargetWeight { get; init; }
-    public byte[] RowVersion { get; init; } = default!;
+    public Guid Id { get; set; }
+    public string? Email { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? PhoneNumber { get; set; }
+    public decimal? Weight { get; set; }
+    public decimal? Height { get; set; }
+    public decimal? TargetWeight { get; set; }
+    public byte[] RowVersion { get; set; } = default!;
 }

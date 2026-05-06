@@ -46,6 +46,7 @@ body {
   --color-primary: #f7f7f7;
   --color-tertiary: #d6eb31;
   --color-tertiary-text: #6d7c0e;
+  --color-card-footer: #080517;
   --font-header: 'Poppins', sans-serif;
   --font-paragraph: 'Dm sans', sans-serif;
 }

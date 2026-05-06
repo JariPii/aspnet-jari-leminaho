@@ -1,13 +1,21 @@
+using CoreFitness.Application.Interfaces;
 using CoreFitness.Web.ViewModels.CustomerService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreFitness.Web.Controllers;
 
-public class CustomerServiceController : Controller
+public class CustomerServiceController(IFaqService faqService) : Controller
 {
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View(new ContactUsViewModel());
+        var faqItems = await faqService.GetFaqItemsAsync();
+
+        var viewModel = new ContactUsViewModel
+        {
+            FaqItems = faqItems
+        };
+
+        return View(viewModel);
     }
 
     [HttpPost]

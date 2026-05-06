@@ -47,7 +47,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseExceptionHandler();
-app.UseStatusCodePagesWithReExecute("/error", "?statusCode={}");
+app.UseStatusCodePagesWithReExecute("/error", "?statusCode={0}");
 
 app.UseAuthentication();
 app.UseAuthorization();

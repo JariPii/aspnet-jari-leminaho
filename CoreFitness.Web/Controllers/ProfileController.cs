@@ -77,11 +77,6 @@ public class ProfileController(IUserService userService, IAuthService authServic
     {
         if(!ModelState.IsValid)
         {
-            
-            foreach (var error in ModelState)
-{
-    Console.WriteLine($"{error.Key}: {string.Join(",", error.Value.Errors.Select(e => e.ErrorMessage))}");
-}
             TempData["Error"] = "Repair errprs";
             return RedirectToAction(nameof(Index));
         }

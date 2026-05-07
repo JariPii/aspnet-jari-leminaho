@@ -6,12 +6,13 @@ using CoreFitness.Domain.Entities.Memberships;
 using CoreFitness.Domain.Entities.Memberships.ValueObjects;
 using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Interfaces.Memberships;
+using CoreFitness.Domain.Interfaces.TrainingSessions;
 using CoreFitness.Domain.Interfaces.UnitOfWork;
 using CoreFitness.Domain.Interfaces.Users;
 
 namespace CoreFitness.Application.Services
 {
-    public class MembershipService(IMembershipRepository repository, IMembershipTypeRepository membershipTypeRepository, IUserRepository userRepository, IUnitOfWork unitOfWork) : IMembershipService
+    public class MembershipService(IMembershipRepository repository, IMembershipTypeRepository membershipTypeRepository, ITrainingSessionRepository trainingSessionRepository, IUserRepository userRepository, IUnitOfWork unitOfWork) : IMembershipService
     {
         public async Task<Result> ActivateAsync(AuthenticationId authenticationId, CancellationToken ct = default)
         {
@@ -82,6 +83,8 @@ namespace CoreFitness.Application.Services
             if (membership is null)
                 return Result.NotFound("Membership", user.Id.Value);
 
+            await CancelAllBookings(user.Id, ct);
+
             membership.DeactivateMembership();
 
             await unitOfWork.SaveChangesAsync(ct);
@@ -138,10 +141,20 @@ namespace CoreFitness.Application.Services
             if(membership is null)
                 return Result.NotFound("Membership", user.Id.Value);
 
+            await CancelAllBookings(user.Id, ct);
+
             await repository.DeleteAsync(membership.Id, ct);
             await unitOfWork.SaveChangesAsync(ct);
 
             return Result.Success();
+        }
+
+        public async Task CancelAllBookings(UserId userId, CancellationToken ct = default)
+        {
+            var bookedSessions = await trainingSessionRepository.GetByUserBookingsAsync(userId, ct);
+
+            foreach(var session in bookedSessions)
+                session.CancelBooking(userId);
         }
     }
 }

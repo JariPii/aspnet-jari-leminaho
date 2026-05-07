@@ -30,8 +30,7 @@ namespace CoreFitness.Application.Services
             var session = await repository.GetByIdAsync(new TrainingSessionId(sessionId), ct);
 
             if (session is null)
-                return Result.NotFound("TrainingSession", sessionId);
-            
+                return Result.NotFound("TrainingSession", sessionId);            
 
             var user = await userRepository.GetByAuthenticationIdAsync(authId, ct);
 

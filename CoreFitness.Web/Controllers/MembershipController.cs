@@ -2,6 +2,7 @@ using CoreFitness.Application.DTOs.Membership;
 using CoreFitness.Application.Interfaces;
 using CoreFitness.Web.Extensions;
 using CoreFitness.Web.ViewModels.Membership;
+using CoreFitness.Web.ViewModels.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,7 +48,7 @@ namespace CoreFitness.Web.Controllers
             return RedirectToAction("Index", "Profile");
         }
 
-// TODO: Is Allready deactivated!
+// TODO: Is Allready deactivated! If active bookins - Cancel!!
         [Authorize]
         [HttpPost("Cancel")]
         public async Task<IActionResult> Cancel(CancellationToken ct = default)
@@ -63,7 +64,7 @@ namespace CoreFitness.Web.Controllers
             }
 
             TempData["Success"] = "Membeship cancelled";
-            return RedirectToAction("Index", "Profile");
+            return RedirectToAction("Index", "Profile", new { tab = ProfileTabs.Bookings});
         }
 
         [Authorize]

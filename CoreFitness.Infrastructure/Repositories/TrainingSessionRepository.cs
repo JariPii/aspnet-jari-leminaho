@@ -1,5 +1,6 @@
 ﻿using CoreFitness.Domain.Entities.TrainingSessions;
 using CoreFitness.Domain.Entities.TrainingSessions.ValueObjects;
+using CoreFitness.Domain.Entities.Users.ValueObjects;
 using CoreFitness.Domain.Interfaces.TrainingSessions;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,15 @@ namespace CoreFitness.Infrastructure.Repositories
                 .Include(ts => ts.Bookings)
                 .FirstOrDefaultAsync(ts => ts.Id == id, ct);
         }
+
+        public async Task<IEnumerable<TrainingSession>> GetByUserBookingsAsync(UserId userId, CancellationToken ct = default)
+        {
+            return await _context.TrainingSessions
+                .Include(s => s.Bookings)
+                .Where(s => s.Bookings.Any(b => b.UserId == userId))
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<TrainingSession>> GetUpcomingAsync(CancellationToken ct = default)
         {
             var now = DateTimeOffset.UtcNow;

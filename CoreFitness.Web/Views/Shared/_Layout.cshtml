@@ -4,6 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,12 +17,13 @@
 
 <body class="bg-primary min-h-screen flex flex-col">
 
-    @if(isHome){
+    @if (isHome)
+    {
         <div class="bg-[url('/images/nav-hero.png')] bg-cover bg-top mx-4 my-1 rounded-3xl">
             @await Html.PartialAsync("Components/Layout/_Navbar")
             <div class='flex justify-center'>
 
-            @await Html.PartialAsync("Components/Home/_Hero")
+                @await Html.PartialAsync("Components/Home/_Hero")
             </div>
         </div>
         @await Html.PartialAsync("Components/Home/_Equipmentbar")
@@ -34,21 +36,21 @@
 
     }
 
-    <main role="main" class="flex-1 pb-3 ">
-        <div class='max-w-7xl mx-auto px-6'>
-            <div class='fixed top-4 right-4 z-50'>
+    <main role="main" class="flex-1 pb-3 p-4">
+        @* <div class='max-w-7xl mx-auto px-6'> *@
+        <div class='fixed top-4 right-4 z-50'>
 
-            @if(TempData["Error"] is string error)
+            @if (TempData["Error"] is string error)
             {
                 <div class='bg-red-100 text-red-800 px-4 py-2 rounded toast-message'>@error</div>
             }
-            @if(TempData["Success"] is string success)
+            @if (TempData["Success"] is string success)
             {
                 <div class='bg-green-100 px-4 py-2 rounded toast-message'>@success</div>
             }
-            </div>
-            @RenderBody()
         </div>
+        @RenderBody()
+        @* </div> *@
     </main>
 
     <div class='flex justify-center'>
@@ -58,4 +60,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

@@ -42,10 +42,12 @@ namespace CoreFitness.Web.Controllers
 
             if(!result.IsSuccess)
             {
+                TempData["Error"] = result.Error?.Message ?? "Could not join membership";
                 return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction("Index", "Profile");
+            TempData["Succsess"] = "Membership activated";
+            return RedirectToAction("Index", "Profile", new { tab = ProfileTabs.Membership});
         }
 
 // TODO: Is Allready deactivated! If active bookins - Cancel!!

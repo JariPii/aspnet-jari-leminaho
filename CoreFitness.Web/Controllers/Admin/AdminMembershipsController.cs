@@ -27,7 +27,15 @@ public class AdminMembershipsController(IMembershipService membershipService, IM
     public async Task<IActionResult> Create(MembershipTypeFormViewModel vm)
     {
         if(!ModelState.IsValid)
-            return RedirectToAction(nameof(Index));
+        {
+            var types = await membershipTypeService.GetAllAsync();
+            var indexVm = new AdminMembershipsViewModel
+            {
+                MembershipTypes = types.IsSuccess ? types.Value : [],
+                UpdateMembershipType = vm
+            };
+            return View("Index", indexVm);
+        }
 
         var dto = new CreateMembershipTypeDTO
         {

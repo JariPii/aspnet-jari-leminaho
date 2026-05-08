@@ -5,9 +5,9 @@
     Layout = "~/Views/Admin/_AdminLayout.cshtml";
 }
 
-<h1>Memberships</h1>
+<h1 class='font-header text-3xl'>Memberships</h1>
 
 @await Html.PartialAsync("Partials/_MembershipTypeTable", Model.MembershipTypes)
 
-@await Html.PartialAsync("Partials/_MembershipTypeForm", Model.UpdateMembershipType ?? new MembershipTypeFormViewModel())
-
+@await Html.PartialAsync("Partials/_MembershipTypeForm", Model.UpdateMembershipType ?? new
+MembershipTypeFormViewModel())

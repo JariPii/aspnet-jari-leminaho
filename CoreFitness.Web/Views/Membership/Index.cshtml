@@ -4,7 +4,7 @@
     ViewData["Title"] = "Memberships page";
 }
 
-<div>
+<div class='flex flex-col justify-center items-center'>
     @await Html.PartialAsync("Partials/_MembershipOffers", Model.MembershipTypes)
     @await Html.PartialAsync("Components/Shared/_Faq", Model.FaqItems)
 </div>

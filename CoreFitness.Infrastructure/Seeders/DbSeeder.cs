@@ -84,18 +84,6 @@ namespace CoreFitness.Infrastructure.Seeders
 
             if (await context.MembershipTypes.AnyAsync()) return;
 
-            var trial = MembershipType.Create(
-                MembershipTypeName.Create("Trial"),
-                MembershipTypeDescription.Create("A 7 day trial membership to try out our amazing gym!"),
-                MembershipTypePrice.Create(0),
-                MembershipTypeDuration.Create(7),
-                5
-                );
-
-            trial.AddBenefit(MembershipTypeBenefitDescription.Create("Access to our premium locker"));
-            trial.AddBenefit(MembershipTypeBenefitDescription.Create("High-energyt fitness class"));
-            trial.AddBenefit(MembershipTypeBenefitDescription.Create("Motivating & supportive environment"));
-
             var standard = MembershipType.Create(
                 MembershipTypeName.Create("Standard"),
                 MembershipTypeDescription.Create("With the Standard Membership, get access to our full range of gym facilities"),
@@ -120,7 +108,7 @@ namespace CoreFitness.Infrastructure.Seeders
             premium.AddBenefit(MembershipTypeBenefitDescription.Create("High-energy group fitness classes"));
             premium.AddBenefit(MembershipTypeBenefitDescription.Create("Motivating & supportive environment"));
 
-            await context.MembershipTypes.AddRangeAsync(trial, standard, premium);
+            await context.MembershipTypes.AddRangeAsync(standard, premium);
             await context.SaveChangesAsync();
         }
 

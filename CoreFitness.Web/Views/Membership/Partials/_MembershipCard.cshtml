@@ -31,8 +31,8 @@
                     <p><span>*</span> Monthly @Model.DurationInDays Classes</p>
                 </div>
                 <form asp-controller="Membership" asp-action="Join" method="post">
-                    <input type="hidden" name="membershipTypeId" value='@Model.Id'/>
-                    <cf-button text="Join now" type="submit"/>
+                    <input type="hidden" name="membershipTypeId" value='@Model.Id' />
+                    <cf-button text="Join now" type="submit" />
                 </form>
             </div>
             <hr class='bg-[#27252F] self-center h-px border-0 w-11/12'>
